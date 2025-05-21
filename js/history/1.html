@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 在 JavaScript 中，eval 是某种介于表达式求值器和语句执行器的混合体。它返回最后一个被求值的表达式的值 (在 JavaScript 中，所有语句都是表达式)，也允许最后一个分号省略。
+        // eval(): 将一个字符串以函数的方式执行并返回一个结果
+        //应用
+        // JavaScript 的 eval 的一个应用是解析 JSON 文本，
+        // 也许是作为 Ajax 框架中的一部分。
+        // 然而，现代的浏览器提供 JSON.parse 作为这个任务的一个更加安全的替代品。
+        foo = 2;
+        console.log(eval('foo+2'))
+
+
+        function isLong(city) {
+            return city.length > 8;
+        }
+        const cities = ["London", "Liverpool", "Totnes", "Edinburgh"];
+        const longer = cities.filter(isLong);
+        console.log(longer); // [ "Liverpool", "Edinburgh" ]
+    </script>
+</body>
+</html>

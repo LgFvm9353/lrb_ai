@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>
+    <link rel="stylesheet" href="bilibili.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="bilibili.js" defer></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="logo">
+            <img src="https://www.bilibili.com/favicon.ico" alt="Bilibili">
+        </div>
+        <ul class="nav">
+            <li class="active">首页</li>
+            <li>番剧</li>
+            <li>直播</li>
+            <li>游戏中心</li>
+            <li>会员购</li>
+            <li>漫画</li>
+            <li>赛事</li>
+        </ul>
+        <div class="search">
+            <input type="text" placeholder="搜索视频、UP主或AV号">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="user">
+            <div class="user-avatar">
+                <img src="https://i1.hdslb.com/bfs/face/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="用户头像">
+            </div>
+        </div>
+    </header>
+    
+    <!-- 主要内容区 -->
+    <div class="container">
+        <div class="main">
+            <!-- 轮播图 -->
+            <div class="banner">
+                <img src="https://i0.hdslb.com/bfs/banner/9a7b5b5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5.jpg" alt="轮播图">
+                <div class="banner-nav">
+                    <div class="banner-dot active"></div>
+                    <div class="banner-dot"></div>
+                    <div class="banner-dot"></div>
+                    <div class="banner-dot"></div>
+                    <div class="banner-dot"></div>
+                </div>
+            </div>
+            
+            <!-- 分区导航 -->
+            <div class="zone-nav">
+                <div class="zone-title">
+                    <i class="fas fa-th-large"></i>
+                    <span>分区</span>
+                </div>
+                <div class="zone-list">
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="动画">
+                        <div>动画</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="番剧">
+                        <div>番剧</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="国创">
+                        <div>国创</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="音乐">
+                        <div>音乐</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="舞蹈">
+                        <div>舞蹈</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="游戏">
+                        <div>游戏</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="知识">
+                        <div>知识</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="科技">
+                        <div>科技</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="运动">
+                        <div>运动</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="汽车">
+                        <div>汽车</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="生活">
+                        <div>生活</div>
+                    </div>
+                    <div class="zone-item">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.png" alt="美食">
+                        <div>美食</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 推荐视频 -->
+            <div class="video-list">
+                <div class="video-card">
+                    <div class="video-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="视频封面">
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">【4K60FPS】周杰伦《七里香》官方MV | 回忆杀！那些年我们追过的周董</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-play"></i> 256.8万</span>
+                            <span><i class="fas fa-comment"></i> 1.2万</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="视频封面">
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">【教程】从零开始学Python编程 | 30天入门到精通 | 适合零基础小白</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-play"></i> 128.3万</span>
+                            <span><i class="fas fa-comment"></i> 8564</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="视频封面">
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">【美食探店】人均50元吃遍成都宽窄巷子 | 本地人推荐的10家必吃小店</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-play"></i> 98.7万</span>
+                            <span><i class="fas fa-comment"></i> 5231</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="视频封面">
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">【游戏实况】《原神》3.0版本全剧情流程 | 须弥新地图探索 | 草元素角色测评</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-play"></i> 187.2万</span>
+                            <span><i class="fas fa-comment"></i> 1.5万</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="视频封面">
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">【科技测评】iPhone 14 Pro Max深度评测：灵动岛真的实用吗？A16芯片性能如何？</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-play"></i> 156.3万</span>
+                            <span><i class="fas fa-comment"></i> 9872</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="视频封面">
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">【健身教程】30天减脂计划 | 每天15分钟 | 无器械在家训练 | 实测减重10斤</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-play"></i> 89.5万</span>
+                            <span><i class="fas fa-comment"></i> 6321</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="视频封面">
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">【动漫混剪】《鬼灭之刃》燃向AMV | 刀剑如梦 | 高燃战斗场面合集</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-play"></i> 210.7万</span>
+                            <span><i class="fas fa-comment"></i> 1.3万</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="视频封面">
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">【历史科普】一口气看完三国历史 | 从黄巾起义到三国归晋 | 通俗易懂讲解</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-play"></i> 145.2万</span>
+                            <span><i class="fas fa-comment"></i> 8765</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 动态区域 -->
+            <div class="dynamic-list">
+                <div class="dynamic-header">
+                    <div class="dynamic-title">动态</div>
+                    <div class="dynamic-tabs">
+                        <div class="dynamic-tab active">全部</div>
+                        <div class="dynamic-tab">视频</div>
+                        <div class="dynamic-tab">专栏</div>
+                        <div class="dynamic-tab">直播</div>
+                    </div>
+                </div>
+                <div class="dynamic-item">
+                    <div class="dynamic-avatar">
+                        <img src="https://i1.hdslb.com/bfs/face/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="用户头像">
+                    </div>
+                    <div class="dynamic-content">
+                        <div class="dynamic-user">科技小飞哥</div>
+                        <div class="dynamic-text">iPhone 14 Pro Max开箱视频已发布！这次灵动岛的设计真的很惊艳，大家觉得这个设计怎么样？</div>
+                        <div class="dynamic-media">
+                            <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="动态图片">
+                        </div>
+                        <div class="dynamic-stats">
+                            <span><i class="far fa-clock"></i> 2小时前</span>
+                            <span><i class="far fa-comment"></i> 324</span>
+                            <span><i class="far fa-thumbs-up"></i> 1567</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dynamic-item">
+                    <div class="dynamic-avatar">
+                        <img src="https://i1.hdslb.com/bfs/face/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="用户头像">
+                    </div>
+                    <div class="dynamic-content">
+                        <div class="dynamic-user">美食家老王</div>
+                        <div class="dynamic-text">今天探店了一家隐藏在胡同里的老北京涮肉，肉质鲜嫩，麻酱香浓，人均才80元，强烈推荐！</div>
+                        <div class="dynamic-media">
+                            <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="动态图片">
+                            <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="动态图片">
+                            <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="动态图片">
+                        </div>
+                        <div class="dynamic-stats">
+                            <span><i class="far fa-clock"></i> 5小时前</span>
+                            <span><i class="far fa-comment"></i> 187</span>
+                            <span><i class="far fa-thumbs-up"></i> 892</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <!-- 排行榜 -->
+            <div class="rank-list">
+                <div class="rank-title">
+                    <span>全站排行榜</span>
+                    <span>查看更多 ></span>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-item-index top3">1</div>
+                    <div class="rank-item-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="排行榜封面">
+                    </div>
+                    <div class="rank-item-info">
+                        <div class="rank-item-title">【原神】3.1版本PV公布！新角色赛诺、妮露登场，沙漠地图开放</div>
+                        <div class="rank-item-stats">播放 356.2万</div>
+                    </div>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-item-index top3">2</div>
+                    <div class="rank-item-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="排行榜封面">
+                    </div>
+                    <div class="rank-item-info">
+                        <div class="rank-item-title">【周杰伦】《最伟大的作品》MV解析 | 隐藏彩蛋全揭秘</div>
+                        <div class="rank-item-stats">播放 298.7万</div>
+                    </div>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-item-index top3">3</div>
+                    <div class="rank-item-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="排行榜封面">
+                    </div>
+                    <div class="rank-item-info">
+                        <div class="rank-item-title">【教程】Python爬虫入门到精通 | 手把手教你爬取网站数据</div>
+                        <div class="rank-item-stats">播放 245.1万</div>
+                    </div>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-item-index">4</div>
+                    <div class="rank-item-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="排行榜封面">
+                    </div>
+                    <div class="rank-item-info">
+                        <div class="rank-item-title">【健身】30天腹肌训练计划 | 每天10分钟 | 无器械在家练</div>
+                        <div class="rank-item-stats">播放 198.6万</div>
+                    </div>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-item-index">5</div>
+                    <div class="rank-item-cover">
+                        <img src="https://i0.hdslb.com/bfs/archive/7a0d5b9e1f5a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3.jpg" alt="排行榜封面">
+                    </div>
+                    <div class="rank-item-info">
+                        <div class="rank-item-title">【美食】探访成都最火火锅店 | 排队3小时值得吗？</div>
+                        <div class="rank-item-stats">播放 176.3万</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>©2022 bilibili 哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</p>
+        <p>本站不提供任何视听上传服务，所有内容均来自视频分享站点所提供的公开引用资源</p>
+    </footer>
+    
+    
+</body>
+</html>

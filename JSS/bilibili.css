@@ -1,0 +1,523 @@
+
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    color: #212121;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 导航栏 */
+.header {
+    height: 64px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-right: 40px;
+}
+
+.logo img {
+    height: 36px;
+}
+
+.nav {
+    display: flex;
+    list-style: none;
+}
+
+.nav li {
+    margin-right: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 0;
+    position: relative;
+    cursor: pointer;
+}
+
+.nav li:hover {
+    color: #00a1d6;
+}
+
+.nav li.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #00a1d6;
+}
+
+.search {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.search input {
+    width: 300px;
+    height: 36px;
+    border: 1px solid #e7e7e7;
+    border-radius: 4px 0 0 4px;
+    padding: 0 12px;
+    outline: none;
+    font-size: 14px;
+}
+
+.search button {
+    height: 36px;
+    width: 48px;
+    background-color: #00a1d6;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    color: white;
+    cursor: pointer;
+}
+
+.user {
+    margin-left: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #eee;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 主要内容区 */
+.container {
+    display: flex;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.main {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.sidebar {
+    width: 300px;
+}
+
+/* 轮播图 */
+.banner {
+    height: 240px;
+    background-color: #e7e7e7;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner-nav {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.banner-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 0 4px;
+    cursor: pointer;
+}
+
+.banner-dot.active {
+    background-color: white;
+}
+
+/* 分区导航 */
+.zone-nav {
+    background-color: white;
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+.zone-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.zone-title i {
+    color: #00a1d6;
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+.zone-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.zone-item {
+    width: 16.666%;
+    padding: 8px 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+.zone-item:hover {
+    color: #00a1d6;
+}
+
+.zone-item img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 4px;
+}
+
+/* 视频卡片 */
+.video-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.video-card {
+    background-color: white;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.video-cover {
+    position: relative;
+    padding-top: 56.25%; /* 16:9 比例 */
+    overflow: hidden;
+}
+
+.video-cover img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-info {
+    padding: 10px;
+}
+
+.video-title {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.video-stats {
+    display: flex;
+    font-size: 12px;
+    color: #999;
+}
+
+.video-stats span {
+    margin-right: 12px;
+}
+
+/* 排行榜 */
+.rank-list {
+    background-color: white;
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.rank-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.rank-title span {
+    color: #00a1d6;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.rank-item {
+    display: flex;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.rank-item:hover .rank-item-title {
+    color: #00a1d6;
+}
+
+.rank-item-index {
+    width: 20px;
+    font-size: 14px;
+    color: #999;
+    margin-right: 8px;
+    text-align: center;
+}
+
+.rank-item-index.top3 {
+    color: #fb7299;
+    font-weight: bold;
+}
+
+.rank-item-cover {
+    width: 80px;
+    height: 50px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-right: 8px;
+}
+
+.rank-item-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rank-item-info {
+    flex: 1;
+}
+
+.rank-item-title {
+    font-size: 14px;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rank-item-stats {
+    font-size: 12px;
+    color: #999;
+}
+
+/* 动态区域 */
+.dynamic-list {
+    background-color: white;
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+.dynamic-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.dynamic-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.dynamic-tabs {
+    display: flex;
+    margin-left: 24px;
+}
+
+.dynamic-tab {
+    padding: 4px 12px;
+    margin-right: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dynamic-tab.active {
+    background-color: #00a1d6;
+    color: white;
+}
+
+.dynamic-item {
+    display: flex;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.dynamic-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 12px;
+}
+
+.dynamic-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dynamic-content {
+    flex: 1;
+}
+
+.dynamic-user {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.dynamic-text {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.dynamic-media {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.dynamic-media img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.dynamic-stats {
+    display: flex;
+    font-size: 12px;
+    color: #999;
+}
+
+.dynamic-stats span {
+    margin-right: 12px;
+}
+
+/* 页脚 */
+.footer {
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .video-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .zone-item {
+        width: 20%;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .main {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .sidebar {
+        width: 100%;
+    }
+    
+    .video-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .zone-item {
+        width: 16.666%;
+    }
+}
+
+@media (max-width: 768px) {
+    .video-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .zone-item {
+        width: 20%;
+    }
+    
+    .search input {
+        width: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .video-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .zone-item {
+        width: 25%;
+    }
+    
+    .search input {
+        width: 150px;
+    }
+    
+    .nav {
+        display: none;
+    }
+}
