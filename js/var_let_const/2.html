@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>事件循环流程图</title>
+    <style>
+        /* 基础容器样式 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            background: #f0f2f5;
+        }
+
+        /* 流程图主体 */
+        .flowchart {
+            position: relative;
+            max-width: 800px;
+        }
+
+        /* 通用节点样式 */
+        .node {
+            padding: 1rem 2rem;
+            margin: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            text-align: center;
+        }
+
+        /* 连接线样式 */
+        .node::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background: #666;
+        }
+
+        /* 条件判断样式 */
+        .condition-node {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+        }
+
+        /* 循环连接线 */
+        .loop-arrow {
+            position: absolute;
+            right: -80px;
+            bottom: 100px;
+            transform: rotate(180deg);
+            color: #666;
+            font-size: 24px;
+        }
+
+        /* 分支容器 */
+        .branch {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+        }
+
+        /* 分支连接线 */
+        .branch::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="flowchart">
+        <!-- 开始 -->
+        <div class="node" style="background: #c8e6c9;">
+            <h3>开始事件循环</h3>
+        </div>
+
+        <!-- 同步任务队列 -->
+        <div class="node">
+            <h3>同步任务队列</h3>
+        </div>
+
+        <!-- 条件判断 -->
+        <div class="node condition-node">
+            有任务？
+            </div>
+
+        <!-- 分支容器 -->
+        <div class="branch">
+            <!-- 左侧分支 -->
+            <div style="position: relative;">
+                <div class="node" style="background: #fff3e0;">
+                    <h3>有任务</h3>
+                </div>
+                <div class="node">
+                    <h3>执行同步任务</h3>
+                </div>
+            </div>
+
+            <!-- 右侧分支 -->
+            <div style="position: relative;">
+                <div class="node" style="background: #ffebee;">
+                    <h3>无任务</h3>
+                </div>
+                <div class="node">
+                    <h3>任务执行完毕</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- 微任务检查 -->
+        <div class="node condition-node">
+            是
+        </div>
+        <div class="node">
+            <h3>检查微任务队列</h3>
+        </div>
+
+        <!-- 微任务分支 -->
+        <div class="branch">
+            <div>
+                <div class="node condition-node">
+                    有微任务？
+                </div>
+                <div class="node" style="background: #f0f4c3;">
+                    <h3>执行微任务</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- 宏任务检查 -->
+        <div class="node condition-node">
+            无微任务
+        </div>
+        <div class="node">
+            <h3>检查宏任务队列</h3>
+        </div>
+
+        <!-- 宏任务分支 -->
+        <div class="branch">
+            <div>
+                <div class="node condition-node">
+                    有宏任务？
+                </div>
+                <div class="node" style="background: #d1c4e9;">
+                    <h3>执行宏任务</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- 结束循环 -->
+        <div class="node" style="background: #ffcdd2;">
+            <h3>等待新任务</h3>
+        </div>
+
+        <!-- 循环箭头 -->
+        <div class="loop-arrow">↻</div>
+    </div>
+
+    <script>
+        // 动态添加连接线
+        document.querySelectorAll('.branch').forEach(branch => {
+            const connector = document.createElement('div');
+            connector.style.cssText = `
+                position: absolute;
+                bottom: -60px;
+                left: 50%;
+                width: 2px;
+                height: 40px;
+                background: #666;
+            `;
+            branch.appendChild(connector);
+        });
+    </script>
+</body>
+</html>
