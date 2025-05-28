@@ -172,3 +172,47 @@ console.log(obj.b.c); // 输出 2
 // const copy = JSON.parse(JSON.stringify(obj));
 // console.log(typeof obj.date); // object
 // console.log(typeof copy.date); // string
+
+// function foo(){}
+// foo.prototype.constructor  = foo;
+// var a = new foo();
+// console.log(a.__proto__.constructor === foo); //true
+// console.log(a.__proto__.constructor === a.constructor) //true
+// console.log(a.constructor === foo); // true
+// var b = Object.create(foo.prototype);
+// console.log(b.constructor === foo); // true
+
+
+// function Foo(){};
+// Foo.prototype = {
+//    constructor: Foo, // 显式指定constructor
+// }
+// console.log(Foo.prototype.constructor); // false
+// var a1 = new Foo();
+// console.log(a1.constructor === Foo); // false
+// console.log(a1.constructor === Object)
+// console.log(a1.constructor === a1.__proto__.constructor) // true
+// console.log(Object.getPrototypeOf(a1).constructor === Foo) // true
+
+function Foo(name)
+{
+    this.name = name;
+}
+Foo.prototype.myName = function(){
+    return this.name;
+}
+function Bar(name,label){
+    Foo.call(this,name);    
+    this.label = label;
+}
+Bar.prototype = Object.create(Foo.prototype);
+Bar.prototype.myLabel = function(){
+    return this.label;
+}
+var a = new Bar("a","obj a");
+console.log(a.name); // "a"
+console.log(a.label); // "obj a"
+console.log(a.myName()); // "a"
+console.log(Bar.prototype.constructor === Foo); // Foo
+console.log(a.__proto__ == Bar.prototype); // true
+console.log(Bar.prototype.__proto__ === Foo.prototype); // false
