@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
+    <!-- 引入 jQuery 库 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 引入控件类.js 文件 -->
+    <script src="js/控件类.js"></script>
 </head>
 <body>
-    
+
 </body>
+</html>
 <script>
-function Foo(){};
-var a1 = Object.create(Foo);
-console.log(a1);
-Object.defineProperty(Foo,"constructor",{
-    enumerable:false,
-    value:function Gotcha(){}
-}
-);
-console.log(a1);
+// function Foo(){};
+// var a1 = Object.create(Foo);
+// console.log(a1);
+// Object.defineProperty(Foo,"constructor",{
+//     enumerable:false,
+//     value:function Gotcha(){}
+// }
+// );
+// console.log(a1);
 </script>
 </html>
