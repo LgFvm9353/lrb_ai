@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    
+</body>
+<script>
+function Foo(){};
+var a1 = Object.create(Foo);
+console.log(a1);
+Object.defineProperty(Foo,"constructor",{
+    enumerable:false,
+    value:function Gotcha(){}
+}
+);
+console.log(a1);
+</script>
+</html>
