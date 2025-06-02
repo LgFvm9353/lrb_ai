@@ -53,3 +53,4 @@ AuthController.rejected = function(){
     this.failure("Auth Failed"+err);
 };
 AuthController.checkAuth();
+
