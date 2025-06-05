@@ -1,35 +1,52 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-
+// todos 列表需要渲染
+// 函数组件 App组件 组合其他的组件完成应用
+//返回html 的函数
+// html,css,js 用函数组合在一起就是组件
 function App() {
-  const [count, setCount] = useState(0)
-
+  //react比vue更纯粹
+  const todos = ['吃饭','睡觉','打豆豆'] //数据
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+     <table>
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>任务</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            todos.map((item, index) => (
+              <tr key={item}>
+                <td>{index + 1}</td>
+                <td>{item}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
     </>
   )
 }
 
+function App2(){
+   //数据 =》 数据状态  数据业务 改变的 数据状态
+   let [todos,setTodos] = useState(['吃饭','睡觉','打豆豆']) //数据
+   let[title,setTitle] = useState('拿下字节')
+   setTimeout(()=>{
+    todos = ['吃饭','睡觉','打豆豆','养鱼']
+    setTodos(todos)
+    setTitle('拿下字节')
+   },3000)
+  return (
+    <div>
+      <h1 className='title'>拿下字节</h1>
+    </div>
+  )
+}
 export default App
+export {
+  App2
+}
