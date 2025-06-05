@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原生JS</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    
+</body>
+<!--挂载点 -->
+<div class="container">
+    <table id="friends" class="table table-striped">
+        <thead>
+            <tr>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>性别</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody> 
+    </table>
+</div>
+
+<script>
+    //挂载点 html 由Js 动态生成
+    // const oBody = document.querySelector('#friends tbody')
+    //JSON数组
+    //DOM 编程 动态页面 数据
+    const friends =[
+        {
+            name: '张三',
+            age: 20,
+            gender: '男',
+        },
+        {
+            name: '李四',
+            age: 21,
+            gender: '男',
+        }
+    ]
+    document.querySelector('#friends tbody').innerHTML += friends.map(friend => {
+       return `<tr>
+            <td>${friend.name}</td>
+            <td>${friend.age}</td>
+            <td>${friend.gender}</td>
+        </tr>`
+    }).join('') ;
+</script>
+</html>
