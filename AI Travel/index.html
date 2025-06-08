@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能旅游规划师 - 让旅行更简单</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-plane-departure"></i>
+                <span>AI旅游规划师</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active" data-page="homePage">首页</a>
+                <a href="#features" class="nav-link" data-page="featuresPage">功能</a>
+                <a href="#about" class="nav-link" data-page="aboutPage">关于</a>
+                <a href="#contact" class="nav-link" data-page="contactPage">联系</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页 -->
+    <section id="homePage" class="page active">
+        <!-- 英雄区域 -->
+        <div class="hero-section">
+            <div class="hero-background">
+                <div class="hero-particles"></div>
+                <div class="hero-gradient"></div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">AI智能旅游规划师</span>
+                    </h1>
+                    <p class="hero-subtitle">让人工智能为您定制完美的旅行体验</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <span>AI智能推荐</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </div>
+                            <span>个性化行程</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <span>智能预算</span>
+                        </div>
+                    </div>
+                    <div class="hero-actions">
+                        <button id="startPlanningBtn" class="cta-button primary">
+                            <span>开始规划旅程</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button class="cta-button secondary" onclick="showPage('featuresPage')">
+                            <span>了解更多</span>
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="floating-cards">
+                        <div class="floating-card card-1">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>目的地推荐</span>
+                        </div>
+                        <div class="floating-card card-2">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>行程规划</span>
+                        </div>
+                        <div class="floating-card card-3">
+                            <i class="fas fa-wallet"></i>
+                            <span>预算管理</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 特色功能展示 -->
+        <div class="features-showcase">
+            <div class="container">
+                <div class="section-header">
+                    <h2>为什么选择我们</h2>
+                    <p>AI驱动的智能旅游规划，让每一次旅行都完美无缺</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>AI智能分析</h3>
+                        <p>基于大数据和机器学习，为您推荐最适合的旅行方案</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>秒速生成</h3>
+                        <p>只需几秒钟，即可生成详细的旅行计划和预算分析</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>多端同步</h3>
+                        <p>支持手机、平板、电脑多端访问，随时随地查看行程</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>安全可靠</h3>
+                        <p>数据加密存储，隐私保护，让您安心使用</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 快速体验区域 -->
+        <div class="quick-experience">
+            <div class="container">
+                <div class="section-header">
+                    <h2>快速体验</h2>
+                    <p>只需简单几步，即可获得专业的旅行规划</p>
+                </div>
+                <div class="experience-steps">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>选择目的地</h3>
+                            <p>告诉我们您想去的地方，或让AI为您推荐</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>设定偏好</h3>
+                            <p>选择旅行时间、预算范围和兴趣偏好</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>AI生成计划</h3>
+                            <p>智能算法为您生成详细的旅行计划</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>开始旅程</h3>
+                            <p>导出计划，开始您的完美旅程</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能页面 -->
+    <section id="featuresPage" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h1>强大功能</h1>
+                <p>全方位的旅游规划解决方案</p>
+            </div>
+            
+            <div class="features-detailed">
+                <div class="feature-section">
+                    <div class="feature-content">
+                        <h2>🎯 AI目的地推荐</h2>
+                        <p>基于您的偏好、预算和时间，AI智能推荐最适合的旅游目的地</p>
+                        <ul>
+                            <li>个性化推荐算法</li>
+                            <li>实时价格对比</li>
+                            <li>季节性最佳时间建议</li>
+                            <li>用户评价分析</li>
+                        </ul>
+                        <div class="feature-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>节省90%的规划时间</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>提高30%的旅行满意度</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-demo">
+                        <div class="demo-card">
+                            <div class="demo-header">目的地推荐</div>
+                            <div class="demo-content">
+                                <div class="destination-item">
+                                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&h=60&fit=crop" alt="九寨沟">
+                                    <div class="dest-info">
+                                        <h4>九寨沟</h4>
+                                        <span class="match-rate">匹配度: 95%</span>
+                                        <span class="price">¥2,800起</span>
+                                    </div>
+                                </div>
+                                <div class="destination-item">
+                                    <img src="https://images.unsplash.com/photo-1548013146-72479768bada?w=100&h=60&fit=crop" alt="张家界">
+                                    <div class="dest-info">
+                                        <h4>张家界</h4>
+                                        <span class="match-rate">匹配度: 88%</span>
+                                        <span class="price">¥2,200起</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section reverse">
+                    <div class="feature-content">
+                        <h2>📅 智能行程规划</h2>
+                        <p>AI自动生成详细的每日行程安排，包含时间、地点、活动和费用</p>
+                        <ul>
+                            <li>精确到小时的时间安排</li>
+                            <li>最优路线规划</li>
+                            <li>实时交通信息</li>
+                            <li>天气预报集成</li>
+                        </ul>
+                        <div class="feature-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>智能避开拥堵路线</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>合理安排游览时间</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-demo">
+                        <div class="demo-card">
+                            <div class="demo-header">第1天行程</div>
+                            <div class="demo-content">
+                                <div class="timeline-item">
+                                    <span class="time">09:00</span>
+                                    <span class="activity">抵达九寨沟</span>
+                                    <span class="cost">¥0</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="time">14:00</span>
+                                    <span class="activity">五花海游览</span>
+                                    <span class="cost">¥220</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="time">18:00</span>
+                                    <span class="activity">特色晚餐</span>
+                                    <span class="cost">¥180</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="feature-content">
+                        <h2>💰 智能预算管理</h2>
+                        <p>详细的费用分解和预算控制，让您的旅行花费一目了然</p>
+                        <ul>
+                            <li>实时费用跟踪</li>
+                            <li>预算超支提醒</li>
+                            <li>费用分类统计</li>
+                            <li>省钱建议推荐</li>
+                        </ul>
+                        <div class="feature-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>平均节省20%旅行费用</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>透明化费用管理</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-demo">
+                        <div class="demo-card">
+                            <div class="demo-header">预算分解</div>
+                            <div class="demo-content">
+                                <div class="budget-item">
+                                    <span class="category">交通</span>
+                                    <span class="amount">¥1,500</span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                                <div class="budget-item">
+                                    <span class="category">住宿</span>
+                                    <span class="amount">¥2,000</span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 40%"></div>
+                                    </div>
+                                </div>
+                                <div class="budget-item">
+                                    <span class="category">餐饮</span>
+                                    <span class="amount">¥1,200</span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 24%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section reverse">
+                    <div class="feature-content">
+                        <h2>🤖 AI旅行助手</h2>
+                        <p>24/7在线的AI助手，随时解答您的旅行疑问</p>
+                        <ul>
+                            <li>实时问答服务</li>
+                            <li>语音交互支持</li>
+                            <li>多语言翻译</li>
+                            <li>紧急情况处理</li>
+                        </ul>
+                        <div class="feature-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>即时响应用户问题</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>专业旅行建议</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-demo">
+                        <div class="demo-card">
+                            <div class="demo-header">AI助手对话</div>
+                            <div class="demo-content">
+                                <div class="chat-message user">
+                                    <span>九寨沟的最佳游览时间？</span>
+                                </div>
+                                <div class="chat-message bot">
+                                    <span>九寨沟最佳游览时间是9-11月，此时秋色正浓，景色最美。建议避开国庆黄金周...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="feature-content">
+                        <h2>📱 多端同步</h2>
+                        <p>支持手机、平板、电脑多端访问，旅行计划随时随地查看</p>
+                        <ul>
+                            <li>云端数据同步</li>
+                            <li>离线模式支持</li>
+                            <li>实时更新推送</li>
+                            <li>跨设备无缝切换</li>
+                        </ul>
+                        <div class="feature-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>随时随地访问计划</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>数据安全备份</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-demo">
+                        <div class="demo-card">
+                            <div class="demo-header">多端同步</div>
+                            <div class="demo-content">
+                                <div class="device-sync">
+                                    <div class="device-item">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <span>手机端</span>
+                                    </div>
+                                    <div class="sync-arrow">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </div>
+                                    <div class="device-item">
+                                        <i class="fas fa-tablet-alt"></i>
+                                        <span>平板端</span>
+                                    </div>
+                                    <div class="sync-arrow">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </div>
+                                    <div class="device-item">
+                                        <i class="fas fa-desktop"></i>
+                                        <span>电脑端</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 功能对比表 -->
+            <div class="comparison-section">
+                <h2>功能对比</h2>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>功能特性</th>
+                                <th>传统规划</th>
+                                <th>AI智能规划</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>规划时间</td>
+                                <td>数小时到数天</td>
+                                <td>几分钟</td>
+                            </tr>
+                            <tr>
+                                <td>个性化程度</td>
+                                <td>有限</td>
+                                <td>高度个性化</td>
+                            </tr>
+                            <tr>
+                                <td>实时更新</td>
+                                <td>手动更新</td>
+                                <td>自动实时更新</td>
+                            </tr>
+                            <tr>
+                                <td>预算控制</td>
+                                <td>粗略估算</td>
+                                <td>精确预算管理</td>
+                            </tr>
+                            <tr>
+                                <td>路线优化</td>
+                                <td>基于经验</td>
+                                <td>AI智能优化</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于页面 -->
+    <section id="aboutPage" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h1>关于我们</h1>
+                <p>用AI技术重新定义旅行规划</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-story">
+                    <h2>我们的故事</h2>
+                    <p>AI旅游规划师诞生于对完美旅行的追求。我们相信，每个人都应该拥有一次完美的旅行体验，而AI技术正是实现这一愿景的关键。</p>
+                    <p>通过整合大数据分析、机器学习算法和用户行为研究，我们打造了这款智能旅游规划平台，让旅行规划变得简单、高效、个性化。</p>
+                    <div class="story-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">100万+</div>
+                            <div class="stat-label">用户信赖</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">500万+</div>
+                            <div class="stat-label">行程规划</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">98%</div>
+                            <div class="stat-label">满意度</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">在线服务</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-vision">
+                    <div class="mission-item">
+                        <div class="mission-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3>我们的使命</h3>
+                        <p>让每个人都能享受到智能化、个性化的旅行规划服务，让旅行变得更简单、更美好。</p>
+                    </div>
+                    <div class="mission-item">
+                        <div class="mission-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>我们的愿景</h3>
+                        <p>成为全球领先的AI旅游规划平台，用技术创新推动旅游行业的数字化转型。</p>
+                    </div>
+                </div>
+
+                <div class="team-section">
+                    <h2>核心团队</h2>
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <h3>张明</h3>
+                            <p>产品总监</p>
+                            <span>10年旅游行业经验，曾任职于携程、去哪儿等知名旅游平台</span>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h3>李华</h3>
+                            <p>技术总监</p>
+                            <span>AI算法专家，清华大学计算机博士，发表多篇顶级论文</span>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <h3>王丽</h3>
+                            <p>设计总监</p>
+                            <span>用户体验设计师，曾获得多项国际设计大奖</span>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3>陈强</h3>
+                            <p>运营总监</p>
+                            <span>数据分析专家，擅长用户增长和商业化运营</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="values-section">
+                    <h2>我们的价值观</h2>
+                    <div class="values-grid">
+                        <div class="value-item">
+                            <i class="fas fa-heart"></i>
+                            <h3>用户至上</h3>
+                            <p>始终以用户需求为中心，提供最优质的服务体验</p>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <h3>持续创新</h3>
+                            <p>不断探索新技术，为用户带来更智能的解决方案</p>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-handshake"></i>
+                            <h3>诚信可靠</h3>
+                            <p>诚实守信，保护用户隐私，建立长期信任关系</p>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-globe"></i>
+                            <h3>开放包容</h3>
+                            <p>拥抱多元文化，为全球用户提供本地化服务</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="technology-section">
+                    <h2>技术优势</h2>
+                    <div class="tech-grid">
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3>深度学习算法</h3>
+                            <p>基于神经网络的推荐系统，不断学习用户偏好</p>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h3>大数据分析</h3>
+                            <p>整合海量旅游数据，提供精准的决策支持</p>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <h3>云计算架构</h3>
+                            <p>高可用、高并发的云端服务，保障系统稳定性</p>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3>安全防护</h3>
+                            <p>多层安全防护体系，保障用户数据和隐私安全</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="awards-section">
+                    <h2>荣誉奖项</h2>
+                    <div class="awards-grid">
+                        <div class="award-item">
+                            <i class="fas fa-trophy"></i>
+                            <h4>2024年度最佳旅游科技产品</h4>
+                            <p>中国旅游协会颁发</p>
+                        </div>
+                        <div class="award-item">
+                            <i class="fas fa-medal"></i>
+                            <h4>AI创新应用奖</h4>
+                            <p>人工智能产业联盟认证</p>
+                        </div>
+                        <div class="award-item">
+                            <i class="fas fa-star"></i>
+                            <h4>用户体验设计奖</h4>
+                            <p>国际用户体验设计协会</p>
+                        </div>
+                        <div class="award-item">
+                            <i class="fas fa-certificate"></i>
+                            <h4>数据安全认证</h4>
+                            <p>ISO 27001信息安全管理体系</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系页面 -->
+    <section id="contactPage" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h1>联系我们</h1>
+                <p>我们随时为您提供帮助和支持</p>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>公司地址</h3>
+                            <p>北京市朝阳区建国门外大街1号<br>国贸大厦A座2008室</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>联系电话</h3>
+                            <p>客服热线：400-888-9999<br>商务合作：010-8888-8888</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>邮箱地址</h3>
+                            <p>客服邮箱：service@ai-travel.com<br>商务邮箱：business@ai-travel.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>服务时间</h3>
+                            <p>周一至周日：9:00-21:00<br>节假日正常服务</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <h3>在线留言</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="contactName">姓名</label>
+                            <input type="text" id="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">邮箱</label>
+                            <input type="email" id="contactEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">电话</label>
+                            <input type="tel" id="contactPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSubject">主题</label>
+                            <select id="contactSubject" required>
+                                <option value="">请选择咨询类型</option>
+                                <option value="product">产品咨询</option>
+                                <option value="technical">技术支持</option>
+                                <option value="business">商务合作</option>
+                                <option value="feedback">意见反馈</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMessage">留言内容</label>
+                            <textarea id="contactMessage" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            发送留言
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="social-media">
+                <h3>关注我们</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <i class="fab fa-weixin"></i>
+                        <span>微信公众号</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-weibo"></i>
+                        <span>新浪微博</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-qq"></i>
+                        <span>QQ群</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-zhihu"></i>
+                        <span>知乎</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 结果页面 -->
+    <section id="resultPage" class="page">
+        <div class="container">
+            <!-- 加载状态 -->
+            <div id="loadingState" class="loading-container" style="display: none;">
+                <div class="loading-content">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                    <h3>AI正在为您精心规划旅程...</h3>
+                    <p id="loadingTip">正在分析您的偏好和需求</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">0%</div>
+                </div>
+            </div>
+
+            <!-- 结果内容 -->
+            <div id="resultContent" style="display: none;">
+                <div class="result-header">
+                    <h2>您的专属旅行计划</h2>
+                    <div class="result-actions">
+                        <button id="chatBtn" class="action-btn" onclick="showModal('chatModal')">
+                            <i class="fas fa-comments"></i>
+                            AI助手
+                        </button>
+                        <button id="exportBtn" class="action-btn" onclick="exportToMarkdown()">
+                            <i class="fas fa-download"></i>
+                            导出计划
+                        </button>
+                        <button id="newPlanBtn" class="action-btn" onclick="generateTravelPlan()">
+                            <i class="fas fa-plus"></i>
+                            新计划
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 标签页导航 -->
+                <div class="tab-navigation">
+                    <button class="tab-btn active" data-tab="overview" onclick="showTab('overview')">
+                        <i class="fas fa-eye"></i>
+                        概览
+                    </button>
+                    <button class="tab-btn" data-tab="itinerary" onclick="showTab('itinerary')">
+                        <i class="fas fa-list"></i>
+                        行程
+                    </button>
+                    <button class="tab-btn" data-tab="budget" onclick="showTab('budget')">
+                        <i class="fas fa-calculator"></i>
+                        预算
+                    </button>
+                    <button class="tab-btn" data-tab="tips" onclick="showTab('tips')">
+                        <i class="fas fa-lightbulb"></i>
+                        贴士
+                    </button>
+                </div>
+
+                <!-- 标签页内容 -->
+                <div class="tab-content">
+                    <div id="overviewContent" class="tab-pane active"></div>
+                    <div id="itineraryContent" class="tab-pane"></div>
+                    <div id="budgetContent" class="tab-pane"></div>
+                    <div id="tipsContent" class="tab-pane"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 模态框 -->
+    <!-- AI聊天模态框 -->
+    <div id="chatModal" class="modal">
+        <div class="modal-content chat-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-robot"></i> AI旅行助手</h3>
+                <button class="close-btn" onclick="hideModal('chatModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-container">
+                <div id="chatMessages" class="chat-messages">
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>您好！我是您的AI旅行助手，有什么关于旅行的问题可以问我哦！</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="输入您的问题...">
+                    <button id="chatSendBtn" onclick="sendChatMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本文件 -->
+    <script src="script.js"></script>
+</body>
+</html>
+
