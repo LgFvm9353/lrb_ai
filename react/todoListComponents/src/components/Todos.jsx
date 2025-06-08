@@ -1,15 +1,7 @@
-// 专职做列表的渲染
-function Todos(props) {
-    // 父组件传过来的数据状态
-    console.log(props);
-    const todos = props.todos;
+function Todos(){
     return (
         <ul>
-         {
-            todos.map(todo=>(
-                <li key={todo.id}>{todo.text}</li>
-            ))
-         }
+
         </ul>
     )
 }
