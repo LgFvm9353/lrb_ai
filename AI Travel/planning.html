@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅行规划 - AI智能旅游规划师</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-plane-departure"></i>
+                <span>AI旅游规划师</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="features.html" class="nav-link">功能</a>
+                <a href="about.html" class="nav-link">关于</a>
+                <a href="contact.html" class="nav-link">联系</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 规划页面主体 -->
+    <main class="planning-main">
+        <div class="planning-container">
+            <!-- 页面标题 -->
+            <div class="planning-header">
+                <h1><i class="fas fa-map-marked-alt"></i> 创建您的专属旅行计划</h1>
+                <p>请填写以下信息，AI将为您生成个性化的旅行方案</p>
+            </div>
+
+            <!-- 进度指示器 -->
+            <div class="progress-indicator">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">目的地</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">预算</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">偏好</div>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">完成</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 表单容器 -->
+            <div class="form-container">
+                <form id="planningForm" class="planning-form">
+                    <!-- 第一步：目的地信息 -->
+                    <div class="form-step active" data-step="1">
+                        <div class="step-header">
+                            <h2><i class="fas fa-map-marker-alt"></i> 目的地信息</h2>
+                            <p>告诉我们您想去的地方和出行时间</p>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="destination">
+                                    <i class="fas fa-location-dot"></i>
+                                    您想去哪里？
+                                </label>
+                                <input type="text" id="destination" name="destination" 
+                                       placeholder="例如：北京、上海、杭州、巴黎、东京..." required>
+                                <div class="input-hint">输入您心仪的目的地城市或国家</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="startDate">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    出发日期
+                                </label>
+                                <input type="date" id="startDate" name="startDate" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="endDate">
+                                    <i class="fas fa-calendar-check"></i>
+                                    返回日期
+                                </label>
+                                <input type="date" id="endDate" name="endDate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-next" onclick="nextStep()">
+                                下一步 <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第二步：预算设置 -->
+                    <div class="form-step" data-step="2">
+                        <div class="step-header">
+                            <h2><i class="fas fa-wallet"></i> 预算设置</h2>
+                            <p>设置您的旅行预算和出行人数</p>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="budget">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    预算范围（人民币）
+                                </label>
+                                <div class="budget-slider">
+                                    <input type="range" id="budgetRange" min="1000" max="50000" value="5000" step="500">
+                                    <div class="budget-display">
+                                        <span id="budgetValue">¥5,000</span>
+                                    </div>
+                                </div>
+                                <div class="budget-presets">
+                                    <button type="button" class="budget-preset" data-budget="2000">经济型 ¥2K</button>
+                                    <button type="button" class="budget-preset" data-budget="5000">舒适型 ¥5K</button>
+                                    <button type="button" class="budget-preset" data-budget="10000">豪华型 ¥1W</button>
+                                    <button type="button" class="budget-preset" data-budget="20000">奢华型 ¥2W+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="travelers">
+                                    <i class="fas fa-users"></i>
+                                    出行人数
+                                </label>
+                                <select id="travelers" name="travelers" required>
+                                    <option value="1">1人 - 独自旅行</option>
+                                    <option value="2" selected>2人 - 情侣/朋友</option>
+                                    <option value="3-4">3-4人 - 小团体</option>
+                                    <option value="5+">5人以上 - 大团体</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-prev" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> 上一步
+                            </button>
+                            <button type="button" class="btn-next" onclick="nextStep()">
+                                下一步 <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第三步：兴趣偏好 -->
+                    <div class="form-step" data-step="3">
+                        <div class="step-header">
+                            <h2><i class="fas fa-heart"></i> 兴趣偏好</h2>
+                            <p>选择您感兴趣的活动类型和旅行风格</p>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label>
+                                    <i class="fas fa-star"></i>
+                                    您对什么类型的活动感兴趣？（可多选）
+                                </label>
+                                <div class="interest-grid">
+                                    <label class="interest-item">
+                                        <input type="checkbox" name="interests" value="历史文化">
+                                        <div class="interest-content">
+                                            <span class="interest-icon">🏛️</span>
+                                            <span class="interest-label">历史文化</span>
+                                        </div>
+                                    </label>
+                                    <label class="interest-item">
+                                        <input type="checkbox" name="interests" value="自然景观">
+                                        <div class="interest-content">
+                                            <span class="interest-icon">🏔️</span>
+                                            <span class="interest-label">自然景观</span>
+                                        </div>
+                                    </label>
+                                    <label class="interest-item">
+                                        <input type="checkbox" name="interests" value="美食体验">
+                                        <div class="interest-content">
+                                            <span class="interest-icon">🍜</span>
+                                            <span class="interest-label">美食体验</span>
+                                        </div>
+                                    </label>
+                                    <label class="interest-item">
+                                        <input type="checkbox" name="interests" value="购物娱乐">
+                                        <div class="interest-content">
+                                            <span class="interest-icon">🛍️</span>
+                                            <span class="interest-label">购物娱乐</span>
+                                        </div>
+                                    </label>
+                                    <label class="interest-item">
+                                        <input type="checkbox" name="interests" value="休闲度假">
+                                        <div class="interest-content">
+                                            <span class="interest-icon">🏖️</span>
+                                            <span class="interest-label">休闲度假</span>
+                                        </div>
+                                    </label>
+                                    <label class="interest-item">
+                                        <input type="checkbox" name="interests" value="冒险运动">
+                                        <div class="interest-content">
+                                            <span class="interest-icon">🚵</span>
+                                            <span class="interest-label">冒险运动</span>
+                                        </div>
+                                    </label>
+                                    <label class="interest-item">
+                                        <input type="checkbox" name="interests" value="艺术展览">
+                                        <div class="interest-content">
+                                            <span class="interest-icon">🎨</span>
+                                            <span class="interest-label">艺术展览</span>
+                                        </div>
+                                    </label>
+                                    <label class="interest-item">
+                                        <input type="checkbox" name="interests" value="夜生活">
+                                        <div class="interest-content">
+                                            <span class="interest-icon">🌃</span>
+                                            <span class="interest-label">夜生活</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="travelStyle">
+                                    <i class="fas fa-route"></i>
+                                    旅行风格
+                                </label>
+                                <select id="travelStyle" name="travelStyle" required>
+                                    <option value="relaxed">悠闲慢游 - 深度体验</option>
+                                    <option value="balanced" selected>平衡安排 - 劳逸结合</option>
+                                    <option value="packed">紧凑高效 - 多点打卡</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-prev" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> 上一步
+                            </button>
+                            <button type="button" class="btn-next" onclick="nextStep()">
+                                下一步 <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第四步：特殊需求 -->
+                    <div class="form-step" data-step="4">
+                        <div class="step-header">
+                            <h2><i class="fas fa-cog"></i> 特殊需求</h2>
+                            <p>设置住宿、交通偏好和其他特殊要求</p>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="accommodation">
+                                    <i class="fas fa-bed"></i>
+                                    住宿偏好
+                                </label>
+                                <select id="accommodation" name="accommodation">
+                                    <option value="budget">经济型酒店/青旅</option>
+                                    <option value="mid-range" selected>舒适型酒店</option>
+                                    <option value="luxury">豪华酒店/度假村</option>
+                                    <option value="unique">特色民宿/精品酒店</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="transportation">
+                                    <i class="fas fa-car"></i>
+                                    交通偏好
+                                </label>
+                                <select id="transportation" name="transportation">
+                                    <option value="public">公共交通为主</option>
+                                    <option value="mixed" selected>公共交通+打车</option>
+                                    <option value="private">私人交通（租车等）</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="specialRequests">
+                                    <i class="fas fa-comment-alt"></i>
+                                    特殊要求（可选）
+                                </label>
+                                <textarea id="specialRequests" name="specialRequests" 
+                                          placeholder="例如：无障碍设施、素食餐厅、儿童友好、宠物友好等特殊需求..." 
+                                          rows="4"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-prev" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> 上一步
+                            </button>
+                            <button type="submit" class="btn-generate" id="generatePlanBtn">
+                                <i class="fas fa-magic"></i> 生成专属旅行计划
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- 加载状态 -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>AI正在为您精心规划旅程...</h3>
+            <p>请稍候，这可能需要几秒钟</p>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="planning.js"></script>
+</body>
+</html>
+

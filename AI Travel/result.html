@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅行计划结果 - AI智能旅游规划师</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-plane-departure"></i>
+                <span>AI旅游规划师</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="features.html" class="nav-link">功能</a>
+                <a href="about.html" class="nav-link">关于</a>
+                <a href="contact.html" class="nav-link">联系</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 结果页面主体 -->
+    <main class="result-main">
+        <div class="result-container">
+            <!-- 页面标题 -->
+            <div class="result-header">
+                <div class="success-indicator">
+                    <i class="fas fa-check-circle"></i>
+                    <span>已使用AI生成专属旅行计划！</span>
+                </div>
+                <h1 id="planTitle">您的专属旅行计划</h1>
+                <div class="plan-actions">
+                    <button class="action-btn primary" onclick="exportPlan()">
+                        <i class="fas fa-download"></i> 导出计划
+                    </button>
+                    <button class="action-btn secondary" onclick="sharePlan()">
+                        <i class="fas fa-share-alt"></i> 分享计划
+                    </button>
+                    <a href="planning.html" class="action-btn outline">
+                        <i class="fas fa-plus"></i> 新建计划
+                    </a>
+                </div>
+            </div>
+
+            <!-- 计划概览 -->
+            <div class="plan-overview">
+                <div class="overview-cards">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">目的地</div>
+                            <div class="card-value" id="overviewDestination">-</div>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">出行时间</div>
+                            <div class="card-value" id="overviewDates">-</div>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">行程天数</div>
+                            <div class="card-value" id="overviewDuration">-</div>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">预计总费用</div>
+                            <div class="card-value" id="overviewBudget">-</div>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i class="fas fa-cloud-sun"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">天气情况</div>
+                            <div class="card-value" id="overviewWeather">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 标签导航 -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="itinerary">
+                    <i class="fas fa-route"></i> 详细行程
+                </button>
+                <button class="tab-btn" data-tab="budget">
+                    <i class="fas fa-chart-pie"></i> 预算分析
+                </button>
+                <button class="tab-btn" data-tab="recommendations">
+                    <i class="fas fa-star"></i> 推荐景点
+                </button>
+                <button class="tab-btn" data-tab="tips">
+                    <i class="fas fa-lightbulb"></i> 旅行贴士
+                </button>
+            </div>
+
+            <!-- 标签内容 -->
+            <div class="tab-content">
+                <!-- 详细行程 -->
+                <div class="tab-panel active" id="itinerary">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-route"></i> 详细行程安排</h2>
+                        <p>为您精心安排的每日行程，点击展开查看详情</p>
+                    </div>
+                    <div class="itinerary-timeline" id="itineraryContent">
+                        <!-- 行程内容将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 预算分析 -->
+                <div class="tab-panel" id="budget">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-chart-pie"></i> 预算分析</h2>
+                        <p>详细的费用分解，帮您合理规划旅行预算</p>
+                    </div>
+                    <div class="budget-analysis">
+                        <div class="budget-chart">
+                            <canvas id="budgetChart" width="400" height="400"></canvas>
+                        </div>
+                        <div class="budget-breakdown" id="budgetBreakdown">
+                            <!-- 预算分解将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 推荐景点 -->
+                <div class="tab-panel" id="recommendations">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-star"></i> 推荐景点</h2>
+                        <p>基于您的兴趣偏好，为您推荐的热门景点</p>
+                    </div>
+                    <div class="recommendations-grid" id="recommendationsContent">
+                        <!-- 推荐景点将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 旅行贴士 -->
+                <div class="tab-panel" id="tips">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-lightbulb"></i> 旅行贴士</h2>
+                        <p>实用的旅行建议，让您的旅程更加顺利</p>
+                    </div>
+                    <div class="tips-content" id="tipsContent">
+                        <!-- 旅行贴士将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="common.js"></script>
+    <script src="result.js"></script>
+</body>
+</html>
+
