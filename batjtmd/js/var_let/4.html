@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+</body>
+<script>
+    // this 是函数运行后的，指针对象
+    var name = 'jack'
+    var a = {
+        name : 'rose',
+        f : function(){
+            console.log(this);
+            console.log(this.name);
+        }
+    }
+    a.f();
+    var b = a.f;
+    b();
+    function Person(name,age){
+        this.name = name;
+        this.age = age;
+    }
+    const p = new Person('zs',12);
+    console.log(p);
+
+</script>
+</html>
