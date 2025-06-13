@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="repos"></ul>
+    <button type="button" id="btn">点击</button>
+</body>
+<script>
+    // 异步任务 网络请求
+    // 事件 网页加载的一个事件 资源加载完了
+
+    document.getElementById("btn").addEventListener("click", () => {
+        console.log('btn')
+    })
+
+    // document.addEventListener("DOMContentLoaded",  () => {
+        // DOM ready 了，可以尽快发送请求
+        // console.log('DOMContentLoaded')
+        //  fetch('https://api.github.com/users/WildBlue58/repos')
+        // .then((res) => {
+        //     return res.json()
+        // })
+        // .then((data) => {
+        //     console.log(data)
+        //     const repos = document.getElementById("repos")
+        //     repos.innerHTML = data.map((item) => {
+        //         return `<li>
+        //              <a href="${item.html_url}" target="_blank">${item.name}</a>
+        //             </li>`
+        //     }).join("")
+        // })
+    // })
+
+    // 申明函数是async 异步函数， 函数的返回值是promise
+    document.addEventListener('DOMContentLoaded', async () => {
+    // await 等到右边的异步任务执行完， 异步变同步 
+    const res = await fetch('https://api.github.com/users/WildBlue58/repos') // 请求完成
+    const data = await res.json() // 解析JSON 完成
+        // .then(data => { // JSON 数据 
+        console.log(data);
+        document.getElementById('repos').innerHTML = data.map(item => {
+            return `<li>
+            <a href="${item.html_url}" target="_blank">${item.name}</a>
+            </li>`
+        }).join('')
+    })
+    
+    window.onload = function () {
+        console.log('window.onload')
+        document.getElementById("repos").innerHTML = "正在加载"
+    }
+</script>
+</html>
