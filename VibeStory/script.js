@@ -28,13 +28,44 @@ const STORY_CONFIG = {
 
 // 背景库
 const BACKGROUND_LIBRARY = {
-    none: '',
-    forest: 'linear-gradient(135deg, #2d5016, #3e7b27)',
-    city: 'linear-gradient(135deg, #1a1a2e, #16213e)',
-    space: 'linear-gradient(135deg, #0c0c0c, #1a1a2e)',
-    ocean: 'linear-gradient(135deg, #006994, #0099cc)',
-    desert: 'linear-gradient(135deg, #d2691e, #f4a460)',
-    mountain: 'linear-gradient(135deg, #4a4a4a, #696969)'
+    none: {
+        gradient: '',
+        image: ''
+    },
+    forest: {
+        gradient: 'linear-gradient(135deg, #2d5016, #3e7b27)',
+        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
+    },
+    city: {
+        gradient: 'linear-gradient(135deg, #1a1a2e, #16213e)',
+        image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
+    },
+    space: {
+        gradient: 'linear-gradient(135deg, #0c0c0c, #1a1a2e)',
+        image: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
+    },
+    ocean: {
+        gradient: 'linear-gradient(135deg, #006994, #0099cc)',
+        image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
+    },
+    desert: {
+        gradient: 'linear-gradient(135deg, #d2691e, #f4a460)',
+        image: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
+    },
+    mountain: {
+        gradient: 'linear-gradient(135deg, #4a4a4a, #696969)',
+        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
+    }
+};
+
+// 场景关键词映射到背景类型
+const SCENE_KEYWORDS = {
+    forest: ['森林', '树木', '丛林', '绿色', '植物', '自然', '野外', '树林'],
+    city: ['城市', '街道', '建筑', '摩天楼', '都市', '市区', '城镇', '大厦'],
+    space: ['太空', '星空', '宇宙', '星球', '星际', '飞船', '星系', '外太空'],
+    ocean: ['海洋', '大海', '海底', '水下', '海滩', '海岸', '珊瑚', '潜水'],
+    desert: ['沙漠', '荒漠', '干旱', '沙丘', '戈壁', '黄沙', '炎热', '荒芜'],
+    mountain: ['山脉', '高山', '山峰', '山谷', '悬崖', '峡谷', '山地', '岩石']
 };
 
 // 游戏状态
@@ -58,7 +89,8 @@ let currentStory = {
     environment: {
         audio: null,
         colorTemp: '#ffffff',
-        tags: []
+        tags: [],
+        currentBackground: 'none'
     },
     settings: {
         difficulty: 3,
@@ -134,9 +166,12 @@ function initGame() {
     
     // 设置背景切换事件
     backgroundSelect.addEventListener('change', function() {
-        const background = BACKGROUND_LIBRARY[this.value];
-        document.body.style.background = background;
+        const backgroundType = this.value;
+        updateBackgroundByType(backgroundType);
     });
+    
+    // 初始设置背景
+    updateBackgroundByType('none');
     
     // 设置难度
     difficultySlider.value = currentStory.settings.difficulty;
@@ -734,6 +769,101 @@ function displayStory(content) {
         .join('');
     
     storyContainer.innerHTML = `<div class="story-content">${storyContent}</div>`;
+    
+    // 根据故事内容自动更新背景
+    detectSceneBackground(storyContent);
+}
+
+/**
+ * 根据背景类型更新页面背景
+ */
+function updateBackgroundByType(backgroundType) {
+    const background = BACKGROUND_LIBRARY[backgroundType];
+    if (!background) return;
+    
+    // 保存当前背景类型
+    currentStory.environment.currentBackground = backgroundType;
+    
+    // 应用背景渐变
+    if (background.gradient) {
+        document.body.style.backgroundImage = background.gradient;
+    }
+    
+    // 应用背景图片
+    if (background.image) {
+        // 创建或获取背景图片容器
+        let bgImageContainer = document.getElementById('background-image-container');
+        if (!bgImageContainer) {
+            bgImageContainer = document.createElement('div');
+            bgImageContainer.id = 'background-image-container';
+            bgImageContainer.style.position = 'fixed';
+            bgImageContainer.style.top = '0';
+            bgImageContainer.style.left = '0';
+            bgImageContainer.style.width = '100%';
+            bgImageContainer.style.height = '100%';
+            bgImageContainer.style.zIndex = '-3';
+            bgImageContainer.style.transition = 'opacity 1.5s ease';
+            bgImageContainer.style.backgroundSize = 'cover';
+            bgImageContainer.style.backgroundPosition = 'center';
+            bgImageContainer.style.opacity = '0';
+            document.body.appendChild(bgImageContainer);
+        }
+        
+        // 设置背景图片并添加淡入效果
+        bgImageContainer.style.backgroundImage = `url(${background.image})`;
+        setTimeout(() => {
+            bgImageContainer.style.opacity = '0.7'; // 增加不透明度，使背景更明显
+        }, 50);
+    } else {
+        // 如果没有图片，移除背景图片容器
+        const bgImageContainer = document.getElementById('background-image-container');
+        if (bgImageContainer) {
+            bgImageContainer.style.opacity = '0';
+            // 等待淡出动画完成后移除元素
+            setTimeout(() => {
+                bgImageContainer.remove();
+            }, 1500);
+        }
+    }
+    
+    console.log(`背景已更新为: ${backgroundType}`);
+}
+
+/**
+ * 根据故事内容检测并更新场景背景
+ */
+function detectSceneBackground(storyContent) {
+    // 如果用户已手动选择背景，则不自动更新
+    if (document.getElementById('background-select').value !== 'none') {
+        return;
+    }
+    
+    // 将故事内容转换为小写以便匹配
+    const lowerContent = storyContent.toLowerCase();
+    
+    // 遍历场景关键词，检查是否匹配
+    let matchedType = null;
+    let maxMatches = 0;
+    
+    for (const [type, keywords] of Object.entries(SCENE_KEYWORDS)) {
+        let matches = 0;
+        for (const keyword of keywords) {
+            if (lowerContent.includes(keyword)) {
+                matches++;
+            }
+        }
+        
+        if (matches > maxMatches) {
+            maxMatches = matches;
+            matchedType = type;
+        }
+    }
+    
+    // 如果找到匹配的背景类型，并且与当前背景不同，则更新背景
+    if (matchedType && matchedType !== currentStory.environment.currentBackground) {
+        console.log(`根据故事内容自动更新背景为: ${matchedType}`);
+        updateBackgroundByType(matchedType);
+    }
 }
 
 /**
