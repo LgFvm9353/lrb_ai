@@ -1,6 +1,12 @@
 /* 基本样式 */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth
+}
 :root {
     --primary-color: #4CAF50;
     --primary-gradient: linear-gradient(135deg, #4CAF50, #2E7D32);
