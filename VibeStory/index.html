@@ -9,157 +9,171 @@
 </head>
 <body>
     <div class="container">
-        <header>
+        <header class="game-title">
             <h1>VibeStory</h1>
             <p>通过关键词创造你的互动故事</p>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#" class="nav-link active" data-page="setup">创建故事</a></li>
-                    <li><a href="#" class="nav-link" data-page="game">游戏界面</a></li>
-                    <li><a href="#" class="nav-link" data-page="about">关于</a></li>
-                </ul>
-            </nav>
         </header>
-        
-        <!-- 创建故事页面 -->
-        <div class="page active" id="setup-page">
-            <div class="game-setup">
-                <h2>创建你的故事</h2>
-                <p class="setup-intro">输入关键词，设置游戏参数，开始你的冒险！</p>
-                
-                <div class="input-group">
-                    <label for="keywords">输入关键词（用+连接）:</label>
-                    <input type="text" id="keywords" placeholder="例如: 末日废墟+机械义肢+失忆">
-                </div>
-                
-                <div class="setup-sections">
-                    <div class="setup-section">
-                        <h3>基本设置</h3>
-                        <div class="option-group">
-                            <label for="difficulty">难度:</label>
-                            <input type="range" id="difficulty" min="1" max="5" value="3">
-                            <span id="difficulty-value">3</span>
-                        </div>
-                        
-                        <div class="option-group">
-                            <label for="genre-select">风格:</label>
-                            <select id="genre-select">
-                                <option value="adventure">冒险</option>
-                                <option value="scifi">科幻</option>
-                                <option value="fantasy">奇幻</option>
-                                <option value="mystery">悬疑</option>
-                                <option value="romance">浪漫</option>
-                            </select>
-                        </div>
-                        
-                        <div class="option-group">
-                            <label for="background-select">背景:</label>
-                            <select id="background-select">
-                                <option value="none">无背景</option>
-                                <option value="forest">森林</option>
-                                <option value="city">城市</option>
-                                <option value="space">太空</option>
-                                <option value="ocean">海洋</option>
-                                <option value="desert">沙漠</option>
-                                <option value="mountain">山脉</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="setup-section">
-                        <h3>高级选项</h3>
-                        <div class="premium-features">
-                            <button id="unlock-styles" class="premium-btn">解锁高级风格包</button>
-                            <button id="unlock-characters" class="premium-btn">解锁DLC角色包</button>
-                        </div>
-                        
 
-                    </div>
-                </div>
-                
-                <button id="submit" class="primary-btn">开始故事</button>
-            </div>
-        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-page="setup">创建故事</a></li>
+                <li><a href="#" class="nav-link" data-page="game">游戏界面</a></li>
+                <li><a href="#" class="nav-link" data-page="about">关于</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- 设置页面 -->
+            <div id="setup-page" class="page active">
+                <div class="setup-container">
+                    <div class="setup-left">
+                        <h2>创建你的故事</h2>
+                        <p>输入关键词，设置游戏参数，开始你的冒险！</p>
+                        
+                        <div class="input-group">
+                            <label for="keywords">输入关键词 (用+连接):</label>
+                            <input type="text" id="keywords" placeholder="例如：末日废墟+机械义肢+失忆">
+                        </div>
         
-        <!-- 游戏界面页面 -->
-        <div class="page" id="game-page">
-            <div class="game-controls">
-                <button id="back-to-setup" class="secondary-btn">返回设置</button>
-                <button id="export-story" class="secondary-btn">导出故事</button>
-            </div>
-            
-            <div class="game-content">
-                <div class="story-section">
-                    <div id="story" class="story-container"></div>
-                    <div id="choices" class="choices-container"></div>
-                </div>
-                
-                <div class="game-sidebar">
-                    <div class="sidebar-tabs">
-                        <button class="tab-btn active" data-tab="structure">故事结构</button>
-                        <button class="tab-btn" data-tab="characters">角色关系</button>
-                        <button class="tab-btn" data-tab="stats">角色属性</button>
-                        <button class="tab-btn" data-tab="memory">记忆碎片</button>
-                    </div>
-                    
-                    <div class="sidebar-content">
-                        <div class="tab-content active" id="structure-tab">
-                            <div id="narrative-nodes" class="narrative-nodes-container"></div>
+                        <h3>基本设置</h3>
+                        <div class="settings-grid">
+                            <div class="input-group">
+                                <label for="difficulty">难度:</label>
+                                <div class="range-slider">
+                                    <input type="range" id="difficulty" min="1" max="5" value="3">
+                                    <span id="difficulty-value">3</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="genre-select">风格:</label>
+                                <select id="genre-select">
+                                    <option value="adventure">冒险</option>
+                                    <option value="scifi">科幻</option>
+                                    <option value="fantasy">奇幻</option>
+                                    <option value="mystery">悬疑</option>
+                                    <option value="romance">浪漫</option>
+                                </select>
+                            </div>
                         </div>
-                        
-                        <div class="tab-content" id="characters-tab">
-                            <div id="character-graph" class="character-graph-container"></div>
-                        </div>
-                        
-                        <div class="tab-content" id="stats-tab">
-                            <div id="character-stats" class="character-stats-container"></div>
-                        </div>
-                        
-                        <div class="tab-content" id="memory-tab">
-                            <div id="memory-fragments" class="memory-fragments-container"></div>
-                        </div>
-                    </div>
-                    <div class="story-generation-progress">
-                        <div class="progress-header">
-                            <h4>故事生成进度</h4>
-                            <span class="progress-percentage">0%</span>
-                        </div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="progress-status">准备中...</div>
-                    </div>
-                </div>
-            </div>
-        </div>
         
-        <!-- 关于页面 -->
-        <div class="page" id="about-page">
-            <div class="about-content">
+                        <h3>高级选项</h3>
+                        <div class="premium-options">
+                            <button class="btn secondary" onclick="unlockPremiumFeature('高级风格包')">解锁高级风格包</button>
+                            <button class="btn secondary" onclick="unlockPremiumFeature('解锁DLC角色包')">解锁DLC角色包</button>
+                        </div>
+                        
+                        <button id="start-btn" class="btn">开始故事</button>
+                    </div>
+                    <div class="setup-right">
+                        <h3>音频设置</h3>
+                        <div id="audio-controls">
+                            <div class="audio-control">
+                                <label for="master-volume">主音量:</label>
+                                <input type="range" id="master-volume" min="0" max="1" step="0.1" value="1">
+                            </div>
+                            <div class="audio-toggle">
+                                <label for="bgm-toggle">背景音乐:</label>
+                                <input type="checkbox" id="bgm-toggle" checked>
+                            </div>
+                            <div class="audio-toggle">
+                                <label for="ambient-toggle">环境音效:</label>
+                                <input type="checkbox" id="ambient-toggle" checked>
+                            </div>
+                            <div class="audio-toggle">
+                                <label for="ui-toggle">界面音效:</label>
+                                <input type="checkbox" id="ui-toggle" checked>
+                            </div>
+                            <div class="audio-toggle">
+                                <label for="mute-toggle">静音:</label>
+                                <input type="checkbox" id="mute-toggle">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 游戏页面 -->
+            <div id="game-page" class="page">
+                <div class="game-interface">
+                    <div class="main-content">
+                        <div id="story"></div>
+                        <div id="choices" class="choices-container"></div>
+                    </div>
+                    <div class="sidebar">
+                        <div class="sidebar-tabs">
+                            <button class="tab-btn active" data-tab="structure">故事结构</button>
+                            <button class="tab-btn" data-tab="characters">角色关系</button>
+                            <button class="tab-btn" data-tab="stats">角色属性</button>
+                            <button class="tab-btn" data-tab="memory">记忆碎片</button>
+                            <button class="tab-btn" data-tab="music">音乐信息</button>
+                        </div>
+                        
+                        <div class="sidebar-content">
+                            <div class="tab-content active" id="structure-tab">
+                                <div id="narrative-nodes" class="narrative-nodes-container"></div>
+                            </div>
+                            <div class="tab-content" id="characters-tab">
+                                <div id="character-graph" class="character-graph-container"></div>
+                            </div>
+                            <div class="tab-content" id="stats-tab">
+                                <div id="character-stats" class="character-stats-container"></div>
+                            </div>
+                            <div class="tab-content" id="memory-tab">
+                                <div id="memory-fragments" class="memory-fragments-container"></div>
+                            </div>
+                            <div class="tab-content" id="music-tab">
+                                <div id="music-info" class="music-info-container">
+                                    <div class="music-info-header">
+                                        <h4>🎵 当前音乐</h4>
+                                    </div>
+                                    <div class="music-info-content">
+                                        <div class="current-music">
+                                            <div class="music-type">背景音乐</div>
+                                            <div class="music-name">冒险主题</div>
+                                            <div class="music-description">史诗冒险音乐，充满勇气和探索精神</div>
+                                        </div>
+                                        <div class="music-controls">
+                                            <button class="music-control-btn" id="music-pause">⏸️</button>
+                                            <button class="music-control-btn" id="music-resume">▶️</button>
+                                            <button class="music-control-btn" id="music-stop">⏹️</button>
+                                        </div>
+                                    </div>
+                                    <div class="theme-suggestions">
+                                        <h5>🎯 主题建议</h5>
+                                        <div class="theme-list">
+                                            <div class="theme-item" data-theme="apocalypse">
+                                                <span class="theme-name">末日主题</span>
+                                                <span class="theme-keywords">末日、废墟、灾难</span>
+                                            </div>
+                                            <div class="theme-item" data-theme="magic">
+                                                <span class="theme-name">魔法主题</span>
+                                                <span class="theme-keywords">魔法、法术、咒语</span>
+                                            </div>
+                                            <div class="theme-item" data-theme="war">
+                                                <span class="theme-name">战争主题</span>
+                                                <span class="theme-keywords">战争、战斗、军队</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关于页面 -->
+            <div id="about-page" class="page">
                 <h2>关于 VibeStory</h2>
-                <p>VibeStory 是一个关键词驱动的互动小说平台，通过简单的关键词组合，创造出丰富多彩的故事世界。</p>
-                
-                <h3>主要特点</h3>
-                <ul>
-                    <li>关键词驱动：只需输入几个关键词，即可生成完整故事</li>
-                    <li>互动选择：在故事的关键节点做出选择，影响故事走向</li>
-                    <li>角色关系：查看角色之间的关系网络</li>
-                    <li>故事结构：了解故事的叙事结构和关键节点</li>
-                    <li>记忆碎片：收集故事中的重要记忆，解锁隐藏内容</li>
-                </ul>
-                
-                <h3>技术支持</h3>
-                <p>本项目使用 DeepSeek API 提供故事生成服务，支持本地模式、代理模式和自定义代理模式。</p>
-                
-                <button id="back-to-home" class="secondary-btn">返回主页</button>
+                <p>VibeStory是一个创新的互动小说平台...</p>
             </div>
-        </div>
-        
+        </main>
+
         <footer>
-            <p> VibeStory - 关键词驱动的互动小说平台</p>
+            <p>VibeStory - 关键词驱动的互动小说平台</p>
         </footer>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
 </html>
