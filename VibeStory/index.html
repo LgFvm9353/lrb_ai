@@ -1,16 +1,47 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VibeStory - 关键词驱动的互动小说平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="VibeStory - AI驱动的互动故事生成器">
+    <meta name="keywords" content="AI, 故事, 互动, 生成器, 游戏">
+    <meta name="author" content="VibeStory Team">
+    
+    <!-- 性能优化 - 预加载关键资源 -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
+    
+    <!-- 性能优化 - DNS预解析 -->
+    <link rel="dns-prefetch" href="//www.soundjay.com">
+    <link rel="dns-prefetch" href="//assets.mixkit.co">
+    <link rel="dns-prefetch" href="//api.deepseek.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- 性能优化 - 预连接 -->
+    <link rel="preconnect" href="https://www.soundjay.com">
+    <link rel="preconnect" href="https://assets.mixkit.co">
+    <link rel="preconnect" href="https://api.deepseek.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    
+    <title>VibeStory - AI驱动的互动故事生成器</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 性能优化 - 图标 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
 </head>
 <body>
+    <!-- 移动端侧边栏切换按钮 -->
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="切换侧边栏">
+        <span id="sidebar-toggle-icon">☰</span>
+    </button>
+
     <div class="container">
         <header class="game-title">
-            <h1>VibeStory</h1>
+            <h1>🎭 VibeStory</h1>
             <p>通过关键词创造你的互动故事</p>
         </header>
 
@@ -31,17 +62,18 @@
                         <p>输入关键词，设置游戏参数，开始你的冒险！</p>
                         
                         <div class="input-group">
-                            <label for="keywords">输入关键词 (用+连接):</label>
-                            <input type="text" id="keywords" placeholder="例如：末日废墟+机械义肢+失忆">
+                            <label for="keywords">输入关键词 (用逗号分隔):</label>
+                            <input type="text" id="keywords" placeholder="例如：魔法、冒险、友谊、成长" maxlength="100">
+                            <small>用逗号分隔多个关键词，最多100个字符</small>
                         </div>
         
                         <h3>基本设置</h3>
                         <div class="settings-grid">
                             <div class="input-group">
-                                <label for="difficulty">难度:</label>
+                                <label for="difficulty">复杂度:</label>
                                 <div class="range-slider">
-                                    <input type="range" id="difficulty" min="1" max="5" value="3">
-                                    <span id="difficulty-value">3</span>
+                                    <input type="range" id="difficulty" min="1" max="10" value="5">
+                                    <span id="difficulty-value">5</span>
                                 </div>
                             </div>
                             <div class="input-group">
@@ -62,30 +94,43 @@
                             <button class="btn secondary" onclick="unlockPremiumFeature('解锁DLC角色包')">解锁DLC角色包</button>
                         </div>
                         
-                        <button id="start-btn" class="btn">开始故事</button>
+                        <button id="start-btn" class="btn">🚀 开始故事</button>
                     </div>
                     <div class="setup-right">
-                        <h3>音频设置</h3>
+                        <h3>🎵 音频设置</h3>
                         <div id="audio-controls">
                             <div class="audio-control">
                                 <label for="master-volume">主音量:</label>
-                                <input type="range" id="master-volume" min="0" max="1" step="0.1" value="1">
+                                <input type="range" id="master-volume" min="0" max="100" value="100">
+                                <span id="volume-value">100%</span>
                             </div>
                             <div class="audio-toggle">
-                                <label for="bgm-toggle">背景音乐:</label>
                                 <input type="checkbox" id="bgm-toggle" checked>
+                                <label for="bgm-toggle">背景音乐</label>
                             </div>
                             <div class="audio-toggle">
-                                <label for="ambient-toggle">环境音效:</label>
                                 <input type="checkbox" id="ambient-toggle" checked>
+                                <label for="ambient-toggle">环境音效</label>
                             </div>
                             <div class="audio-toggle">
-                                <label for="ui-toggle">界面音效:</label>
                                 <input type="checkbox" id="ui-toggle" checked>
+                                <label for="ui-toggle">界面音效</label>
                             </div>
                             <div class="audio-toggle">
-                                <label for="mute-toggle">静音:</label>
                                 <input type="checkbox" id="mute-toggle">
+                                <label for="mute-toggle">静音</label>
+                            </div>
+                        </div>
+                        
+                        <!-- 音频状态指示器 -->
+                        <div class="audio-status" id="audio-status">
+                            <div class="status-item">
+                                <span class="status-label">音频系统:</span>
+                                <span class="status-value" id="audio-system-status">初始化中...</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">预加载:</span>
+                                <span class="status-value" id="audio-preload-status">0%</span>
                             </div>
                         </div>
                     </div>
@@ -98,8 +143,17 @@
                     <div class="main-content">
                         <div id="story"></div>
                         <div id="choices" class="choices-container"></div>
+                        
+                        <!-- 进度条 -->
+                        <div class="progress-container" id="progress-container" style="display: none;">
+                            <div class="progress-bar" id="progress-bar"></div>
+                            <div class="progress-info">
+                                <span class="progress-percentage" id="progress-percentage">0%</span>
+                                <span class="progress-status" id="progress-status">准备中...</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="sidebar">
+                    <div class="sidebar" id="sidebar">
                         <div class="sidebar-tabs">
                             <button class="tab-btn active" data-tab="structure">故事结构</button>
                             <button class="tab-btn" data-tab="characters">角色关系</button>
@@ -131,6 +185,13 @@
                                             <div class="music-type">背景音乐</div>
                                             <div class="music-name">冒险主题</div>
                                             <div class="music-description">史诗冒险音乐，充满勇气和探索精神</div>
+                                            <div class="music-visualizer">
+                                                <div class="visualizer-bar"></div>
+                                                <div class="visualizer-bar"></div>
+                                                <div class="visualizer-bar"></div>
+                                                <div class="visualizer-bar"></div>
+                                                <div class="visualizer-bar"></div>
+                                            </div>
                                         </div>
                                         <div class="music-controls">
                                             <button class="music-control-btn" id="music-pause">⏸️</button>
@@ -140,7 +201,7 @@
                                     </div>
                                     <div class="theme-suggestions">
                                         <h5>🎯 主题建议</h5>
-                                        <div class="theme-list">
+                                        <div class="theme-list" id="theme-list">
                                             <div class="theme-item" data-theme="apocalypse">
                                                 <span class="theme-name">末日主题</span>
                                                 <span class="theme-keywords">末日、废墟、灾难</span>
@@ -165,15 +226,41 @@
             <!-- 关于页面 -->
             <div id="about-page" class="page">
                 <h2>关于 VibeStory</h2>
-                <p>VibeStory是一个创新的互动小说平台...</p>
+                <p>VibeStory是一个创新的互动小说平台，通过AI技术为用户提供个性化的故事体验。</p>
+                <div class="features">
+                    <h3>主要特性</h3>
+                    <ul>
+                        <li>🎭 AI驱动的故事生成</li>
+                        <li>🎵 智能音频配乐</li>
+                        <li>📱 移动端完美适配</li>
+                        <li>⚡ 高性能优化</li>
+                        <li>🎨 丰富的视觉体验</li>
+                    </ul>
+                </div>
             </div>
         </main>
 
         <footer>
-            <p>VibeStory - 关键词驱动的互动小说平台</p>
+            <p>VibeStory - AI驱动的互动故事生成器</p>
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <!-- 性能优化 - 延迟加载脚本 -->
+    <script src="script.js" defer></script>
+    
+    <!-- 性能优化 - Service Worker 注册 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

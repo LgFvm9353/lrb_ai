@@ -1,9 +1,9 @@
-// // VibeStory
+// VibeStory
 
 // API配置
 const API_CONFIG = {
     url: 'https://api.deepseek.com/v1/chat/completions',
-    apiKey: 'sk-77a11aba20914bddb5294cc2d2d3a14d', // DeepSeek API密钥
+    apiKey: 'sk-77a11aba20914bddb5294cc2d2d3a14d', 
     maxRetries: 3,
     retryDelay: 1000,
     headers: {
@@ -12,36 +12,41 @@ const API_CONFIG = {
     }
 };
 
-// 音频系统配置
+// 音频系统配置 - 使用可靠的音频资源URL和降级方案
 const AUDIO_CONFIG = {
     // 背景音乐库 - 按主题分类
     backgroundMusic: {
         adventure: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/adventure.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-adventure-begins-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/adventure-1.mp3',
             volume: 0.4,
             loop: true,
             description: '史诗冒险音乐，充满勇气和探索精神'
         },
         scifi: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/scifi.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-tech-ambient-overseas-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/scifi-1.mp3',
             volume: 0.35,
             loop: true,
             description: '未来科技音乐，营造太空探索氛围'
         },
         fantasy: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/fantasy.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-magical-realm-667.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/fantasy-1.mp3',
             volume: 0.4,
             loop: true,
             description: '魔法奇幻音乐，神秘而梦幻'
         },
         mystery: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/mystery.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-dark-ambient-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/mystery-1.mp3',
             volume: 0.3,
             loop: true,
             description: '悬疑推理音乐，紧张而神秘'
         },
         romance: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/romance.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-romantic-piano-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/romance-1.mp3',
             volume: 0.35,
             loop: true,
             description: '浪漫温馨音乐，充满情感'
@@ -51,148 +56,136 @@ const AUDIO_CONFIG = {
     themeMusic: {
         // 末日主题
         apocalypse: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/apocalypse.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-apocalyptic-ambient-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/apocalypse-1.mp3',
             volume: 0.3,
             loop: true,
             keywords: ['末日', '废墟', '灾难', '毁灭', '末世', '废土']
         },
         // 机械主题
         mechanical: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/mechanical.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-industrial-ambient-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/mechanical-1.mp3',
             volume: 0.35,
             loop: true,
             keywords: ['机械', '义肢', '机器人', '齿轮', '蒸汽', '工业']
         },
         // 失忆主题
         memory: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/memory.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-melancholic-ambient-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/memory-1.mp3',
             volume: 0.3,
             loop: true,
             keywords: ['失忆', '记忆', '遗忘', '回忆', '过去', '身份']
         },
         // 魔法主题
         magic: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/magic.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-magical-realm-667.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/magic-1.mp3',
             volume: 0.4,
             loop: true,
             keywords: ['魔法', '法术', '咒语', '巫师', '精灵', '龙']
         },
         // 战争主题
         war: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/war.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-epic-battle-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/war-1.mp3',
             volume: 0.35,
             loop: true,
             keywords: ['战争', '战斗', '军队', '武器', '战场', '将军']
         },
         // 海洋主题
         ocean: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/ocean.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-ocean-waves-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/ocean-1.mp3',
             volume: 0.3,
             loop: true,
             keywords: ['海洋', '海盗', '船只', '深海', '岛屿', '宝藏']
         },
         // 太空主题
         space: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/space.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-space-ambient-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/space-1.mp3',
             volume: 0.3,
             loop: true,
             keywords: ['太空', '宇宙', '星球', '飞船', '星际', '外星']
         },
         // 古代主题
         ancient: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/ancient.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-ancient-civilization-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/ancient-1.mp3',
             volume: 0.35,
             loop: true,
             keywords: ['古代', '王朝', '皇帝', '宫殿', '历史', '传统']
         },
         // 现代都市主题
         urban: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/urban.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-urban-ambient-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/urban-1.mp3',
             volume: 0.35,
             loop: true,
             keywords: ['都市', '城市', '现代', '科技', '商业', '生活']
         },
         // 自然主题
         nature: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/nature.mp3',
+            url: 'https://assets.mixkit.co/music/preview/mixkit-nature-ambient-983.mp3',
+            fallbackUrl: 'https://www.soundjay.com/misc/sounds/nature-1.mp3',
             volume: 0.3,
             loop: true,
             keywords: ['自然', '森林', '山脉', '河流', '动物', '生态']
         }
     },
-    // 音效库
+    // 音效库 - 使用简单的音效
     soundEffects: {
         buttonClick: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/button-click.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.5
         },
         pageTransition: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/page-transition.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.4
         },
         choiceSelect: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/choice-select.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.6
         },
         storyProgress: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/story-progress.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.4
         },
         error: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/error.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.7
-        },
-        // 主题相关音效
-        magicSpell: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/magic-spell.wav',
-            volume: 0.6
-        },
-        swordClash: {
-            url: 'https://cdn.jsdelivr.net/gh/gemini-pro-copilot/VibeStory-Music/sword-clash.wav',
-            volume: 0.5
-        },
-        footsteps: {
-            url: 'https://www.soundjay.com/misc/sounds/footsteps.wav',
-            volume: 0.4
-        },
-        doorOpen: {
-            url: 'https://www.soundjay.com/misc/sounds/door-open.wav',
-            volume: 0.5
-        },
-        thunder: {
-            url: 'https://www.soundjay.com/misc/sounds/thunder.wav',
-            volume: 0.6
         }
     },
     // 环境音效
     ambientSounds: {
         forest: {
-            url: 'https://www.soundjay.com/nature/sounds/forest-1.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-forest-birds-ambience-loop-1250.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.2,
             loop: true
         },
         city: {
-            url: 'https://www.soundjay.com/nature/sounds/city-1.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-city-traffic-ambience-loop-1250.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.2,
             loop: true
         },
         space: {
-            url: 'https://www.soundjay.com/nature/sounds/space-1.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-space-ambience-loop-1250.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.2,
             loop: true
         },
         ocean: {
-            url: 'https://www.soundjay.com/nature/sounds/ocean-1.wav',
-            volume: 0.2,
-            loop: true
-        },
-        desert: {
-            url: 'https://www.soundjay.com/nature/sounds/desert-1.wav',
-            volume: 0.2,
-            loop: true
-        },
-        mountain: {
-            url: 'https://www.soundjay.com/nature/sounds/mountain-1.wav',
+            url: 'https://assets.mixkit.co/sfx/preview/mixkit-ocean-waves-ambience-loop-1250.wav',
+            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
             volume: 0.2,
             loop: true
         }
@@ -254,19 +247,81 @@ class AudioManager {
     }
 
     // 预加载音频文件
-    async preloadAudio(url) {
+    async preloadAudio(url, fallbackUrl = null) {
+        // 检查缓存
         if (this.soundCache.has(url)) {
             return this.soundCache.get(url);
         }
 
+        // 确保音频上下文已初始化且处于运行状态
+        if (!this.audioContext) {
+            console.warn('音频上下文未初始化');
+            return null;
+        }
+
+        // 如果音频上下文被暂停，需要用户交互才能恢复
+        if (this.audioContext.state === 'suspended') {
+            console.log('音频上下文被暂停，等待用户交互...');
+            return null;
+        }
+
+        // 尝试主URL
         try {
-            const response = await fetch(url);
+            console.log(`正在预加载音频: ${url}`);
+            const response = await fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                cache: 'force-cache',
+                timeout: 10000 // 10秒超时
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const arrayBuffer = await response.arrayBuffer();
             const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+            
+            // 添加时间戳用于缓存管理
+            audioBuffer.timestamp = Date.now();
             this.soundCache.set(url, audioBuffer);
+            
+            console.log(`音频预加载成功: ${url}`);
             return audioBuffer;
         } catch (error) {
-            console.warn(`音频预加载失败: ${url}`, error);
+            console.warn(`主音频URL加载失败: ${url}`, error);
+            
+            // 尝试降级URL
+            if (fallbackUrl) {
+                try {
+                    console.log(`尝试降级音频URL: ${fallbackUrl}`);
+                    const fallbackResponse = await fetch(fallbackUrl, {
+                        method: 'GET',
+                        mode: 'cors',
+                        cache: 'force-cache',
+                        timeout: 10000
+                    });
+                    
+                    if (!fallbackResponse.ok) {
+                        throw new Error(`HTTP ${fallbackResponse.status}: ${fallbackResponse.statusText}`);
+                    }
+                    
+                    const fallbackArrayBuffer = await fallbackResponse.arrayBuffer();
+                    const fallbackAudioBuffer = await this.audioContext.decodeAudioData(fallbackArrayBuffer);
+                    
+                    // 添加时间戳
+                    fallbackAudioBuffer.timestamp = Date.now();
+                    this.soundCache.set(url, fallbackAudioBuffer);
+                    
+                    console.log(`降级音频预加载成功: ${fallbackUrl}`);
+                    return fallbackAudioBuffer;
+                } catch (fallbackError) {
+                    console.warn(`降级音频URL也失败: ${fallbackUrl}`, fallbackError);
+                }
+            }
+            
+            // 如果都失败了，返回null但不抛出错误
+            this.soundCache.set(url, null);
             return null;
         }
     }
@@ -310,9 +365,12 @@ class AudioManager {
                 this.backgroundMusic = null;
             }
 
-            // 创建新的音频源
-            const audioBuffer = await this.preloadAudio(musicConfig.url);
-            if (!audioBuffer) return;
+            // 创建新的音频源，支持降级URL
+            const audioBuffer = await this.preloadAudio(musicConfig.url, musicConfig.fallbackUrl);
+            if (!audioBuffer) {
+                console.warn(`背景音乐加载失败，跳过播放: ${genre}`);
+                return;
+            }
 
             const source = this.audioContext.createBufferSource();
             const gainNode = this.audioContext.createGain();
@@ -349,7 +407,7 @@ class AudioManager {
                 this.themeMusic = null;
             }
 
-            const audioBuffer = await this.preloadAudio(themeConfig.url);
+            const audioBuffer = await this.preloadAudio(themeConfig.url, themeConfig.fallbackUrl);
             if (!audioBuffer) return;
 
             const source = this.audioContext.createBufferSource();
@@ -402,7 +460,7 @@ class AudioManager {
                 this.ambientSound = null;
             }
 
-            const audioBuffer = await this.preloadAudio(ambientConfig.url);
+            const audioBuffer = await this.preloadAudio(ambientConfig.url, ambientConfig.fallbackUrl);
             if (!audioBuffer) return;
 
             const source = this.audioContext.createBufferSource();
@@ -432,8 +490,11 @@ class AudioManager {
         if (!effectConfig) return;
 
         try {
-            const audioBuffer = await this.preloadAudio(effectConfig.url);
-            if (!audioBuffer) return;
+            const audioBuffer = await this.preloadAudio(effectConfig.url, effectConfig.fallbackUrl);
+            if (!audioBuffer) {
+                console.warn(`音效加载失败，跳过播放: ${effectName}`);
+                return;
+            }
 
             const source = this.audioContext.createBufferSource();
             const gainNode = this.audioContext.createGain();
@@ -971,6 +1032,8 @@ let currentStory = {
     storyTree: {
         // 当前节点ID
         currentNodeId: 'root',
+        // 根节点ID
+        rootNodeId: 'root',
         // 节点映射表，键为节点ID，值为节点对象
         nodes: {}
     },
@@ -1018,6 +1081,21 @@ function initGame() {
     // 初始化音乐控制功能
     initializeMusicControls();
     
+    // 初始化移动端侧边栏
+    initializeMobileSidebar();
+    
+    // 初始化懒加载
+    initializeLazyLoading();
+    
+    // 初始化缓存管理
+    initializeCacheManagement();
+    
+    // 初始化内存管理
+    initializeMemoryManagement();
+    
+    // 添加用户交互监听器来恢复音频上下文
+    initializeAudioContextResume();
+    
     // 提示用户设置API密钥
     if (!API_CONFIG.apiKey) {
         console.warn('请设置DeepSeek API密钥');
@@ -1037,12 +1115,13 @@ function initGame() {
         });
     }
 
-    const backgroundSelect = document.getElementById('background-select');
-    if (backgroundSelect) {
-        backgroundSelect.addEventListener('change', () => {
-            updateBackgroundByType(backgroundSelect.value);
-        });
-    }
+    // 移除对不存在的background-select的引用
+    // const backgroundSelect = document.getElementById('background-select');
+    // if (backgroundSelect) {
+    //     backgroundSelect.addEventListener('change', () => {
+    //         updateBackgroundByType(backgroundSelect.value);
+    //     });
+    // }
 
     // 预加载关键资源
     preloadAudioFiles();
@@ -1144,30 +1223,80 @@ function initializePerformanceOptimizations() {
 }
 
 /**
- * 预加载音频文件
+ * 性能优化 - 音频预加载优化
  */
 async function preloadAudioFiles() {
+    // 检查音频上下文状态
+    if (!audioManager || !audioManager.audioContext) {
+        console.log('音频管理器未初始化，跳过预加载');
+        return;
+    }
+    
+    if (audioManager.audioContext.state === 'suspended') {
+        console.log('音频上下文被暂停，等待用户交互后重试');
+        return;
+    }
+    
     const audioFiles = [
-        // 背景音乐
-        ...Object.values(AUDIO_CONFIG.backgroundMusic).map(music => music.url),
-        // 主题音乐
-        ...Object.values(AUDIO_CONFIG.themeMusic).map(music => music.url),
-        // 音效
-        ...Object.values(AUDIO_CONFIG.soundEffects).map(effect => effect.url),
-        // 环境音效
-        ...Object.values(AUDIO_CONFIG.ambientSounds).map(ambient => ambient.url)
+        // 背景音乐 - 只预加载最常用的几个
+        ...Object.values(AUDIO_CONFIG.backgroundMusic).slice(0, 3).map(music => ({
+            url: music.url,
+            fallbackUrl: music.fallbackUrl
+        })),
+        // 主题音乐 - 只预加载几个主要主题
+        ...Object.values(AUDIO_CONFIG.themeMusic).slice(0, 5).map(music => ({
+            url: music.url,
+            fallbackUrl: music.fallbackUrl
+        })),
+        // 音效 - 只预加载基本音效
+        ...Object.values(AUDIO_CONFIG.soundEffects).slice(0, 3).map(effect => ({
+            url: effect.url,
+            fallbackUrl: effect.fallbackUrl
+        }))
     ];
     
-    // 使用Promise.allSettled避免某个文件加载失败影响其他文件
-    const preloadPromises = audioFiles.map(url => audioManager.preloadAudio(url));
+    // 使用更小的并发控制，避免内存问题
+    const batchSize = 2; // 减少并发数量
+    const batches = [];
     
-    Promise.allSettled(preloadPromises).then(results => {
-        const successCount = results.filter(result => result.status === 'fulfilled').length;
-        console.log(`音频预加载完成: ${successCount}/${audioFiles.length} 个文件`);
+    for (let i = 0; i < audioFiles.length; i += batchSize) {
+        batches.push(audioFiles.slice(i, i + batchSize));
+    }
+    
+    let successCount = 0;
+    let totalCount = audioFiles.length;
+    
+    console.log(`开始预加载音频文件，总计: ${totalCount} 个`);
+    
+    for (let i = 0; i < batches.length; i++) {
+        const batch = batches[i];
+        const batchPromises = batch.map(audio => 
+            audioManager.preloadAudio(audio.url, audio.fallbackUrl)
+                .then(result => ({ success: !!result, url: audio.url }))
+                .catch(error => ({ success: false, url: audio.url, error }))
+        );
         
-        // 更新音乐信息面板
-        updateMusicInfo();
-    });
+        try {
+            const batchResults = await Promise.all(batchPromises);
+            successCount += batchResults.filter(result => result.success).length;
+            
+            // 更新进度
+            const progress = ((i + 1) * batchSize / totalCount) * 100;
+            console.log(`音频预加载进度: ${Math.min(progress, 100).toFixed(1)}% (${successCount}/${totalCount})`);
+            
+            // 添加更长的延迟，避免阻塞UI
+            if (i < batches.length - 1) {
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+        } catch (error) {
+            console.warn(`批次 ${i + 1} 预加载失败:`, error);
+        }
+    }
+    
+    console.log(`音频预加载完成: ${successCount}/${totalCount} 个文件成功`);
+    
+    // 更新音乐信息面板
+    updateMusicInfo();
 }
 
 /**
@@ -1272,6 +1401,7 @@ async function generateStory(keywords) {
         // 重置故事树
         currentStory.storyTree = {
             currentNodeId: 'root',
+            rootNodeId: 'root',
             nodes: {}
         };
         currentStory.currentPath = [];
@@ -1344,6 +1474,8 @@ async function generateStory(keywords) {
         const rootId = 'root';
         const rootNode = new StoryNode(rootId, result.story, result.choices);
         currentStory.storyTree.nodes[rootId] = rootNode;
+        currentStory.storyTree.rootNodeId = rootId;
+        currentStory.storyTree.currentNodeId = rootId;
         
         // 显示故事内容
         displayStory(result.story);
@@ -1395,6 +1527,7 @@ function updateStoryGenerationProgress(current, total) {
     const progressPercentage = document.querySelector('.progress-percentage');
     const progressStatus = document.querySelector('.progress-status');
     
+    // 检查进度条元素是否存在，如果不存在则跳过更新
     if (progressBar && progressPercentage && progressStatus) {
         progressBar.style.width = `${percentage}%`;
         progressPercentage.textContent = `${percentage}%`;
@@ -1808,10 +1941,10 @@ function updateBackgroundByType(backgroundType) {
  * 检测故事内容中的场景并更新背景
  */
 function detectSceneBackground(storyContent) {
-    // 如果用户已手动选择背景，则不自动更新
-    if (document.getElementById('background-select').value !== 'none') {
-        return;
-    }
+    // 移除对不存在的background-select的检查
+    // if (document.getElementById('background-select').value !== 'none') {
+    //     return;
+    // }
     
     // 将故事内容转换为小写以便匹配
     const lowerContent = storyContent.toLowerCase();
@@ -2677,5 +2810,158 @@ function initializeMusicControls() {
     });
 }
 
+/**
+ * 初始化音频上下文恢复
+ */
+function initializeAudioContextResume() {
+    let audioContextResumed = false;
+    
+    // 监听用户交互事件
+    const resumeAudioContext = async () => {
+        if (audioContextResumed) return;
+        
+        if (audioManager && audioManager.audioContext) {
+            if (audioManager.audioContext.state === 'suspended') {
+                try {
+                    await audioManager.audioContext.resume();
+                    console.log('音频上下文已恢复');
+                    audioContextResumed = true;
+                    
+                    // 重新尝试预加载音频
+                    setTimeout(() => {
+                        preloadAudioFiles();
+                    }, 1000);
+                } catch (error) {
+                    console.warn('恢复音频上下文失败:', error);
+                }
+            }
+        }
+    };
+    
+    // 监听各种用户交互事件
+    const events = ['click', 'touchstart', 'keydown', 'mousedown'];
+    events.forEach(eventType => {
+        document.addEventListener(eventType, resumeAudioContext, { once: true });
+    });
+    
+    // 如果用户已经交互过，立即尝试恢复
+    if (document.readyState === 'complete') {
+        resumeAudioContext();
+    } else {
+        window.addEventListener('load', resumeAudioContext);
+    }
+}
+
 // 页面加载完成后初始化游戏
 document.addEventListener('DOMContentLoaded', initGame);
+
+/**
+ * 初始化移动端侧边栏切换
+ */
+function initializeMobileSidebar() {
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggleIcon = document.getElementById('sidebar-toggle-icon');
+    
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            sidebarToggleIcon.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+        });
+        
+        // 点击侧边栏外部关闭侧边栏
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                sidebar.classList.remove('open');
+                sidebarToggleIcon.textContent = '☰';
+            }
+        });
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('open');
+                sidebarToggleIcon.textContent = '☰';
+            }
+        });
+    }
+}
+
+/**
+ * 性能优化 - 图片懒加载
+ */
+function initializeLazyLoading() {
+    const images = document.querySelectorAll('img[data-src]');
+    
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.add('loaded');
+                observer.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+}
+
+/**
+ * 性能优化 - 缓存管理
+ */
+function initializeCacheManagement() {
+    // 清理过期的音频缓存
+    setInterval(() => {
+        const now = Date.now();
+        const maxAge = 30 * 60 * 1000; // 30分钟
+        
+        for (const [url, audioBuffer] of audioManager.soundCache.entries()) {
+            if (audioBuffer && audioBuffer.timestamp && (now - audioBuffer.timestamp) > maxAge) {
+                audioManager.soundCache.delete(url);
+                console.log(`清理过期音频缓存: ${url}`);
+            }
+        }
+    }, 5 * 60 * 1000); // 每5分钟检查一次
+}
+
+/**
+ * 性能优化 - 内存管理
+ */
+function initializeMemoryManagement() {
+    // 监听页面可见性变化
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            // 页面隐藏时，暂停音频并清理一些资源
+            if (audioManager.backgroundMusic) {
+                audioManager.backgroundMusic.source.suspend();
+            }
+            if (audioManager.ambientSound) {
+                audioManager.ambientSound.source.suspend();
+            }
+        } else {
+            // 页面显示时，恢复音频
+            if (audioManager.backgroundMusic) {
+                audioManager.backgroundMusic.source.resume();
+            }
+            if (audioManager.ambientSound) {
+                audioManager.ambientSound.source.resume();
+            }
+        }
+    });
+    
+    // 监听内存压力
+    if ('memory' in performance) {
+        setInterval(() => {
+            const memory = performance.memory;
+            const usedMB = memory.usedJSHeapSize / 1024 / 1024;
+            const totalMB = memory.totalJSHeapSize / 1024 / 1024;
+            
+            if (usedMB > totalMB * 0.8) {
+                console.warn('内存使用率过高，清理缓存');
+                // 清理一些非关键缓存
+                audioManager.soundCache.clear();
+            }
+        }, 30 * 1000); // 每30秒检查一次
+    }
+}
