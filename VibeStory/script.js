@@ -1,9 +1,9 @@
-// VibeStory
+// // VibeStory
 
 // API配置
 const API_CONFIG = {
     url: 'https://api.deepseek.com/v1/chat/completions',
-    apiKey: 'sk-77a11aba20914bddb5294cc2d2d3a14d', 
+    apiKey: 'sk-77a11aba20914bddb5294cc2d2d3a14d', // DeepSeek API密钥
     maxRetries: 3,
     retryDelay: 1000,
     headers: {
@@ -11,933 +11,6 @@ const API_CONFIG = {
         'Authorization': 'Bearer sk-77a11aba20914bddb5294cc2d2d3a14d'
     }
 };
-
-// 音频系统配置 - 使用可靠的音频资源URL和降级方案
-const AUDIO_CONFIG = {
-    // 背景音乐库 - 按主题分类
-    backgroundMusic: {
-        adventure: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-adventure-begins-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/adventure-1.mp3',
-            volume: 0.4,
-            loop: true,
-            description: '史诗冒险音乐，充满勇气和探索精神'
-        },
-        scifi: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-tech-ambient-overseas-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/scifi-1.mp3',
-            volume: 0.35,
-            loop: true,
-            description: '未来科技音乐，营造太空探索氛围'
-        },
-        fantasy: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-magical-realm-667.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/fantasy-1.mp3',
-            volume: 0.4,
-            loop: true,
-            description: '魔法奇幻音乐，神秘而梦幻'
-        },
-        mystery: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-dark-ambient-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/mystery-1.mp3',
-            volume: 0.3,
-            loop: true,
-            description: '悬疑推理音乐，紧张而神秘'
-        },
-        romance: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-romantic-piano-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/romance-1.mp3',
-            volume: 0.35,
-            loop: true,
-            description: '浪漫温馨音乐，充满情感'
-        }
-    },
-    // 主题特定音乐 - 根据关键词和场景动态选择
-    themeMusic: {
-        // 末日主题
-        apocalypse: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-apocalyptic-ambient-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/apocalypse-1.mp3',
-            volume: 0.3,
-            loop: true,
-            keywords: ['末日', '废墟', '灾难', '毁灭', '末世', '废土']
-        },
-        // 机械主题
-        mechanical: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-industrial-ambient-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/mechanical-1.mp3',
-            volume: 0.35,
-            loop: true,
-            keywords: ['机械', '义肢', '机器人', '齿轮', '蒸汽', '工业']
-        },
-        // 失忆主题
-        memory: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-melancholic-ambient-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/memory-1.mp3',
-            volume: 0.3,
-            loop: true,
-            keywords: ['失忆', '记忆', '遗忘', '回忆', '过去', '身份']
-        },
-        // 魔法主题
-        magic: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-magical-realm-667.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/magic-1.mp3',
-            volume: 0.4,
-            loop: true,
-            keywords: ['魔法', '法术', '咒语', '巫师', '精灵', '龙']
-        },
-        // 战争主题
-        war: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-epic-battle-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/war-1.mp3',
-            volume: 0.35,
-            loop: true,
-            keywords: ['战争', '战斗', '军队', '武器', '战场', '将军']
-        },
-        // 海洋主题
-        ocean: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-ocean-waves-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/ocean-1.mp3',
-            volume: 0.3,
-            loop: true,
-            keywords: ['海洋', '海盗', '船只', '深海', '岛屿', '宝藏']
-        },
-        // 太空主题
-        space: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-space-ambient-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/space-1.mp3',
-            volume: 0.3,
-            loop: true,
-            keywords: ['太空', '宇宙', '星球', '飞船', '星际', '外星']
-        },
-        // 古代主题
-        ancient: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-ancient-civilization-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/ancient-1.mp3',
-            volume: 0.35,
-            loop: true,
-            keywords: ['古代', '王朝', '皇帝', '宫殿', '历史', '传统']
-        },
-        // 现代都市主题
-        urban: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-urban-ambient-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/urban-1.mp3',
-            volume: 0.35,
-            loop: true,
-            keywords: ['都市', '城市', '现代', '科技', '商业', '生活']
-        },
-        // 自然主题
-        nature: {
-            url: 'https://assets.mixkit.co/music/preview/mixkit-nature-ambient-983.mp3',
-            fallbackUrl: 'https://www.soundjay.com/misc/sounds/nature-1.mp3',
-            volume: 0.3,
-            loop: true,
-            keywords: ['自然', '森林', '山脉', '河流', '动物', '生态']
-        }
-    },
-    // 音效库 - 使用简单的音效
-    soundEffects: {
-        buttonClick: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.5
-        },
-        pageTransition: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.4
-        },
-        choiceSelect: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.6
-        },
-        storyProgress: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.4
-        },
-        error: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.7
-        }
-    },
-    // 环境音效
-    ambientSounds: {
-        forest: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-forest-birds-ambience-loop-1250.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.2,
-            loop: true
-        },
-        city: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-city-traffic-ambience-loop-1250.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.2,
-            loop: true
-        },
-        space: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-space-ambience-loop-1250.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.2,
-            loop: true
-        },
-        ocean: {
-            url: 'https://assets.mixkit.co/sfx/preview/mixkit-ocean-waves-ambience-loop-1250.wav',
-            fallbackUrl: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT',
-            volume: 0.2,
-            loop: true
-        }
-    }
-};
-
-// 性能优化配置
-const PERFORMANCE_CONFIG = {
-    // 虚拟滚动配置
-    virtualScroll: {
-        itemHeight: 60, // 每个选项的高度
-        visibleItems: 5, // 可见项目数量
-        bufferSize: 2, // 缓冲区大小
-        throttleDelay: 16 // 节流延迟（60fps）
-    },
-    // 懒加载配置
-    lazyLoad: {
-        threshold: 0.1, // 交叉观察器阈值
-        rootMargin: '50px' // 根边距
-    },
-    // 缓存配置
-    cache: {
-        maxSize: 100, // 最大缓存项数
-        ttl: 5 * 60 * 1000 // 缓存生存时间（5分钟）
-    }
-};
-
-// 音频管理器类
-class AudioManager {
-    constructor() {
-        this.audioContext = null;
-        this.backgroundMusic = null;
-        this.themeMusic = null;
-        this.ambientSound = null;
-        this.soundCache = new Map();
-        this.isMuted = false;
-        this.masterVolume = 1.0;
-        this.currentTheme = null;
-        this.initAudioContext();
-    }
-
-    // 初始化音频上下文
-    async initAudioContext() {
-        try {
-            // 检查浏览器支持
-            if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
-                this.audioContext = new (AudioContext || webkitAudioContext)();
-                
-                // 用户交互后恢复音频上下文
-                document.addEventListener('click', () => {
-                    if (this.audioContext.state === 'suspended') {
-                        this.audioContext.resume();
-                    }
-                }, { once: true });
-            }
-        } catch (error) {
-            console.warn('音频上下文初始化失败:', error);
-        }
-    }
-
-    // 预加载音频文件
-    async preloadAudio(url, fallbackUrl = null) {
-        // 检查缓存
-        if (this.soundCache.has(url)) {
-            return this.soundCache.get(url);
-        }
-
-        // 确保音频上下文已初始化且处于运行状态
-        if (!this.audioContext) {
-            console.warn('音频上下文未初始化');
-            return null;
-        }
-
-        // 如果音频上下文被暂停，需要用户交互才能恢复
-        if (this.audioContext.state === 'suspended') {
-            console.log('音频上下文被暂停，等待用户交互...');
-            return null;
-        }
-
-        // 尝试主URL
-        try {
-            console.log(`正在预加载音频: ${url}`);
-            const response = await fetch(url, {
-                method: 'GET',
-                mode: 'cors',
-                cache: 'force-cache',
-                timeout: 10000 // 10秒超时
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            const arrayBuffer = await response.arrayBuffer();
-            const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-            
-            // 添加时间戳用于缓存管理
-            audioBuffer.timestamp = Date.now();
-            this.soundCache.set(url, audioBuffer);
-            
-            console.log(`音频预加载成功: ${url}`);
-            return audioBuffer;
-        } catch (error) {
-            console.warn(`主音频URL加载失败: ${url}`, error);
-            
-            // 尝试降级URL
-            if (fallbackUrl) {
-                try {
-                    console.log(`尝试降级音频URL: ${fallbackUrl}`);
-                    const fallbackResponse = await fetch(fallbackUrl, {
-                        method: 'GET',
-                        mode: 'cors',
-                        cache: 'force-cache',
-                        timeout: 10000
-                    });
-                    
-                    if (!fallbackResponse.ok) {
-                        throw new Error(`HTTP ${fallbackResponse.status}: ${fallbackResponse.statusText}`);
-                    }
-                    
-                    const fallbackArrayBuffer = await fallbackResponse.arrayBuffer();
-                    const fallbackAudioBuffer = await this.audioContext.decodeAudioData(fallbackArrayBuffer);
-                    
-                    // 添加时间戳
-                    fallbackAudioBuffer.timestamp = Date.now();
-                    this.soundCache.set(url, fallbackAudioBuffer);
-                    
-                    console.log(`降级音频预加载成功: ${fallbackUrl}`);
-                    return fallbackAudioBuffer;
-                } catch (fallbackError) {
-                    console.warn(`降级音频URL也失败: ${fallbackUrl}`, fallbackError);
-                }
-            }
-            
-            // 如果都失败了，返回null但不抛出错误
-            this.soundCache.set(url, null);
-            return null;
-        }
-    }
-
-    // 检测关键词匹配的主题音乐
-    detectThemeMusic(keywords) {
-        if (!keywords || !Array.isArray(keywords)) return null;
-        
-        const keywordString = keywords.join(' ').toLowerCase();
-        let bestMatch = null;
-        let maxScore = 0;
-        
-        for (const [themeName, themeConfig] of Object.entries(AUDIO_CONFIG.themeMusic)) {
-            let score = 0;
-            for (const keyword of themeConfig.keywords) {
-                if (keywordString.includes(keyword.toLowerCase())) {
-                    score += 1;
-                }
-            }
-            
-            if (score > maxScore) {
-                maxScore = score;
-                bestMatch = themeName;
-            }
-        }
-        
-        return maxScore > 0 ? bestMatch : null;
-    }
-
-    // 播放背景音乐
-    async playBackgroundMusic(genre) {
-        if (this.isMuted || !this.audioContext) return;
-
-        const musicConfig = AUDIO_CONFIG.backgroundMusic[genre];
-        if (!musicConfig) return;
-
-        try {
-            // 停止当前背景音乐
-            if (this.backgroundMusic) {
-                this.backgroundMusic.source.stop();
-                this.backgroundMusic = null;
-            }
-
-            // 创建新的音频源，支持降级URL
-            const audioBuffer = await this.preloadAudio(musicConfig.url, musicConfig.fallbackUrl);
-            if (!audioBuffer) {
-                console.warn(`背景音乐加载失败，跳过播放: ${genre}`);
-                return;
-            }
-
-            const source = this.audioContext.createBufferSource();
-            const gainNode = this.audioContext.createGain();
-            
-            source.buffer = audioBuffer;
-            source.loop = musicConfig.loop;
-            
-            gainNode.gain.value = musicConfig.volume * this.masterVolume;
-            
-            source.connect(gainNode);
-            gainNode.connect(this.audioContext.destination);
-            
-            source.start();
-            this.backgroundMusic = { source, gainNode, type: 'background', genre };
-            
-            console.log(`播放背景音乐: ${genre} - ${musicConfig.description}`);
-            
-        } catch (error) {
-            console.warn('背景音乐播放失败:', error);
-        }
-    }
-
-    // 播放主题音乐
-    async playThemeMusic(themeName) {
-        if (this.isMuted || !this.audioContext) return;
-
-        const themeConfig = AUDIO_CONFIG.themeMusic[themeName];
-        if (!themeConfig) return;
-
-        try {
-            // 停止当前主题音乐
-            if (this.themeMusic) {
-                this.themeMusic.source.stop();
-                this.themeMusic = null;
-            }
-
-            const audioBuffer = await this.preloadAudio(themeConfig.url, themeConfig.fallbackUrl);
-            if (!audioBuffer) return;
-
-            const source = this.audioContext.createBufferSource();
-            const gainNode = this.audioContext.createGain();
-            
-            source.buffer = audioBuffer;
-            source.loop = themeConfig.loop;
-            gainNode.gain.value = themeConfig.volume * this.masterVolume;
-            
-            source.connect(gainNode);
-            gainNode.connect(this.audioContext.destination);
-            
-            source.start();
-            this.themeMusic = { source, gainNode, type: 'theme', theme: themeName };
-            this.currentTheme = themeName;
-            
-            console.log(`播放主题音乐: ${themeName}`);
-            
-        } catch (error) {
-            console.warn('主题音乐播放失败:', error);
-        }
-    }
-
-    // 智能音乐选择 - 根据关键词和风格选择最合适的音乐
-    async playSmartMusic(keywords, genre) {
-        // 首先尝试检测主题音乐
-        const detectedTheme = this.detectThemeMusic(keywords);
-        
-        if (detectedTheme) {
-            await this.playThemeMusic(detectedTheme);
-            return { type: 'theme', theme: detectedTheme };
-        } else {
-            // 如果没有检测到特定主题，播放风格背景音乐
-            await this.playBackgroundMusic(genre);
-            return { type: 'background', genre };
-        }
-    }
-
-    // 播放环境音效
-    async playAmbientSound(backgroundType) {
-        if (this.isMuted || !this.audioContext) return;
-
-        const ambientConfig = AUDIO_CONFIG.ambientSounds[backgroundType];
-        if (!ambientConfig) return;
-
-        try {
-            // 停止当前环境音效
-            if (this.ambientSound) {
-                this.ambientSound.source.stop();
-                this.ambientSound = null;
-            }
-
-            const audioBuffer = await this.preloadAudio(ambientConfig.url, ambientConfig.fallbackUrl);
-            if (!audioBuffer) return;
-
-            const source = this.audioContext.createBufferSource();
-            const gainNode = this.audioContext.createGain();
-            
-            source.buffer = audioBuffer;
-            source.loop = ambientConfig.loop;
-            
-            gainNode.gain.value = ambientConfig.volume * this.masterVolume;
-            
-            source.connect(gainNode);
-            gainNode.connect(this.audioContext.destination);
-            
-            source.start();
-            this.ambientSound = { source, gainNode };
-            
-        } catch (error) {
-            console.warn('环境音效播放失败:', error);
-        }
-    }
-
-    // 播放音效
-    async playSoundEffect(effectName) {
-        if (this.isMuted || !this.audioContext) return;
-
-        const effectConfig = AUDIO_CONFIG.soundEffects[effectName];
-        if (!effectConfig) return;
-
-        try {
-            const audioBuffer = await this.preloadAudio(effectConfig.url, effectConfig.fallbackUrl);
-            if (!audioBuffer) {
-                console.warn(`音效加载失败，跳过播放: ${effectName}`);
-                return;
-            }
-
-            const source = this.audioContext.createBufferSource();
-            const gainNode = this.audioContext.createGain();
-            
-            source.buffer = audioBuffer;
-            gainNode.gain.value = effectConfig.volume * this.masterVolume;
-            
-            source.connect(gainNode);
-            gainNode.connect(this.audioContext.destination);
-            
-            source.start();
-            
-        } catch (error) {
-            console.warn(`音效播放失败: ${effectName}`, error);
-        }
-    }
-
-    // 根据故事内容播放相关音效
-    async playContextualSound(storyContent) {
-        const content = storyContent.toLowerCase();
-        
-        // 检测故事内容中的关键词，播放相应音效
-        if (content.includes('魔法') || content.includes('咒语') || content.includes('法术')) {
-            await this.playSoundEffect('magicSpell');
-        } else if (content.includes('战斗') || content.includes('剑') || content.includes('武器')) {
-            await this.playSoundEffect('swordClash');
-        } else if (content.includes('脚步声') || content.includes('行走') || content.includes('移动')) {
-            await this.playSoundEffect('footsteps');
-        } else if (content.includes('门') || content.includes('打开') || content.includes('进入')) {
-            await this.playSoundEffect('doorOpen');
-        } else if (content.includes('雷声') || content.includes('闪电') || content.includes('暴风雨')) {
-            await this.playSoundEffect('thunder');
-        }
-    }
-
-    // 设置静音状态
-    setMuted(muted) {
-        this.isMuted = muted;
-        
-        if (muted) {
-            if (this.backgroundMusic) {
-                this.backgroundMusic.gainNode.gain.value = 0;
-            }
-            if (this.themeMusic) {
-                this.themeMusic.gainNode.gain.value = 0;
-            }
-            if (this.ambientSound) {
-                this.ambientSound.gainNode.gain.value = 0;
-            }
-        } else {
-            if (this.backgroundMusic) {
-                const musicConfig = AUDIO_CONFIG.backgroundMusic[this.backgroundMusic.genre];
-                this.backgroundMusic.gainNode.gain.value = musicConfig.volume * this.masterVolume;
-            }
-            if (this.themeMusic) {
-                const themeConfig = AUDIO_CONFIG.themeMusic[this.themeMusic.theme];
-                this.themeMusic.gainNode.gain.value = themeConfig.volume * this.masterVolume;
-            }
-            if (this.ambientSound) {
-                const currentBackground = currentStory.environment.currentBackground;
-                if (currentBackground !== 'none') {
-                    const ambientConfig = AUDIO_CONFIG.ambientSounds[currentBackground];
-                    this.ambientSound.gainNode.gain.value = ambientConfig.volume * this.masterVolume;
-                }
-            }
-        }
-    }
-
-    // 设置主音量
-    setMasterVolume(volume) {
-        this.masterVolume = Math.max(0, Math.min(1, volume));
-        
-        if (this.backgroundMusic) {
-            const musicConfig = AUDIO_CONFIG.backgroundMusic[this.backgroundMusic.genre];
-            this.backgroundMusic.gainNode.gain.value = musicConfig.volume * this.masterVolume;
-        }
-        
-        if (this.themeMusic) {
-            const themeConfig = AUDIO_CONFIG.themeMusic[this.themeMusic.theme];
-            this.themeMusic.gainNode.gain.value = themeConfig.volume * this.masterVolume;
-        }
-        
-        if (this.ambientSound) {
-            const currentBackground = currentStory.environment.currentBackground;
-            if (currentBackground !== 'none') {
-                const ambientConfig = AUDIO_CONFIG.ambientSounds[currentBackground];
-                this.ambientSound.gainNode.gain.value = ambientConfig.volume * this.masterVolume;
-            }
-        }
-    }
-
-    // 停止所有音频
-    stopAll() {
-        if (this.backgroundMusic) {
-            this.backgroundMusic.source.stop();
-            this.backgroundMusic = null;
-        }
-        if (this.themeMusic) {
-            this.themeMusic.source.stop();
-            this.themeMusic = null;
-        }
-        if (this.ambientSound) {
-            this.ambientSound.source.stop();
-            this.ambientSound = null;
-        }
-        this.currentTheme = null;
-    }
-
-    // 获取当前播放的音乐信息
-    getCurrentMusicInfo() {
-        if (this.themeMusic) {
-            return {
-                type: 'theme',
-                name: this.themeMusic.theme,
-                description: `主题音乐: ${this.themeMusic.theme}`
-            };
-        } else if (this.backgroundMusic) {
-            const musicConfig = AUDIO_CONFIG.backgroundMusic[this.backgroundMusic.genre];
-            return {
-                type: 'background',
-                name: this.backgroundMusic.genre,
-                description: musicConfig.description || `背景音乐: ${this.backgroundMusic.genre}`
-            };
-        }
-        return null;
-    }
-}
-
-// 性能优化管理器类
-class PerformanceManager {
-    constructor() {
-        this.observer = null;
-        this.cache = new Map();
-        this.virtualScrollContainers = new Map();
-        this.initIntersectionObserver();
-    }
-
-    // 初始化交叉观察器
-    initIntersectionObserver() {
-        if ('IntersectionObserver' in window) {
-            this.observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            this.loadLazyContent(entry.target);
-                        }
-                    });
-                },
-                {
-                    threshold: PERFORMANCE_CONFIG.lazyLoad.threshold,
-                    rootMargin: PERFORMANCE_CONFIG.lazyLoad.rootMargin
-                }
-            );
-        }
-    }
-
-    // 懒加载内容
-    loadLazyContent(element) {
-        if (element.dataset.lazyLoaded === 'true') return;
-
-        const loadType = element.dataset.lazyType;
-        const loadData = element.dataset.lazyData;
-
-        switch (loadType) {
-            case 'image':
-                this.loadLazyImage(element, loadData);
-                break;
-            case 'content':
-                this.loadLazyContent(element, loadData);
-                break;
-            case 'component':
-                this.loadLazyComponent(element, loadData);
-                break;
-        }
-
-        element.dataset.lazyLoaded = 'true';
-        this.observer.unobserve(element);
-    }
-
-    // 懒加载图片
-    loadLazyImage(element, imageUrl) {
-        const img = new Image();
-        img.onload = () => {
-            element.style.backgroundImage = `url(${imageUrl})`;
-            element.classList.add('loaded');
-        };
-        img.src = imageUrl;
-    }
-
-    // 懒加载组件
-    loadLazyComponent(element, componentData) {
-        try {
-            const data = JSON.parse(componentData);
-            // 根据组件类型动态加载
-            switch (data.type) {
-                case 'character-card':
-                    element.innerHTML = this.createCharacterCard(data);
-                    break;
-                case 'story-node':
-                    element.innerHTML = this.createStoryNode(data);
-                    break;
-                default:
-                    element.innerHTML = data.content || '';
-            }
-            element.classList.add('loaded');
-        } catch (error) {
-            console.warn('懒加载组件失败:', error);
-        }
-    }
-
-    // 创建角色卡片
-    createCharacterCard(data) {
-        return `
-            <div class="character-card">
-                <div class="character-avatar" style="background-image: url(${data.avatar || 'default-avatar.png'})"></div>
-                <div class="character-info">
-                    <h4>${data.name}</h4>
-                    <p>${data.description}</p>
-                </div>
-            </div>
-        `;
-    }
-
-    // 创建故事节点
-    createStoryNode(data) {
-        return `
-            <div class="story-node">
-                <div class="node-title">${data.title}</div>
-                <div class="node-content">${data.content}</div>
-            </div>
-        `;
-    }
-
-    // 虚拟滚动实现
-    createVirtualScroll(container, items, itemHeight = PERFORMANCE_CONFIG.virtualScroll.itemHeight) {
-        const visibleItems = PERFORMANCE_CONFIG.virtualScroll.visibleItems;
-        const bufferSize = PERFORMANCE_CONFIG.virtualScroll.bufferSize;
-        
-        let scrollTop = 0;
-        let startIndex = 0;
-        let endIndex = visibleItems + bufferSize;
-
-        // 创建虚拟滚动容器
-        const virtualContainer = document.createElement('div');
-        virtualContainer.style.height = `${items.length * itemHeight}px`;
-        virtualContainer.style.position = 'relative';
-        virtualContainer.style.overflow = 'hidden';
-
-        const contentContainer = document.createElement('div');
-        contentContainer.style.position = 'absolute';
-        contentContainer.style.top = '0';
-        contentContainer.style.left = '0';
-        contentContainer.style.right = '0';
-
-        virtualContainer.appendChild(contentContainer);
-        container.appendChild(virtualContainer);
-
-        // 渲染可见项目
-        const renderVisibleItems = () => {
-            contentContainer.innerHTML = '';
-            contentContainer.style.transform = `translateY(${startIndex * itemHeight}px)`;
-
-            for (let i = startIndex; i <= endIndex && i < items.length; i++) {
-                const item = items[i];
-                const itemElement = this.createVirtualScrollItem(item, i, itemHeight);
-                contentContainer.appendChild(itemElement);
-            }
-        };
-
-        // 滚动事件处理（节流）
-        let ticking = false;
-        const handleScroll = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    scrollTop = container.scrollTop;
-                    const newStartIndex = Math.floor(scrollTop / itemHeight);
-                    const newEndIndex = Math.min(newStartIndex + visibleItems + bufferSize, items.length);
-
-                    if (newStartIndex !== startIndex || newEndIndex !== endIndex) {
-                        startIndex = newStartIndex;
-                        endIndex = newEndIndex;
-                        renderVisibleItems();
-                    }
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        };
-
-        container.addEventListener('scroll', handleScroll);
-        renderVisibleItems();
-
-        // 保存虚拟滚动实例
-        this.virtualScrollContainers.set(container, {
-            virtualContainer,
-            contentContainer,
-            items,
-            itemHeight,
-            startIndex,
-            endIndex,
-            handleScroll
-        });
-    }
-
-    // 创建虚拟滚动项目
-    createVirtualScrollItem(item, index, height) {
-        const itemElement = document.createElement('div');
-        itemElement.style.height = `${height}px`;
-        itemElement.style.position = 'absolute';
-        itemElement.style.top = `${index * height}px`;
-        itemElement.style.left = '0';
-        itemElement.style.right = '0';
-        itemElement.innerHTML = item.content || item;
-        return itemElement;
-    }
-
-    // 清理虚拟滚动
-    destroyVirtualScroll(container) {
-        const instance = this.virtualScrollContainers.get(container);
-        if (instance) {
-            container.removeEventListener('scroll', instance.handleScroll);
-            container.innerHTML = '';
-            this.virtualScrollContainers.delete(container);
-        }
-    }
-
-    // 缓存管理
-    setCache(key, value, ttl = PERFORMANCE_CONFIG.cache.ttl) {
-        const cacheItem = {
-            value,
-            timestamp: Date.now(),
-            ttl
-        };
-        this.cache.set(key, cacheItem);
-
-        // 清理过期缓存
-        this.cleanupCache();
-    }
-
-    getCache(key) {
-        const cacheItem = this.cache.get(key);
-        if (!cacheItem) return null;
-
-        if (Date.now() - cacheItem.timestamp > cacheItem.ttl) {
-            this.cache.delete(key);
-            return null;
-        }
-
-        return cacheItem.value;
-    }
-
-    cleanupCache() {
-        const now = Date.now();
-        for (const [key, item] of this.cache.entries()) {
-            if (now - item.timestamp > item.ttl) {
-                this.cache.delete(key);
-            }
-        }
-
-        // 限制缓存大小
-        if (this.cache.size > PERFORMANCE_CONFIG.cache.maxSize) {
-            const entries = Array.from(this.cache.entries());
-            entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
-            
-            const toDelete = entries.slice(0, this.cache.size - PERFORMANCE_CONFIG.cache.maxSize);
-            toDelete.forEach(([key]) => this.cache.delete(key));
-        }
-    }
-
-    // 防抖函数
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    // 节流函数
-    throttle(func, limit) {
-        let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    }
-
-    // 图片懒加载
-    setupImageLazyLoading() {
-        const images = document.querySelectorAll('img[data-src]');
-        images.forEach(img => {
-            this.observer.observe(img);
-        });
-    }
-
-    // 组件懒加载
-    setupComponentLazyLoading() {
-        const components = document.querySelectorAll('[data-lazy-type]');
-        components.forEach(component => {
-            this.observer.observe(component);
-        });
-    }
-
-    // 预加载关键资源
-    preloadCriticalResources() {
-        const criticalResources = [
-            '/assets/fonts/Poppins-Regular.woff2',
-            '/assets/images/backgrounds/forest.jpg',
-            '/assets/images/backgrounds/city.jpg'
-        ];
-
-        criticalResources.forEach(resource => {
-            if (resource.endsWith('.woff2')) {
-                const link = document.createElement('link');
-                link.rel = 'preload';
-                link.href = resource;
-                link.as = 'font';
-                link.type = 'font/woff2';
-                link.crossOrigin = 'anonymous';
-                document.head.appendChild(link);
-            } else if (resource.endsWith('.jpg') || resource.endsWith('.png')) {
-                const link = document.createElement('link');
-                link.rel = 'preload';
-                link.href = resource;
-                link.as = 'image';
-                document.head.appendChild(link);
-            }
-        });
-    }
-}
-
-// 创建全局实例
-const audioManager = new AudioManager();
-const performanceManager = new PerformanceManager();
 
 // 故事配置
 const STORY_CONFIG = {
@@ -1032,8 +105,6 @@ let currentStory = {
     storyTree: {
         // 当前节点ID
         currentNodeId: 'root',
-        // 根节点ID
-        rootNodeId: 'root',
         // 节点映射表，键为节点ID，值为节点对象
         nodes: {}
     },
@@ -1062,260 +133,72 @@ function generateUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
 
+let isFirstStory = true;
+
 /**
  * 初始化游戏
  */
 function initGame() {
-    // 初始化页面导航
-    initializeNavigation();
-    
-    // 初始化音频控制
-    initializeAudioControls();
+    const keywordsInput = document.getElementById('keywords');
+    const genreSelect = document.getElementById('genre-select');
+    const storyContainer = document.getElementById('story');
+    const choicesContainer = document.getElementById('choices');
+    const narrativeNodesContainer = document.getElementById('narrative-nodes');
+    const characterGraph = document.getElementById('character-graph');
+    const characterStatsContainer = document.getElementById('character-stats');
+    const memoryFragmentsContainer = document.getElementById('memory-fragments');
+    const submitBtn = document.getElementById('submit');
+    const exportStoryBtn = document.getElementById('export-story');
+    const backToSetupBtn = document.getElementById('back-to-setup');
+    const backToHomeBtn = document.getElementById('back-to-home');
 
-    // 初始化性能优化
-    initializePerformanceOptimizations();
-    
+    // 设置风格选择事件
+    if (genreSelect) {
+        genreSelect.addEventListener('change', function() {
+            currentStory.settings.genre = this.value;
+        });
+        genreSelect.value = currentStory.settings.genre;
+    }
+
+    // 设置开始游戏按钮事件
+    if (submitBtn) {
+        submitBtn.addEventListener('click', startGame);
+    }
+
+    // 设置导出故事按钮事件
+    if (exportStoryBtn) {
+        exportStoryBtn.addEventListener('click', exportStory);
+    }
+
+    // 设置返回按钮事件
+    if (backToSetupBtn) {
+        backToSetupBtn.addEventListener('click', () => switchPage('setup'));
+    }
+    if (backToHomeBtn) {
+        backToHomeBtn.addEventListener('click', () => switchPage('setup'));
+    }
+
+    // 初始化导航系统
+    initializeNavigation();
     // 初始化侧边栏标签系统
     initializeSidebarTabs();
-
-    // 初始化音乐控制功能
-    initializeMusicControls();
-    
-    // 初始化移动端侧边栏
-    initializeMobileSidebar();
-    
-    // 初始化懒加载
-    initializeLazyLoading();
-    
-    // 初始化缓存管理
-    initializeCacheManagement();
-    
-    // 初始化内存管理
-    initializeMemoryManagement();
-    
-    // 添加用户交互监听器来恢复音频上下文
-    initializeAudioContextResume();
-    
     // 提示用户设置API密钥
     if (!API_CONFIG.apiKey) {
         console.warn('请设置DeepSeek API密钥');
     }
-    
-    // 添加事件监听
-    const startBtn = document.getElementById('start-btn');
-    if (startBtn) {
-        startBtn.addEventListener('click', startGame);
-    }
-
-    const difficultySlider = document.getElementById('difficulty');
-    const difficultyValue = document.getElementById('difficulty-value');
-    if (difficultySlider && difficultyValue) {
-        difficultySlider.addEventListener('input', () => {
-            difficultyValue.textContent = difficultySlider.value;
-        });
-    }
-
-    // 移除对不存在的background-select的引用
-    // const backgroundSelect = document.getElementById('background-select');
-    // if (backgroundSelect) {
-    //     backgroundSelect.addEventListener('change', () => {
-    //         updateBackgroundByType(backgroundSelect.value);
-    //     });
-    // }
-
-    // 预加载关键资源
-    preloadAudioFiles();
-}
-
-/**
- * 初始化音频控制功能
- */
-function initializeAudioControls() {
-    const masterVolume = document.getElementById('master-volume');
-    const muteToggle = document.getElementById('mute-toggle');
-    const bgmToggle = document.getElementById('bgm-toggle');
-    const ambientToggle = document.getElementById('ambient-toggle');
-    const uiToggle = document.getElementById('ui-toggle');
-
-    // 加载保存的设置
-    const savedSettings = JSON.parse(localStorage.getItem('vibeStoryAudioSettings')) || {};
-
-    if (masterVolume) {
-        masterVolume.value = savedSettings.masterVolume ?? 1;
-        audioManager.setMasterVolume(parseFloat(masterVolume.value));
-        masterVolume.addEventListener('input', () => {
-            audioManager.setMasterVolume(parseFloat(masterVolume.value));
-        });
-    }
-
-    if (muteToggle) {
-        muteToggle.checked = savedSettings.isMuted ?? false;
-        audioManager.setMuted(muteToggle.checked);
-        muteToggle.addEventListener('change', () => {
-            audioManager.setMuted(muteToggle.checked);
-        });
-    }
-
-    if (bgmToggle) {
-        bgmToggle.checked = savedSettings.bgmEnabled ?? true;
-        currentStory.settings.bgmEnabled = bgmToggle.checked;
-        bgmToggle.addEventListener('change', () => {
-            currentStory.settings.bgmEnabled = bgmToggle.checked;
-            if (!bgmToggle.checked) {
-                audioManager.stopAll();
-            }
-        });
-    }
-
-    if (ambientToggle) {
-        ambientToggle.checked = savedSettings.ambientEnabled ?? true;
-        currentStory.settings.ambientSoundEnabled = ambientToggle.checked;
-        ambientToggle.addEventListener('change', () => {
-            currentStory.settings.ambientSoundEnabled = ambientToggle.checked;
-        });
-    }
-
-    if (uiToggle) {
-        uiToggle.checked = savedSettings.uiSoundEnabled ?? true;
-        currentStory.settings.uiSoundEnabled = uiToggle.checked;
-        uiToggle.addEventListener('change', () => {
-            currentStory.settings.uiSoundEnabled = uiToggle.checked;
-        });
-    }
-}
-
-/**
- * 初始化性能优化
- */
-function initializePerformanceOptimizations() {
-    // 预加载关键资源
-    performanceManager.preloadCriticalResources();
-    
-    // 设置图片懒加载
-    performanceManager.setupImageLazyLoading();
-    
-    // 设置组件懒加载
-    performanceManager.setupComponentLazyLoading();
-    
-    // 预加载音频文件
-    preloadAudioFiles();
-    
-    // 设置页面可见性API
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            // 页面隐藏时暂停音频
-            if (audioManager.backgroundMusic) {
-                audioManager.backgroundMusic.source.suspend();
-            }
-            if (audioManager.ambientSound) {
-                audioManager.ambientSound.source.suspend();
-            }
-        } else {
-            // 页面显示时恢复音频
-            if (audioManager.backgroundMusic) {
-                audioManager.backgroundMusic.source.resume();
-            }
-            if (audioManager.ambientSound) {
-                audioManager.ambientSound.source.resume();
-            }
-        }
-    });
-}
-
-/**
- * 性能优化 - 音频预加载优化
- */
-async function preloadAudioFiles() {
-    // 检查音频上下文状态
-    if (!audioManager || !audioManager.audioContext) {
-        console.log('音频管理器未初始化，跳过预加载');
-        return;
-    }
-    
-    if (audioManager.audioContext.state === 'suspended') {
-        console.log('音频上下文被暂停，等待用户交互后重试');
-        return;
-    }
-    
-    const audioFiles = [
-        // 背景音乐 - 只预加载最常用的几个
-        ...Object.values(AUDIO_CONFIG.backgroundMusic).slice(0, 3).map(music => ({
-            url: music.url,
-            fallbackUrl: music.fallbackUrl
-        })),
-        // 主题音乐 - 只预加载几个主要主题
-        ...Object.values(AUDIO_CONFIG.themeMusic).slice(0, 5).map(music => ({
-            url: music.url,
-            fallbackUrl: music.fallbackUrl
-        })),
-        // 音效 - 只预加载基本音效
-        ...Object.values(AUDIO_CONFIG.soundEffects).slice(0, 3).map(effect => ({
-            url: effect.url,
-            fallbackUrl: effect.fallbackUrl
-        }))
-    ];
-    
-    // 使用更小的并发控制，避免内存问题
-    const batchSize = 2; // 减少并发数量
-    const batches = [];
-    
-    for (let i = 0; i < audioFiles.length; i += batchSize) {
-        batches.push(audioFiles.slice(i, i + batchSize));
-    }
-    
-    let successCount = 0;
-    let totalCount = audioFiles.length;
-    
-    console.log(`开始预加载音频文件，总计: ${totalCount} 个`);
-    
-    for (let i = 0; i < batches.length; i++) {
-        const batch = batches[i];
-        const batchPromises = batch.map(audio => 
-            audioManager.preloadAudio(audio.url, audio.fallbackUrl)
-                .then(result => ({ success: !!result, url: audio.url }))
-                .catch(error => ({ success: false, url: audio.url, error }))
-        );
-        
-        try {
-            const batchResults = await Promise.all(batchPromises);
-            successCount += batchResults.filter(result => result.success).length;
-            
-            // 更新进度
-            const progress = ((i + 1) * batchSize / totalCount) * 100;
-            console.log(`音频预加载进度: ${Math.min(progress, 100).toFixed(1)}% (${successCount}/${totalCount})`);
-            
-            // 添加更长的延迟，避免阻塞UI
-            if (i < batches.length - 1) {
-                await new Promise(resolve => setTimeout(resolve, 200));
-            }
-        } catch (error) {
-            console.warn(`批次 ${i + 1} 预加载失败:`, error);
-        }
-    }
-    
-    console.log(`音频预加载完成: ${successCount}/${totalCount} 个文件成功`);
-    
-    // 更新音乐信息面板
-    updateMusicInfo();
 }
 
 /**
  * 开始游戏
  */
 function startGame() {
+    isFirstStory = true;
     const keywordsInput = document.getElementById('keywords');
     const keywords = keywordsInput.value.trim();
-    
     if (!keywords) {
         alert('请输入关键词！');
         return;
     }
-    
-    // 播放开始音效
-    if (currentStory.settings.uiSoundEnabled !== false) {
-        audioManager.playSoundEffect('storyProgress');
-    }
-    
     // 验证API密钥
     if (!API_CONFIG.apiKey) {
         const apiKey = prompt('请输入您的DeepSeek API密钥：');
@@ -1326,53 +209,39 @@ function startGame() {
         API_CONFIG.apiKey = apiKey;
         API_CONFIG.headers.Authorization = 'Bearer ' + apiKey;
     }
-    
     // 保存关键词
     currentStory.keywords.raw = keywords;
     currentStory.keywords.parsed = keywords.split('+').map(k => k.trim());
-    
     // 保存当前设置
-    currentStory.settings.difficulty = parseInt(document.getElementById('difficulty').value);
-    currentStory.settings.genre = document.getElementById('genre-select').value;
-    
+    const difficultyElem = document.getElementById('difficulty');
+    if (difficultyElem) {
+        currentStory.settings.difficulty = parseInt(difficultyElem.value);
+    }
+    const genreElem = document.getElementById('genre-select');
+    if (genreElem) {
+        currentStory.settings.genre = genreElem.value;
+    }
     // 切换到游戏页面
     switchPage('game');
-    
-    // 播放页面切换音效
-    if (currentStory.settings.uiSoundEnabled !== false) {
-        audioManager.playSoundEffect('pageTransition');
-    }
-    
     // 显示加载状态
     const storyContainer = document.getElementById('story');
-    storyContainer.innerHTML = '<div class="loading">正在生成故事...</div>';
-    
+    storyContainer.innerHTML = '<div class="loading">正在为你生成专属故事...</div>';
     // 清空选择容器
     const choicesContainer = document.getElementById('choices');
     choicesContainer.innerHTML = '';
-    
     // 重置故事状态
     currentStory.scenes = [];
     currentStory.currentSceneIndex = 0;
-    
-    // 智能选择并播放音乐
-    audioManager.playSmartMusic(currentStory.keywords.parsed, currentStory.settings.genre);
-    
     // 生成故事
     generateStory(keywords).catch(error => {
         console.error('生成故事失败:', error);
         storyContainer.innerHTML = `<div class="error">生成故事失败: ${error.message}</div>`;
-        
-        // 播放错误音效
-        audioManager.playSoundEffect('error');
-        
         // 添加重试按钮
         const retryButton = document.createElement('button');
         retryButton.className = 'primary-btn';
         retryButton.textContent = '重试';
         retryButton.addEventListener('click', startGame);
         storyContainer.appendChild(retryButton);
-        
         // 添加返回按钮
         const backButton = document.createElement('button');
         backButton.className = 'secondary-btn';
@@ -1380,6 +249,7 @@ function startGame() {
         backButton.addEventListener('click', () => switchPage('setup'));
         storyContainer.appendChild(backButton);
     });
+    setGameUIVisibility(false);
 }
 
 /**
@@ -1393,15 +263,19 @@ async function generateStory(keywords) {
     STORY_CONFIG.CURRENT_SCENE = 0;
     STORY_CONFIG.IS_STORY_ENDED = false;
     
-    // 显示骨架屏加载动画
-    storyContainer.innerHTML = generateSkeletonLoading();
-    choicesContainer.innerHTML = generateSkeletonChoices();
+    // 首次和后续生成的提示
+    if (isFirstStory) {
+        storyContainer.innerHTML = '<div class="loading">正在为你生成专属故事...</div>';
+        isFirstStory = false;
+    } else {
+        storyContainer.innerHTML = '<div class="loading">正在生成专属剧情...</div>';
+    }
+    choicesContainer.innerHTML = '';
     
     try {
         // 重置故事树
         currentStory.storyTree = {
             currentNodeId: 'root',
-            rootNodeId: 'root',
             nodes: {}
         };
         currentStory.currentPath = [];
@@ -1409,28 +283,8 @@ async function generateStory(keywords) {
         // 获取设备类型的文本长度限制
         const textLength = getDeviceTextLength();
         
-        const prompt = `基于关键词"${keywords}"创建一个互动故事的开头。请包含：
-1. 生动的场景描述
-2. 主要角色介绍
-3. 初始冲突或问题
-4. 2-3个选择选项
-
-请注意以下要求：
-- 故事将在${STORY_CONFIG.MAX_SCENES}个场景内结束，请合理规划故事长度
-- 每段对话的字数应控制在${textLength.MIN}-${textLength.MAX}字之间
-
-你必须严格按照以下JSON格式返回，不要添加任何额外的文本、注释或代码块：
-{
-  "story": "详细的故事内容...",
-  "choices": ["选项1", "选项2", "选项3"]
-}
-
-确保：
-- story字段是字符串，不是对象
-- choices字段是字符串数组，不是对象数组
-- 返回的是有效的JSON格式，不包含markdown标记
-- 不要在JSON外添加任何说明文字或代码块标记
-`;
+        const genre = currentStory.settings.genre;
+        const prompt = `请基于关键词“${keywords}”和风格“${genre}”，创作一个紧密贴合主题和风格的互动故事开头。要求：\n- 剧情推进合理，环环相扣，情节紧凑，人物动机清晰。\n- 总共12段剧情，结局自然且不突兀。\n- 每段剧情都与主题和风格高度相关。\n- 第一段为开篇，介绍背景、角色和冲突。\n- 后续每段推进故事发展，最后一段为结局。\n- 每段50-80字。\n- 返回JSON格式：{\"story\": [\"第1段...\", ... , \"第12段...\"], \"choices\": [\"选项1\", ...] }\n- story为12段字符串数组，choices为本段可选项数组。\n- 不要添加任何多余说明、注释或代码块。`;
         
         const response = await callDeepSeekAPI(prompt);
         
@@ -1474,8 +328,6 @@ async function generateStory(keywords) {
         const rootId = 'root';
         const rootNode = new StoryNode(rootId, result.story, result.choices);
         currentStory.storyTree.nodes[rootId] = rootNode;
-        currentStory.storyTree.rootNodeId = rootId;
-        currentStory.storyTree.currentNodeId = rootId;
         
         // 显示故事内容
         displayStory(result.story);
@@ -1501,6 +353,7 @@ async function generateStory(keywords) {
             generateStoryBranches(rootId, result.story, result.choices, 1, progressInfo);
         }, 100);
         
+        setGameUIVisibility(true);
     } catch (error) {
         console.error('生成故事失败:', error);
         storyContainer.innerHTML = `
@@ -1515,6 +368,7 @@ async function generateStory(keywords) {
         // 添加重试和返回按钮的事件监听器
         document.getElementById('retry-story').addEventListener('click', () => generateStory(keywords));
         document.getElementById('back-to-setup').addEventListener('click', () => switchPage('setup'));
+        setGameUIVisibility(false);
     }
 }
 
@@ -1527,7 +381,6 @@ function updateStoryGenerationProgress(current, total) {
     const progressPercentage = document.querySelector('.progress-percentage');
     const progressStatus = document.querySelector('.progress-status');
     
-    // 检查进度条元素是否存在，如果不存在则跳过更新
     if (progressBar && progressPercentage && progressStatus) {
         progressBar.style.width = `${percentage}%`;
         progressPercentage.textContent = `${percentage}%`;
@@ -1873,78 +726,72 @@ function displayStory(content) {
     
     // 根据故事内容自动更新背景
     detectSceneBackground(storyContent);
-    
-    // 根据故事内容播放相关音效
-    if (currentStory.settings.uiSoundEnabled !== false) {
-        audioManager.playContextualSound(storyContent);
-    }
-    
-    // 检查是否需要切换主题音乐
-    checkAndSwitchThemeMusic(storyContent);
 }
 
 /**
- * 检查并切换主题音乐
- */
-function checkAndSwitchThemeMusic(storyContent) {
-    const content = storyContent.toLowerCase();
-    const currentKeywords = currentStory.keywords.parsed;
-    
-    // 检测新的主题关键词
-    for (const [themeName, themeConfig] of Object.entries(AUDIO_CONFIG.themeMusic)) {
-        let shouldSwitch = false;
-        
-        // 检查故事内容中是否包含主题关键词
-        for (const keyword of themeConfig.keywords) {
-            if (content.includes(keyword.toLowerCase())) {
-                shouldSwitch = true;
-                break;
-            }
-        }
-        
-        // 如果检测到新主题且与当前主题不同，则切换音乐
-        if (shouldSwitch && audioManager.currentTheme !== themeName) {
-            console.log(`检测到新主题: ${themeName}，切换音乐`);
-            audioManager.playThemeMusic(themeName);
-            break;
-        }
-    }
-}
-
-/**
- * 根据类型更新背景
+ * 根据背景类型更新页面背景
  */
 function updateBackgroundByType(backgroundType) {
-    // 如果场景没有变化，则不执行任何操作
-    if (currentStory.environment.currentBackground === backgroundType) {
-        return;
+    const background = BACKGROUND_LIBRARY[backgroundType];
+    if (!background) return;
+    
+    // 保存当前背景类型
+    currentStory.environment.currentBackground = backgroundType;
+    
+    // 应用背景渐变
+    if (background.gradient) {
+        document.body.style.backgroundImage = background.gradient;
     }
     
-    currentStory.environment.currentBackground = backgroundType;
-
-    // 根据设置播放环境音效
-    const ambientToggle = document.getElementById('ambient-toggle');
-    if (ambientToggle && ambientToggle.checked) {
-        if (backgroundType !== 'none') {
-            audioManager.playAmbientSound(backgroundType);
-            console.log(`智能场景音效已切换为: ${backgroundType}`);
-        } else {
-            if (audioManager.ambientSound) {
-                audioManager.ambientSound.source.stop();
-                audioManager.ambientSound = null;
-            }
+    // 应用背景图片
+    if (background.image) {
+        // 创建或获取背景图片容器
+        let bgImageContainer = document.getElementById('background-image-container');
+        if (!bgImageContainer) {
+            bgImageContainer = document.createElement('div');
+            bgImageContainer.id = 'background-image-container';
+            bgImageContainer.style.position = 'fixed';
+            bgImageContainer.style.top = '0';
+            bgImageContainer.style.left = '0';
+            bgImageContainer.style.width = '100%';
+            bgImageContainer.style.height = '100%';
+            bgImageContainer.style.zIndex = '-3';
+            bgImageContainer.style.transition = 'opacity 1.5s ease';
+            bgImageContainer.style.backgroundSize = 'cover';
+            bgImageContainer.style.backgroundPosition = 'center';
+            bgImageContainer.style.opacity = '0';
+            document.body.appendChild(bgImageContainer);
+        }
+        
+        // 设置背景图片并添加淡入效果
+        bgImageContainer.style.backgroundImage = `url(${background.image})`;
+        setTimeout(() => {
+            bgImageContainer.style.opacity = '0.7'; // 增加不透明度，使背景更明显
+        }, 50);
+    } else {
+        // 如果没有图片，移除背景图片容器
+        const bgImageContainer = document.getElementById('background-image-container');
+        if (bgImageContainer) {
+            bgImageContainer.style.opacity = '0';
+            // 等待淡出动画完成后移除元素
+            setTimeout(() => {
+                bgImageContainer.remove();
+            }, 1500);
         }
     }
+    
+    console.log(`背景已更新为: ${backgroundType}`);
 }
 
 /**
- * 检测故事内容中的场景并更新背景
+ * 根据故事内容检测并更新场景背景
  */
 function detectSceneBackground(storyContent) {
-    // 移除对不存在的background-select的检查
-    // if (document.getElementById('background-select').value !== 'none') {
-    //     return;
-    // }
+    // 如果用户已手动选择背景，则不自动更新
+    const bgSelect = document.getElementById('background-select');
+    if (bgSelect && bgSelect.value !== 'none') {
+        return;
+    }
     
     // 将故事内容转换为小写以便匹配
     const lowerContent = storyContent.toLowerCase();
@@ -2225,13 +1072,8 @@ async function makeChoice(index, choice) {
     const storyContainer = document.getElementById('story');
     const choicesContainer = document.getElementById('choices');
     
-    // 播放选择音效
-    if (currentStory.settings.uiSoundEnabled !== false) {
-        audioManager.playSoundEffect('choiceSelect');
-    }
-    
     // 显示骨架屏加载动画
-    choicesContainer.innerHTML = generateSkeletonLoading();
+    choicesContainer.innerHTML = generateSkeletonChoices();
     
     try {
         // 获取当前节点
@@ -2333,11 +1175,6 @@ async function makeChoice(index, choice) {
         if (STORY_CONFIG.CURRENT_SCENE >= STORY_CONFIG.MAX_SCENES || nextNode.isEnding) {
             // 标记故事已结束
             STORY_CONFIG.IS_STORY_ENDED = true;
-            
-            // 播放故事结束音效
-            if (currentStory.settings.uiSoundEnabled !== false) {
-                audioManager.playSoundEffect('storyProgress');
-            }
         }
         
         // 显示新故事内容
@@ -2362,9 +1199,6 @@ async function makeChoice(index, choice) {
     } catch (error) {
         console.error('生成故事失败:', error);
         choicesContainer.innerHTML = `<div class="error">生成故事失败: ${error.message}</div>`;
-        
-        // 播放错误音效
-        audioManager.playSoundEffect('error');
         
         // 添加重试按钮
         const retryBtn = document.createElement('button');
@@ -2525,11 +1359,6 @@ function initializeNavigation() {
  * 切换页面
  */
 function switchPage(pageName) {
-    // 播放页面切换音效
-    if (currentStory.settings.uiSoundEnabled !== false) {
-        audioManager.playSoundEffect('pageTransition');
-    }
-    
     // 隐藏所有页面
     const pages = document.querySelectorAll('.page');
     pages.forEach(page => page.classList.remove('active'));
@@ -2549,15 +1378,8 @@ function switchPage(pageName) {
         }
     });
     
-    // 根据页面类型调整音频
-    if (pageName === 'setup') {
-        // 返回设置页面时停止背景音乐
-        audioManager.stopAll();
-    } else if (pageName === 'game') {
-        // 进入游戏页面时开始播放背景音乐
-        if (currentStory.settings.genre) {
-            audioManager.playBackgroundMusic(currentStory.settings.genre);
-        }
+    if (pageName === 'game') {
+        setGameUIVisibility(false);
     }
 }
 
@@ -2676,292 +1498,14 @@ function unlockPremiumFeature(feature) {
     alert(`高级功能"${feature}"暂未实现，敬请期待！`);
 }
 
-/**
- * 保存音频设置到本地存储
- */
-function saveAudioSettings() {
-    const audioSettings = {
-        isMuted: audioManager.isMuted,
-        masterVolume: audioManager.masterVolume,
-        bgmEnabled: document.getElementById('bgm-toggle')?.checked,
-        ambientEnabled: document.getElementById('ambient-toggle')?.checked,
-        uiSoundEnabled: document.getElementById('ui-toggle')?.checked
-    };
-    
-    try {
-        localStorage.setItem('vibeStoryAudioSettings', JSON.stringify(audioSettings));
-    } catch (error) {
-        console.error('保存音频设置失败:', error);
-    }
-}
-
-/**
- * 定期保存音频设置
- */
-setInterval(saveAudioSettings, 30000); // 每30秒保存一次
-
-// 页面卸载时保存设置
-window.addEventListener('beforeunload', saveAudioSettings);
-
-/**
- * 更新音乐信息面板
- */
-function updateMusicInfo() {
-    const musicInfoContainer = document.getElementById('music-info');
-    if (!musicInfoContainer) return;
-    
-    const musicInfo = audioManager.getCurrentMusicInfo();
-    if (!musicInfo) {
-        musicInfoContainer.innerHTML = '<div class="no-music">当前没有播放音乐</div>';
-        return;
-    }
-    
-    const musicType = musicInfo.type === 'theme' ? '主题音乐' : '背景音乐';
-    const musicName = musicInfo.name;
-    const musicDescription = musicInfo.description;
-    
-    const currentMusicDiv = musicInfoContainer.querySelector('.current-music');
-    if (currentMusicDiv) {
-        currentMusicDiv.innerHTML = `
-            <div class="music-type">${musicType}</div>
-            <div class="music-name">${musicName}</div>
-            <div class="music-description">${musicDescription}</div>
-            <div class="music-visualizer">
-                <div class="visualizer-bar"></div>
-                <div class="visualizer-bar"></div>
-                <div class="visualizer-bar"></div>
-                <div class="visualizer-bar"></div>
-                <div class="visualizer-bar"></div>
-            </div>
-        `;
-    }
-    
-    // 更新主题建议的激活状态
-    updateThemeSuggestions();
-}
-
-/**
- * 更新主题建议
- */
-function updateThemeSuggestions() {
-    const themeItems = document.querySelectorAll('.theme-item');
-    const currentTheme = audioManager.currentTheme;
-    
-    themeItems.forEach(item => {
-        const themeName = item.dataset.theme;
-        if (themeName === currentTheme) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
-    });
-}
-
-/**
- * 初始化音乐控制功能
- */
-function initializeMusicControls() {
-    const musicPauseBtn = document.getElementById('music-pause');
-    const musicResumeBtn = document.getElementById('music-resume');
-    const musicStopBtn = document.getElementById('music-stop');
-    
-    if (musicPauseBtn) {
-        musicPauseBtn.addEventListener('click', () => {
-            audioManager.setMuted(true);
-            musicPauseBtn.style.display = 'none';
-            musicResumeBtn.style.display = 'inline-block';
-        });
-    }
-    
-    if (musicResumeBtn) {
-        musicResumeBtn.addEventListener('click', () => {
-            audioManager.setMuted(false);
-            musicResumeBtn.style.display = 'none';
-            musicPauseBtn.style.display = 'inline-block';
-        });
-    }
-    
-    if (musicStopBtn) {
-        musicStopBtn.addEventListener('click', () => {
-            audioManager.stopAll();
-            updateMusicInfo();
-            musicResumeBtn.style.display = 'none';
-            musicPauseBtn.style.display = 'inline-block';
-        });
-    }
-    
-    // 主题建议点击事件
-    const themeItems = document.querySelectorAll('.theme-item');
-    themeItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const themeName = item.dataset.theme;
-            audioManager.playThemeMusic(themeName);
-            updateMusicInfo();
-            
-            // 添加切换动画
-            const currentMusic = document.querySelector('.current-music');
-            if (currentMusic) {
-                currentMusic.classList.add('music-transition');
-                setTimeout(() => {
-                    currentMusic.classList.remove('music-transition');
-                }, 500);
-            }
-        });
-    });
-}
-
-/**
- * 初始化音频上下文恢复
- */
-function initializeAudioContextResume() {
-    let audioContextResumed = false;
-    
-    // 监听用户交互事件
-    const resumeAudioContext = async () => {
-        if (audioContextResumed) return;
-        
-        if (audioManager && audioManager.audioContext) {
-            if (audioManager.audioContext.state === 'suspended') {
-                try {
-                    await audioManager.audioContext.resume();
-                    console.log('音频上下文已恢复');
-                    audioContextResumed = true;
-                    
-                    // 重新尝试预加载音频
-                    setTimeout(() => {
-                        preloadAudioFiles();
-                    }, 1000);
-                } catch (error) {
-                    console.warn('恢复音频上下文失败:', error);
-                }
-            }
-        }
-    };
-    
-    // 监听各种用户交互事件
-    const events = ['click', 'touchstart', 'keydown', 'mousedown'];
-    events.forEach(eventType => {
-        document.addEventListener(eventType, resumeAudioContext, { once: true });
-    });
-    
-    // 如果用户已经交互过，立即尝试恢复
-    if (document.readyState === 'complete') {
-        resumeAudioContext();
-    } else {
-        window.addEventListener('load', resumeAudioContext);
-    }
+function setGameUIVisibility(isStoryReady) {
+    // 导出按钮
+    const exportBtn = document.getElementById('export-story');
+    if (exportBtn) exportBtn.classList.toggle('hidden', !isStoryReady);
+    // 侧边栏tab按钮
+    const tabBtns = document.querySelectorAll('.game-sidebar .tab-btn');
+    tabBtns.forEach(btn => btn.classList.toggle('hidden', !isStoryReady));
 }
 
 // 页面加载完成后初始化游戏
 document.addEventListener('DOMContentLoaded', initGame);
-
-/**
- * 初始化移动端侧边栏切换
- */
-function initializeMobileSidebar() {
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggleIcon = document.getElementById('sidebar-toggle-icon');
-    
-    if (sidebarToggle && sidebar) {
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            sidebarToggleIcon.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
-        });
-        
-        // 点击侧边栏外部关闭侧边栏
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-                sidebar.classList.remove('open');
-                sidebarToggleIcon.textContent = '☰';
-            }
-        });
-        
-        // 监听窗口大小变化
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                sidebar.classList.remove('open');
-                sidebarToggleIcon.textContent = '☰';
-            }
-        });
-    }
-}
-
-/**
- * 性能优化 - 图片懒加载
- */
-function initializeLazyLoading() {
-    const images = document.querySelectorAll('img[data-src]');
-    
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.classList.add('loaded');
-                observer.unobserve(img);
-            }
-        });
-    });
-    
-    images.forEach(img => imageObserver.observe(img));
-}
-
-/**
- * 性能优化 - 缓存管理
- */
-function initializeCacheManagement() {
-    // 清理过期的音频缓存
-    setInterval(() => {
-        const now = Date.now();
-        const maxAge = 30 * 60 * 1000; // 30分钟
-        
-        for (const [url, audioBuffer] of audioManager.soundCache.entries()) {
-            if (audioBuffer && audioBuffer.timestamp && (now - audioBuffer.timestamp) > maxAge) {
-                audioManager.soundCache.delete(url);
-                console.log(`清理过期音频缓存: ${url}`);
-            }
-        }
-    }, 5 * 60 * 1000); // 每5分钟检查一次
-}
-
-/**
- * 性能优化 - 内存管理
- */
-function initializeMemoryManagement() {
-    // 监听页面可见性变化
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            // 页面隐藏时，暂停音频并清理一些资源
-            if (audioManager.backgroundMusic) {
-                audioManager.backgroundMusic.source.suspend();
-            }
-            if (audioManager.ambientSound) {
-                audioManager.ambientSound.source.suspend();
-            }
-        } else {
-            // 页面显示时，恢复音频
-            if (audioManager.backgroundMusic) {
-                audioManager.backgroundMusic.source.resume();
-            }
-            if (audioManager.ambientSound) {
-                audioManager.ambientSound.source.resume();
-            }
-        }
-    });
-    
-    // 监听内存压力
-    if ('memory' in performance) {
-        setInterval(() => {
-            const memory = performance.memory;
-            const usedMB = memory.usedJSHeapSize / 1024 / 1024;
-            const totalMB = memory.totalJSHeapSize / 1024 / 1024;
-            
-            if (usedMB > totalMB * 0.8) {
-                console.warn('内存使用率过高，清理缓存');
-                // 清理一些非关键缓存
-                audioManager.soundCache.clear();
-            }
-        }, 30 * 1000); // 每30秒检查一次
-    }
-}
