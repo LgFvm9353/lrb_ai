@@ -1,1511 +1,842 @@
-// // VibeStory
+// VibeStory - 关键词驱动的互动小说平台
+// 优化版本 - 简洁大方的界面设计
 
-// API配置
+// ==================== 配置常量 ====================
 const API_CONFIG = {
     url: 'https://api.deepseek.com/v1/chat/completions',
-    apiKey: 'sk-77a11aba20914bddb5294cc2d2d3a14d', // DeepSeek API密钥
+    apiKey: 'sk-77a11aba20914bddb5294cc2d2d3a14d', 
     maxRetries: 3,
     retryDelay: 1000,
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk-77a11aba20914bddb5294cc2d2d3a14d'
-    }
+    requestTimeout: 30000
 };
 
-// 故事配置
 const STORY_CONFIG = {
-    MAX_SCENES: 12, // 最大场景数量，故事将在达到此数量后结束
-    CURRENT_SCENE: 0, // 当前场景索引
-    TEXT_LENGTH: {
-        DESKTOP: { MIN: 50, MAX: 80 }, // PC端每段对话字数
-        MOBILE: { MIN: 20, MAX: 30 }   // 移动端每段对话字数
-    },
-    IS_STORY_ENDED: false, // 故事是否已结束标志
-    BRANCH_DEPTH: 3, // 预生成的分支深度
-    STEPS_PER_BRANCH: 5, // 每个分支的步数
-    PRELOAD_THRESHOLD: 2 // 当剩余步数小于此值时触发预加载
+    TOTAL_SEGMENTS: 12,
+    MIN_CONTENT_LENGTH: 300,
+    MAX_CONTENT_LENGTH: 600,
+    CHOICES_COUNT: 3
 };
 
-// 背景库
-const BACKGROUND_LIBRARY = {
-    none: {
-        gradient: '',
-        image: ''
-    },
-    forest: {
-        gradient: 'linear-gradient(135deg, #2d5016, #3e7b27)',
-        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
-    },
-    city: {
-        gradient: 'linear-gradient(135deg, #1a1a2e, #16213e)',
-        image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
-    },
-    space: {
-        gradient: 'linear-gradient(135deg, #0c0c0c, #1a1a2e)',
-        image: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
-    },
-    ocean: {
-        gradient: 'linear-gradient(135deg, #006994, #0099cc)',
-        image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
-    },
-    desert: {
-        gradient: 'linear-gradient(135deg, #d2691e, #f4a460)',
-        image: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
-    },
-    mountain: {
-        gradient: 'linear-gradient(135deg, #4a4a4a, #696969)',
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
-    }
+const UI_CONFIG = {
+    ANIMATION_DURATION: 300,
+    TOAST_DURATION: 3000
 };
 
-// 场景关键词映射到背景类型
-const SCENE_KEYWORDS = {
-    forest: ['森林', '树木', '丛林', '绿色', '植物', '自然', '野外', '树林'],
-    city: ['城市', '街道', '建筑', '摩天楼', '都市', '市区', '城镇', '大厦'],
-    space: ['太空', '星空', '宇宙', '星球', '星际', '飞船', '星系', '外太空'],
-    ocean: ['海洋', '大海', '海底', '水下', '海滩', '海岸', '珊瑚', '潜水'],
-    desert: ['沙漠', '荒漠', '干旱', '沙丘', '戈壁', '黄沙', '炎热', '荒芜'],
-    mountain: ['山脉', '高山', '山峰', '山谷', '悬崖', '峡谷', '山地', '岩石']
-};
-
-// 游戏状态
+// ==================== 全局状态 ====================
 let currentStory = {
-    keywords: {
-        raw: '',
-        parsed: [],
-        sceneBase: '',
-        coreConflict: '',
-        specialElements: []
-    },
-    scenes: [],
-    currentSceneIndex: 0,
-    choices: [],
-    narrativeNodes: [],
-    characters: {
-        list: {},
-        relations: [],
-        attributes: {}
-    },
-    environment: {
-        audio: null,
-        colorTemp: '#ffffff',
-        tags: [],
-        currentBackground: 'none'
-    },
-    settings: {
-        difficulty: 3,
-        genre: 'adventure',
-        premium: {
-            advancedStyles: false,
-            dlcCharacters: false
-        }
-    },
-    memoryFragments: [],
-    // 故事树结构，用于存储预生成的所有分支
-    storyTree: {
-        // 当前节点ID
-        currentNodeId: 'root',
-        // 节点映射表，键为节点ID，值为节点对象
-        nodes: {}
-    },
-    // 当前路径，记录用户选择的路径
-    currentPath: [],
-    // 后台加载状态
-    backgroundLoading: false
+    keywords: '',
+    genre: '',
+    difficulty: 1,
+    segments: [],
+    currentSegment: 0,
+    isComplete: false,
+    characters: new Map(),
+    storyTree: {}
 };
 
-// 故事树节点结构
-class StoryNode {
-    constructor(id, content, choices = [], parentId = null, depth = 0) {
-        this.id = id;                 // 节点唯一ID
-        this.content = content;       // 故事内容
-        this.choices = choices;       // 选项列表
-        this.childrenIds = {};        // 子节点ID映射，键为选项文本，值为子节点ID
-        this.parentId = parentId;     // 父节点ID
-        this.depth = depth;           // 节点深度
-        this.isGenerated = false;     // 是否已生成子节点
-        this.isEnding = false;        // 是否是结局节点
-    }
-}
+let isGenerating = false;
 
-// 生成唯一ID
-function generateUniqueId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-}
-
-let isFirstStory = true;
-
-/**
- * 初始化游戏
- */
-function initGame() {
-    const keywordsInput = document.getElementById('keywords');
-    const genreSelect = document.getElementById('genre-select');
-    const storyContainer = document.getElementById('story');
-    const choicesContainer = document.getElementById('choices');
-    const narrativeNodesContainer = document.getElementById('narrative-nodes');
-    const characterGraph = document.getElementById('character-graph');
-    const characterStatsContainer = document.getElementById('character-stats');
-    const memoryFragmentsContainer = document.getElementById('memory-fragments');
-    const submitBtn = document.getElementById('submit');
-    const exportStoryBtn = document.getElementById('export-story');
-    const backToSetupBtn = document.getElementById('back-to-setup');
-    const backToHomeBtn = document.getElementById('back-to-home');
-
-    // 设置风格选择事件
-    if (genreSelect) {
-        genreSelect.addEventListener('change', function() {
-            currentStory.settings.genre = this.value;
-        });
-        genreSelect.value = currentStory.settings.genre;
-    }
-
-    // 设置开始游戏按钮事件
-    if (submitBtn) {
-        submitBtn.addEventListener('click', startGame);
-    }
-
-    // 设置导出故事按钮事件
-    if (exportStoryBtn) {
-        exportStoryBtn.addEventListener('click', exportStory);
-    }
-
-    // 设置返回按钮事件
-    if (backToSetupBtn) {
-        backToSetupBtn.addEventListener('click', () => switchPage('setup'));
-    }
-    if (backToHomeBtn) {
-        backToHomeBtn.addEventListener('click', () => switchPage('setup'));
-    }
-
-    // 初始化导航系统
-    initializeNavigation();
-    // 初始化侧边栏标签系统
-    initializeSidebarTabs();
-    // 提示用户设置API密钥
-    if (!API_CONFIG.apiKey) {
-        console.warn('请设置DeepSeek API密钥');
-    }
-}
-
-/**
- * 开始游戏
- */
-function startGame() {
-    isFirstStory = true;
-    const keywordsInput = document.getElementById('keywords');
-    const keywords = keywordsInput.value.trim();
-    if (!keywords) {
-        alert('请输入关键词！');
-        return;
-    }
-    // 验证API密钥
-    if (!API_CONFIG.apiKey) {
-        const apiKey = prompt('请输入您的DeepSeek API密钥：');
-        if (!apiKey) {
-            alert('需要API密钥才能开始游戏！');
-            return;
-        }
-        API_CONFIG.apiKey = apiKey;
-        API_CONFIG.headers.Authorization = 'Bearer ' + apiKey;
-    }
-    // 保存关键词
-    currentStory.keywords.raw = keywords;
-    currentStory.keywords.parsed = keywords.split('+').map(k => k.trim());
-    // 保存当前设置
-    const difficultyElem = document.getElementById('difficulty');
-    if (difficultyElem) {
-        currentStory.settings.difficulty = parseInt(difficultyElem.value);
-    }
-    const genreElem = document.getElementById('genre-select');
-    if (genreElem) {
-        currentStory.settings.genre = genreElem.value;
-    }
-    // 切换到游戏页面
-    switchPage('game');
-    // 显示加载状态
-    const storyContainer = document.getElementById('story');
-    storyContainer.innerHTML = '<div class="loading">正在为你生成专属故事...</div>';
-    // 清空选择容器
-    const choicesContainer = document.getElementById('choices');
-    choicesContainer.innerHTML = '';
-    // 重置故事状态
-    currentStory.scenes = [];
-    currentStory.currentSceneIndex = 0;
-    // 生成故事
-    generateStory(keywords).catch(error => {
-        console.error('生成故事失败:', error);
-        storyContainer.innerHTML = `<div class="error">生成故事失败: ${error.message}</div>`;
-        // 添加重试按钮
-        const retryButton = document.createElement('button');
-        retryButton.className = 'primary-btn';
-        retryButton.textContent = '重试';
-        retryButton.addEventListener('click', startGame);
-        storyContainer.appendChild(retryButton);
-        // 添加返回按钮
-        const backButton = document.createElement('button');
-        backButton.className = 'secondary-btn';
-        backButton.textContent = '返回设置';
-        backButton.addEventListener('click', () => switchPage('setup'));
-        storyContainer.appendChild(backButton);
-    });
-    setGameUIVisibility(false);
-}
-
-/**
- * 生成故事
- */
-async function generateStory(keywords) {
-    const storyContainer = document.getElementById('story');
-    const choicesContainer = document.getElementById('choices');
-    
-    // 重置故事配置
-    STORY_CONFIG.CURRENT_SCENE = 0;
-    STORY_CONFIG.IS_STORY_ENDED = false;
-    
-    // 首次和后续生成的提示
-    if (isFirstStory) {
-        storyContainer.innerHTML = '<div class="loading">正在为你生成专属故事...</div>';
-        isFirstStory = false;
-    } else {
-        storyContainer.innerHTML = '<div class="loading">正在生成专属剧情...</div>';
-    }
-    choicesContainer.innerHTML = '';
-    
-    try {
-        // 重置故事树
-        currentStory.storyTree = {
-            currentNodeId: 'root',
-            nodes: {}
-        };
-        currentStory.currentPath = [];
+// ==================== 工具函数 ====================
+class Utils {
+    static showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
         
-        // 获取设备类型的文本长度限制
-        const textLength = getDeviceTextLength();
+        container.appendChild(toast);
         
-        const genre = currentStory.settings.genre;
-        const prompt = `请基于关键词“${keywords}”和风格“${genre}”，创作一个紧密贴合主题和风格的互动故事开头。要求：\n- 剧情推进合理，环环相扣，情节紧凑，人物动机清晰。\n- 总共12段剧情，结局自然且不突兀。\n- 每段剧情都与主题和风格高度相关。\n- 第一段为开篇，介绍背景、角色和冲突。\n- 后续每段推进故事发展，最后一段为结局。\n- 每段50-80字。\n- 返回JSON格式：{\"story\": [\"第1段...\", ... , \"第12段...\"], \"choices\": [\"选项1\", ...] }\n- story为12段字符串数组，choices为本段可选项数组。\n- 不要添加任何多余说明、注释或代码块。`;
-        
-        const response = await callDeepSeekAPI(prompt);
-        
-        let result;
-        try {
-            result = JSON.parse(response);
-        } catch (parseError) {
-            console.error('JSON解析错误:', parseError, '原始响应:', response);
-            throw new Error(`无法解析API返回的内容: ${parseError.message}\n\n原始响应: ${response.substring(0, 100)}...`);
-        }
-        
-        // 验证返回的数据结构
-        if (!result.story) {
-            throw new Error('API返回的数据缺少story字段');
-        }
-        
-        // 确保story是字符串
-        if (typeof result.story === 'object') {
-            result.story = result.story.text || result.story.content || JSON.stringify(result.story);
-        }
-        
-        // 确保choices是字符串数组
-        if (result.choices) {
-            if (!Array.isArray(result.choices)) {
-                // 如果不是数组，尝试转换
-                result.choices = Object.values(result.choices);
-            }
-            
-            // 处理数组中的每个元素
-            result.choices = result.choices.map(choice => {
-                if (typeof choice === 'object') {
-                    return choice.text || choice.description || JSON.stringify(choice);
-                }
-                return String(choice);
-            });
-        } else {
-            result.choices = [];
-        }
-        
-        // 创建根节点
-        const rootId = 'root';
-        const rootNode = new StoryNode(rootId, result.story, result.choices);
-        currentStory.storyTree.nodes[rootId] = rootNode;
-        
-        // 显示故事内容
-        displayStory(result.story);
-        
-        // 显示选择
-        displayChoices(result.choices);
-        
-        // 保存到故事状态
-        currentStory.scenes.push({
-            content: result.story,
-            choices: result.choices
-        });
-        
-        // 更新当前场景索引
-        STORY_CONFIG.CURRENT_SCENE++;
-        
-        // 初始化进度条
-        updateStoryGenerationProgress(1, calculateTotalNodes());
-        
-        // 在后台生成故事树的其余部分
         setTimeout(() => {
-            const progressInfo = { current: 1, total: calculateTotalNodes() };
-            generateStoryBranches(rootId, result.story, result.choices, 1, progressInfo);
-        }, 100);
-        
-        setGameUIVisibility(true);
-    } catch (error) {
-        console.error('生成故事失败:', error);
-        storyContainer.innerHTML = `
-            <div class="error">
-                <h3>生成故事失败</h3>
-                <p>${error.message}</p>
-                <button id="retry-story" class="primary-btn">重试</button>
-                <button id="back-to-setup" class="secondary-btn">返回设置</button>
-            </div>
-        `;
-        
-        // 添加重试和返回按钮的事件监听器
-        document.getElementById('retry-story').addEventListener('click', () => generateStory(keywords));
-        document.getElementById('back-to-setup').addEventListener('click', () => switchPage('setup'));
-        setGameUIVisibility(false);
-    }
-}
-
-/**
- * 更新故事生成进度
- */
-function updateStoryGenerationProgress(current, total) {
-    const percentage = Math.min(Math.round((current / total) * 100), 100);
-    const progressBar = document.querySelector('.progress-bar');
-    const progressPercentage = document.querySelector('.progress-percentage');
-    const progressStatus = document.querySelector('.progress-status');
-    
-    if (progressBar && progressPercentage && progressStatus) {
-        progressBar.style.width = `${percentage}%`;
-        progressPercentage.textContent = `${percentage}%`;
-        
-        if (percentage < 25) {
-            progressStatus.textContent = '正在生成故事主干...';
-        } else if (percentage < 50) {
-            progressStatus.textContent = '正在探索分支可能性...';
-        } else if (percentage < 75) {
-            progressStatus.textContent = '正在丰富故事细节...';
-        } else if (percentage < 100) {
-            progressStatus.textContent = '正在完善故事结局...';
-        } else {
-            progressStatus.textContent = '故事树生成完成！';
-        }
-    }
-}
-
-/**
- * 计算故事树的总节点数
- */
-function calculateTotalNodes() {
-    // 基于分支深度和每个节点的平均选择数计算
-    const avgChoicesPerNode = 3; // 假设平均每个节点有3个选择
-    let total = 0;
-    
-    // 计算每一层的节点数并累加
-    for (let i = 0; i <= STORY_CONFIG.BRANCH_DEPTH; i++) {
-        // 第i层的节点数 = avgChoicesPerNode^i
-        total += Math.pow(avgChoicesPerNode, i);
+            toast.remove();
+        }, UI_CONFIG.TOAST_DURATION);
     }
     
-    return total;
-}
-
-/**
- * 递归生成故事分支
- * @param {string} parentId - 父节点ID
- * @param {string} parentContent - 父节点内容
- * @param {Array} parentChoices - 父节点选项
- * @param {number} depth - 当前深度
- * @param {Object} progressInfo - 进度信息对象
- */
-async function generateStoryBranches(parentId, parentContent, parentChoices, depth, progressInfo = { current: 0, total: calculateTotalNodes() }) {
-    // 如果已达到最大深度或没有选项，则停止生成
-    if (depth >= STORY_CONFIG.BRANCH_DEPTH || !parentChoices || parentChoices.length === 0) {
-        return;
+    static formatText(text) {
+        return text.trim()
+            .replace(/\n{3,}/g, '\n\n')
+            .replace(/\s{2,}/g, ' ');
     }
     
-    // 标记当前正在后台加载
-    currentStory.backgroundLoading = true;
-    
-    // 获取父节点
-    const parentNode = currentStory.storyTree.nodes[parentId];
-    if (!parentNode) return;
-    
-    // 更新进度
-    progressInfo.current++;
-    updateStoryGenerationProgress(progressInfo.current, progressInfo.total);
-    
-    // 获取设备类型的文本长度限制
-    const textLength = getDeviceTextLength();
-    
-    // 为每个选项生成后续故事
-    for (let i = 0; i < parentChoices.length; i++) {
-        const choice = parentChoices[i];
-        let choiceText = typeof choice === 'object' ? choice.text || choice.description : choice;
-        
-        try {
-            // 检查是否接近故事结束
-            const isNearEnd = depth >= STORY_CONFIG.BRANCH_DEPTH - 1;
-            const endingPrompt = isNearEnd ? `\n请注意：故事应该在接下来的1-2个场景内结束，请开始为故事准备结局。` : '';
-            
-            // 构建提示词，要求一次性生成多步骤的故事段落
-            const branchPrompt = `基于之前的故事："${parentContent}"\n\n用户选择了："${choiceText}"\n\n请继续故事，生成${STORY_CONFIG.STEPS_PER_BRANCH}步完整的故事段落，预测这个选项的后续发展。每段对话的字数应控制在${textLength.MIN}-${textLength.MAX}字之间。${endingPrompt}\n\n同时为每个步骤提供2-3个新的选择。\n\n用JSON格式返回，包含以下结构：\n{\n  "steps": [\n    {\n      "content": "第一步的故事内容",\n      "choices": ["选项1", "选项2", "选项3"]\n    },\n    {\n      "content": "第二步的故事内容",\n      "choices": ["选项1", "选项2"]\n    }\n    // 更多步骤...\n  ]\n}`;
-            
-            const branchResponse = await callDeepSeekAPI(branchPrompt);
-            const branchResult = JSON.parse(branchResponse);
-            
-            // 验证返回的数据结构
-            if (!branchResult.steps || !Array.isArray(branchResult.steps) || branchResult.steps.length === 0) {
-                console.error('API返回的数据缺少有效的steps字段');
-                continue;
-            }
-            
-            // 创建分支节点链
-            let currentParentId = parentId;
-            let currentDepth = depth;
-            
-            for (let j = 0; j < branchResult.steps.length; j++) {
-                const step = branchResult.steps[j];
-                
-                if (!step.content || !step.choices || !Array.isArray(step.choices)) {
-                    console.error(`步骤 ${j+1} 缺少有效的content或choices字段`);
-                    continue;
-                }
-                
-                // 检查是否是最后一步，如果是则标记为结局
-                const isLastStep = j === branchResult.steps.length - 1 && currentDepth + 1 >= STORY_CONFIG.BRANCH_DEPTH;
-                
-                // 创建新节点
-                const nodeId = generateUniqueId();
-                const newNode = new StoryNode(
-                    nodeId,
-                    step.content,
-                    isLastStep ? ['查看故事总结'] : step.choices,
-                    currentParentId,
-                    currentDepth + 1
-                );
-                
-                // 设置结局标志
-                newNode.isEnding = isLastStep;
-                
-                // 将新节点添加到故事树
-                currentStory.storyTree.nodes[nodeId] = newNode;
-                
-                // 更新父节点的子节点映射
-                if (j === 0) {
-                    // 第一步，连接到原始选项
-                    parentNode.childrenIds[choiceText] = nodeId;
-                } else {
-                    // 后续步骤，连接到上一步的第一个选项
-                    const prevNode = currentStory.storyTree.nodes[currentParentId];
-                    if (prevNode && prevNode.choices && prevNode.choices.length > 0) {
-                        const firstChoice = prevNode.choices[0];
-                        const firstChoiceText = typeof firstChoice === 'object' ? 
-                            firstChoice.text || firstChoice.description : 
-                            String(firstChoice);
-                        prevNode.childrenIds[firstChoiceText] = nodeId;
-                    }
-                }
-                
-                // 更新当前父节点为这个新节点
-                currentParentId = nodeId;
-                currentDepth++;
-            }
-            
-            // 如果深度允许，继续递归生成更深的分支
-                if (currentDepth < STORY_CONFIG.BRANCH_DEPTH) {
-                    const lastNode = currentStory.storyTree.nodes[currentParentId];
-                    if (lastNode && !lastNode.isEnding) {
-                        await generateStoryBranches(
-                            currentParentId,
-                            lastNode.content,
-                            lastNode.choices,
-                            currentDepth,
-                            progressInfo
-                        );
-                    }
-                }
-                
-                // 更新进度
-                progressInfo.current++;
-                updateStoryGenerationProgress(progressInfo.current, progressInfo.total);
-                
-                // 定期保存到本地存储
-                if (progressInfo.current % 5 === 0) { // 每生成5个节点保存一次
-                    storyTreeCache.saveToLocalStorage();
-                }
-            
-        } catch (error) {
-            console.error(`生成选项 "${choiceText}" 的分支失败:`, error);
+    static validateKeywords(keywords) {
+        if (!keywords || keywords.trim().length === 0) {
+            return { valid: false, message: '请输入关键词' };
         }
         
-        // 在每个选项之间添加短暂延迟，避免API限制
-        if (i < parentChoices.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 500));
+        const keywordArray = keywords.split('+').filter(k => k.trim());
+        if (keywordArray.length < 1) {
+            return { valid: false, message: '请至少输入一个关键词' };
         }
+        
+        if (keywordArray.length > 5) {
+            return { valid: false, message: '关键词数量不能超过5个' };
+        }
+        
+        return { valid: true, keywords: keywordArray };
     }
     
-    // 标记父节点已生成子节点
-    parentNode.isGenerated = true;
-    
-    // 标记后台加载完成
-    currentStory.backgroundLoading = false;
-    
-    console.log(`完成深度 ${depth} 的分支生成`);
+    static sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }
 
-/**
- * 获取当前设备的文本长度限制
- */
-function getDeviceTextLength() {
-    // 检测是否为移动设备
-    const isMobile = window.innerWidth <= 768;
-    return isMobile ? STORY_CONFIG.TEXT_LENGTH.MOBILE : STORY_CONFIG.TEXT_LENGTH.DESKTOP;
-}
-
-/**
- * 生成骨架屏加载动画HTML
- */
-function generateSkeletonLoading() {
-    return `
-        <div class="skeleton-loading">
-            <div class="skeleton-text"></div>
-            <div class="skeleton-text"></div>
-            <div class="skeleton-text"></div>
-            <div class="skeleton-text"></div>
-            <div class="skeleton-text"></div>
-        </div>
-    `;
-}
-
-/**
- * 生成骨架屏选项加载动画HTML
- */
-function generateSkeletonChoices() {
-    return `
-        <div class="skeleton-loading skeleton-choice"></div>
-        <div class="skeleton-loading skeleton-choice"></div>
-        <div class="skeleton-loading skeleton-choice"></div>
-    `;
-}
-
-/**
- * 调用DeepSeek API
- */
-async function callDeepSeekAPI(prompt) {
-    // 确保API密钥已设置
-    if (!API_CONFIG.apiKey) {
-        const apiKey = prompt('请输入您的DeepSeek API密钥：');
-        if (!apiKey) {
-            throw new Error('需要API密钥才能调用DeepSeek API');
-        }
-        API_CONFIG.apiKey = apiKey;
-        API_CONFIG.headers.Authorization = 'Bearer ' + apiKey;
+// ==================== API管理器 ====================
+class APIManager {
+    constructor() {
+        this.cache = new Map();
+        this.requestQueue = [];
+        this.isProcessing = false;
     }
     
-    // 添加重试逻辑
-    let retries = 0;
-    let lastError = null;
-    
-    while (retries <= API_CONFIG.maxRetries) {
-        try {
-            // 确保每次请求都使用最新的headers
-            const headers = {
-                ...API_CONFIG.headers,
-                'Authorization': 'Bearer ' + API_CONFIG.apiKey
-            };
-            
-            console.log('正在调用DeepSeek API...');
-            const response = await fetch(API_CONFIG.url, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify({
-                    model: 'deepseek-chat',
-                    messages: [
-                        {
-                            role: 'user',
-                            content: prompt
-                        }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 2000
-                })
+    async callAPI(prompt, segment = 1) {
+        const cacheKey = this.generateCacheKey(prompt, segment);
+        
+        // 检查缓存
+        if (this.cache.has(cacheKey)) {
+            return this.cache.get(cacheKey);
+        }
+        
+        // 添加到请求队列
+        return new Promise((resolve, reject) => {
+            this.requestQueue.push({
+                prompt,
+                segment,
+                cacheKey,
+                resolve,
+                reject
             });
             
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error(`API响应错误: ${response.status} ${response.statusText}`, errorText);
-                
-                if (response.status === 401) {
-                    // 认证错误，重新获取API密钥
-                    const apiKey = prompt('API密钥无效，请重新输入DeepSeek API密钥：');
-                    if (!apiKey) {
-                        throw new Error('需要有效的API密钥才能继续');
-                    }
-                    API_CONFIG.apiKey = apiKey;
-                    API_CONFIG.headers.Authorization = 'Bearer ' + apiKey;
-                    retries++;
-                    continue;
-                }
-                
-                throw new Error(`API调用失败: ${response.status} ${response.statusText}`);
-            }
-            
-            const data = await response.json();
-            const content = data.choices[0].message.content;
-            
-            // 处理返回的内容，确保是有效的JSON
-            // 如果内容包含markdown代码块，提取JSON部分
-            let jsonContent = content;
-            const jsonRegex = /```(?:json)?\s*([\s\S]*?)```/;
-            const match = content.match(jsonRegex);
-            
-            if (match && match[1]) {
-                jsonContent = match[1].trim();
-            }
-            
-            // 尝试验证JSON是否有效
-            try {
-                JSON.parse(jsonContent);
-                return jsonContent;
-            } catch (e) {
-                console.warn('API返回的内容不是有效的JSON，尝试修复格式...');
-                // 尝试提取看起来像JSON的部分
-                const possibleJson = jsonContent.match(/\{[\s\S]*\}/);
-                if (possibleJson) {
-                    return possibleJson[0];
-                }
-                throw new Error('无法解析API返回的内容为有效JSON');
-            }
-            
-        } catch (error) {
-            console.error(`尝试 ${retries + 1}/${API_CONFIG.maxRetries + 1} 失败:`, error);
-            lastError = error;
-            retries++;
-            
-            if (retries <= API_CONFIG.maxRetries) {
-                // 等待一段时间后重试
-                await new Promise(resolve => setTimeout(resolve, API_CONFIG.retryDelay * retries));
-            }
-        }
+            this.processQueue();
+        });
     }
     
-    throw lastError || new Error('API调用失败，已达到最大重试次数');
-}
-
-/**
- * 显示故事内容
- */
-function displayStory(content) {
-    const storyContainer = document.getElementById('story');
-    
-    // 确保内容是字符串
-    let storyContent = content;
-    if (typeof content === 'object' && content !== null) {
-        // 如果是对象，尝试获取text或content属性
-        storyContent = content.text || content.content || JSON.stringify(content);
-        console.warn('故事内容是对象格式，已转换为字符串:', content);
-    } else if (typeof content !== 'string') {
-        storyContent = String(content);
-        console.warn('故事内容不是字符串格式，已转换:', content);
-    }
-    
-    // 格式化故事内容，添加段落
-    storyContent = storyContent
-        .split('\n\n')
-        .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
-        .join('');
-    
-    storyContainer.innerHTML = `<div class="story-content">${storyContent}</div>`;
-    
-    // 根据故事内容自动更新背景
-    detectSceneBackground(storyContent);
-}
-
-/**
- * 根据背景类型更新页面背景
- */
-function updateBackgroundByType(backgroundType) {
-    const background = BACKGROUND_LIBRARY[backgroundType];
-    if (!background) return;
-    
-    // 保存当前背景类型
-    currentStory.environment.currentBackground = backgroundType;
-    
-    // 应用背景渐变
-    if (background.gradient) {
-        document.body.style.backgroundImage = background.gradient;
-    }
-    
-    // 应用背景图片
-    if (background.image) {
-        // 创建或获取背景图片容器
-        let bgImageContainer = document.getElementById('background-image-container');
-        if (!bgImageContainer) {
-            bgImageContainer = document.createElement('div');
-            bgImageContainer.id = 'background-image-container';
-            bgImageContainer.style.position = 'fixed';
-            bgImageContainer.style.top = '0';
-            bgImageContainer.style.left = '0';
-            bgImageContainer.style.width = '100%';
-            bgImageContainer.style.height = '100%';
-            bgImageContainer.style.zIndex = '-3';
-            bgImageContainer.style.transition = 'opacity 1.5s ease';
-            bgImageContainer.style.backgroundSize = 'cover';
-            bgImageContainer.style.backgroundPosition = 'center';
-            bgImageContainer.style.opacity = '0';
-            document.body.appendChild(bgImageContainer);
-        }
-        
-        // 设置背景图片并添加淡入效果
-        bgImageContainer.style.backgroundImage = `url(${background.image})`;
-        setTimeout(() => {
-            bgImageContainer.style.opacity = '0.7'; // 增加不透明度，使背景更明显
-        }, 50);
-    } else {
-        // 如果没有图片，移除背景图片容器
-        const bgImageContainer = document.getElementById('background-image-container');
-        if (bgImageContainer) {
-            bgImageContainer.style.opacity = '0';
-            // 等待淡出动画完成后移除元素
-            setTimeout(() => {
-                bgImageContainer.remove();
-            }, 1500);
-        }
-    }
-    
-    console.log(`背景已更新为: ${backgroundType}`);
-}
-
-/**
- * 根据故事内容检测并更新场景背景
- */
-function detectSceneBackground(storyContent) {
-    // 如果用户已手动选择背景，则不自动更新
-    const bgSelect = document.getElementById('background-select');
-    if (bgSelect && bgSelect.value !== 'none') {
-        return;
-    }
-    
-    // 将故事内容转换为小写以便匹配
-    const lowerContent = storyContent.toLowerCase();
-    
-    // 遍历场景关键词，检查是否匹配
-    let matchedType = null;
-    let maxMatches = 0;
-    
-    for (const [type, keywords] of Object.entries(SCENE_KEYWORDS)) {
-        let matches = 0;
-        for (const keyword of keywords) {
-            if (lowerContent.includes(keyword)) {
-                matches++;
-            }
-        }
-        
-        if (matches > maxMatches) {
-            maxMatches = matches;
-            matchedType = type;
-        }
-    }
-    
-    // 如果找到匹配的背景类型，并且与当前背景不同，则更新背景
-    if (matchedType && matchedType !== currentStory.environment.currentBackground) {
-        console.log(`根据故事内容自动更新背景为: ${matchedType}`);
-        updateBackgroundByType(matchedType);
-    }
-}
-
-/**
- * 显示选择
- */
-function displayChoices(choices) {
-    const choicesContainer = document.getElementById('choices');
-    choicesContainer.innerHTML = '';
-    
-    // 确保choices是数组
-    if (!Array.isArray(choices)) {
-        console.error('选项不是数组格式:', choices);
-        // 尝试转换为数组
-        if (typeof choices === 'object' && choices !== null) {
-            choices = Object.values(choices);
-        } else {
-            choices = [];
-        }
-    }
-    
-    choices.forEach((choice, index) => {
-        const button = document.createElement('button');
-        button.className = 'choice-btn';
-        
-        // 处理选项内容，确保是字符串
-        let choiceText = choice;
-        if (typeof choice === 'object' && choice !== null) {
-            // 如果是对象，尝试获取text或description属性
-            choiceText = choice.text || choice.description || JSON.stringify(choice);
-        } else if (typeof choice !== 'string') {
-            choiceText = String(choice);
-        }
-        
-        button.textContent = choiceText;
-        button.dataset.index = index;
-        button.dataset.choice = choiceText;
-        
-        // 检查是否是故事结束选项
-        if (STORY_CONFIG.IS_STORY_ENDED || choiceText === '查看故事总结') {
-            button.classList.add('end-choice-btn');
-            button.addEventListener('click', () => {
-                // 显示故事结束内容
-                showStoryEndContent();
-                
-                // 更新按钮文本
-                button.textContent = '导出故事';
-                button.removeEventListener('click', () => {});
-                button.addEventListener('click', exportStory);
-            });
-        } else {
-            // 添加点击事件
-            button.addEventListener('click', () => makeChoice(index, choiceText));
-            
-            // 检查是否已经预生成了这个选项的分支
-            const currentNodeId = currentStory.storyTree.currentNodeId;
-            const currentNode = currentStory.storyTree.nodes[currentNodeId];
-            
-            if (currentNode) {
-                const childNodeId = currentNode.childrenIds[choiceText];
-                if (!childNodeId) {
-                    // 如果没有预生成，添加悬停事件来触发预加载
-                    button.addEventListener('mouseenter', () => {
-                        // 检查是否正在后台加载
-                        if (!currentStory.backgroundLoading) {
-                            console.log(`悬停预加载选项: "${choiceText}"`);
-                            // 触发预加载
-                            setTimeout(() => {
-                                const currentNode = currentStory.storyTree.nodes[currentStory.storyTree.currentNodeId];
-                                if (currentNode && !currentNode.childrenIds[choiceText]) {
-                                    // 计算进度信息
-                                    const totalNodes = calculateTotalNodes();
-                                    const currentNodes = Object.keys(currentStory.storyTree.nodes).length;
-                                    const progressInfo = {
-                                        current: currentNodes,
-                                        total: totalNodes,
-                                        nodesGenerated: 0
-                                    };
-                                    
-                                    // 模拟点击这个选项，但不更新UI
-                                    simulateChoiceForPreload(choiceText, progressInfo);
-                                }
-                            }, 200);
-                        }
-                    });
-                } else {
-                    // 如果已经预生成，添加一个类来表示已准备好
-                    button.classList.add('preloaded-choice');
-                }
-            }
-        }
-        
-        choicesContainer.appendChild(button);
-    });
-    
-    // 检查是否需要预加载更多分支
-    checkAndPreloadMoreBranches();
-}
-
-/**
- * 模拟选择以进行预加载，但不更新UI
- */
-async function simulateChoiceForPreload(choice, progressInfo = { current: 0, total: 0, nodesGenerated: 0 }) {
-    try {
-        // 标记正在后台加载
-        currentStory.backgroundLoading = true;
-        
-        // 获取当前节点
-        const currentNodeId = currentStory.storyTree.currentNodeId;
-        const currentNode = currentStory.storyTree.nodes[currentNodeId];
-        
-        if (!currentNode || currentNode.childrenIds[choice]) {
-            // 如果节点不存在或已经有这个选项的子节点，则不需要预加载
-            currentStory.backgroundLoading = false;
+    async processQueue() {
+        if (this.isProcessing || this.requestQueue.length === 0) {
             return;
         }
         
-        console.log(`预加载选项: "${choice}" 的分支`);
+        this.isProcessing = true;
         
-        // 获取设备类型的文本长度限制
-        const textLength = getDeviceTextLength();
-        
-        // 检查是否接近故事结束
-        const isNearEnd = STORY_CONFIG.CURRENT_SCENE >= STORY_CONFIG.MAX_SCENES - 2;
-        const endingPrompt = isNearEnd ? `\n请注意：故事应该在接下来的1-2个场景内结束，请开始为故事准备结局。` : '';
-        
-        const prompt = `基于之前的故事："${currentNode.content}"\n\n用户选择了："${choice}"\n\n请继续故事，包含新的情节发展和2-3个新的选择。每段对话的字数应控制在${textLength.MIN}-${textLength.MAX}字之间。${endingPrompt}\n\n用JSON格式返回，包含story和choices字段。`;
-        
-        const response = await callDeepSeekAPI(prompt);
-        const result = JSON.parse(response);
-        
-        // 验证返回的数据结构
-        if (!result.story || !result.choices || !Array.isArray(result.choices)) {
-            throw new Error('API返回的数据格式不正确');
-        }
-        
-        // 检查是否达到最大场景数
-        const isEnding = STORY_CONFIG.CURRENT_SCENE + 1 >= STORY_CONFIG.MAX_SCENES;
-        const choices = isEnding ? ['查看故事总结'] : result.choices;
-        
-        // 创建新节点
-        const nodeId = generateUniqueId();
-        const newNode = new StoryNode(
-            nodeId,
-            result.story,
-            choices,
-            currentNodeId,
-            currentNode.depth + 1
-        );
-        
-        // 设置结局标志
-        newNode.isEnding = isEnding;
-        
-        // 将新节点添加到故事树
-        currentStory.storyTree.nodes[nodeId] = newNode;
-        
-        // 更新父节点的子节点映射
-        currentNode.childrenIds[choice] = nodeId;
-        
-        console.log(`预加载选项: "${choice}" 完成`);
-        
-        // 更新UI，为已预加载的选项添加类
-        const buttons = document.querySelectorAll('.choice-btn');
-        buttons.forEach(button => {
-            if (button.dataset.choice === choice) {
-                button.classList.add('preloaded-choice');
-            }
-        });
-        
-        // 更新进度信息
-        progressInfo.nodesGenerated++;
-        progressInfo.current++;
-        
-        // 更新进度条
-        updateStoryGenerationProgress(progressInfo.current, progressInfo.total);
-        
-        // 每生成5个节点保存一次故事树
-        if (progressInfo.nodesGenerated % 5 === 0) {
-            storyTreeCache.saveToLocalStorage();
-        }
-        
-        // 在后台生成更深的分支
-        if (!isEnding) {
-            generateStoryBranches(nodeId, result.story, result.choices, newNode.depth, progressInfo);
-        }
-        
-    } catch (error) {
-        console.error(`预加载选项 "${choice}" 失败:`, error);
-    } finally {
-        // 标记后台加载完成
-        currentStory.backgroundLoading = false;
-    }
-}
-
-// 故事树缓存，用于存储完整的故事树
-const storyTreeCache = {
-    // 缓存键为故事的关键词和设置的组合
-    getKey: function() {
-        return `${currentStory.keywords.raw}_${currentStory.settings.difficulty}_${currentStory.settings.genre}`;
-    },
-    // 保存故事树到本地存储
-    saveToLocalStorage: function() {
-        try {
-            const key = this.getKey();
-            // 只保存节点数据，不保存UI状态
-            const dataToSave = {
-                nodes: currentStory.storyTree.nodes,
-                timestamp: Date.now()
-            };
-            localStorage.setItem(`storyTree_${key}`, JSON.stringify(dataToSave));
-            console.log('故事树已保存到本地存储');
-        } catch (error) {
-            console.error('保存故事树失败:', error);
-        }
-    },
-    // 从本地存储加载故事树
-    loadFromLocalStorage: function() {
-        try {
-            const key = this.getKey();
-            const savedData = localStorage.getItem(`storyTree_${key}`);
-            if (savedData) {
-                const parsedData = JSON.parse(savedData);
-                // 检查缓存是否过期（24小时）
-                const isExpired = Date.now() - parsedData.timestamp > 24 * 60 * 60 * 1000;
-                if (!isExpired) {
-                    currentStory.storyTree.nodes = parsedData.nodes;
-                    console.log('从本地存储加载故事树');
-                    return true;
-                } else {
-                    console.log('故事树缓存已过期');
-                    localStorage.removeItem(`storyTree_${key}`);
-                }
-            }
-        } catch (error) {
-            console.error('加载故事树失败:', error);
-        }
-        return false;
-    }
-};
-
-// 定期保存故事树到本地存储
-setInterval(() => {
-    if (currentStory.storyTree && Object.keys(currentStory.storyTree.nodes).length > 0) {
-        storyTreeCache.saveToLocalStorage();
-    }
-}, 30000); // 每30秒保存一次
-
-/**
- * 做出选择
- */
-async function makeChoice(index, choice) {
-    const storyContainer = document.getElementById('story');
-    const choicesContainer = document.getElementById('choices');
-    
-    // 显示骨架屏加载动画
-    choicesContainer.innerHTML = generateSkeletonChoices();
-    
-    try {
-        // 获取当前节点
-        const currentNodeId = currentStory.storyTree.currentNodeId;
-        const currentNode = currentStory.storyTree.nodes[currentNodeId];
-        
-        if (!currentNode) {
-            throw new Error('当前节点不存在');
-        }
-        
-        // 记录用户选择的路径
-        currentStory.currentPath.push({
-            nodeId: currentNodeId,
-            choice: choice
-        });
-        
-        // 检查是否有对应的子节点
-        let nextNodeId = currentNode.childrenIds[choice];
-        let nextNode = nextNodeId ? currentStory.storyTree.nodes[nextNodeId] : null;
-        
-        // 如果没有找到对应的子节点，可能是因为还没有生成
-        if (!nextNode) {
-            console.log(`选项 "${choice}" 的子节点尚未生成，正在生成...`);
-            
-            // 显示加载状态
-            storyContainer.innerHTML = generateSkeletonLoading();
+        while (this.requestQueue.length > 0) {
+            const request = this.requestQueue.shift();
             
             try {
-                // 获取设备类型的文本长度限制
-                const textLength = getDeviceTextLength();
-                
-                // 检查是否接近故事结束
-                const isNearEnd = STORY_CONFIG.CURRENT_SCENE >= STORY_CONFIG.MAX_SCENES - 2;
-                const endingPrompt = isNearEnd ? `\n请注意：故事应该在接下来的1-2个场景内结束，请开始为故事准备结局。` : '';
-                
-                const prompt = `基于之前的故事："${currentNode.content}"\n\n用户选择了："${choice}"\n\n请继续故事，包含新的情节发展和2-3个新的选择。每段对话的字数应控制在${textLength.MIN}-${textLength.MAX}字之间。${endingPrompt}\n\n用JSON格式返回，包含story和choices字段。`;
-                
-                const response = await callDeepSeekAPI(prompt);
-                const result = JSON.parse(response);
-                
-                // 验证返回的数据结构
-                if (!result.story) {
-                    throw new Error('API返回的数据缺少story字段');
-                }
-                
-                if (!result.choices || !Array.isArray(result.choices) || result.choices.length === 0) {
-                    throw new Error('API返回的数据缺少有效的choices字段');
-                }
-                
-                // 检查是否达到最大场景数
-                const isEnding = STORY_CONFIG.CURRENT_SCENE + 1 >= STORY_CONFIG.MAX_SCENES;
-                const choices = isEnding ? ['查看故事总结'] : result.choices;
-                
-                // 创建新节点
-                nextNodeId = generateUniqueId();
-                nextNode = new StoryNode(
-                    nextNodeId,
-                    result.story,
-                    choices,
-                    currentNodeId,
-                    currentNode.depth + 1
-                );
-                
-                // 设置结局标志
-                nextNode.isEnding = isEnding;
-                
-                // 将新节点添加到故事树
-                currentStory.storyTree.nodes[nextNodeId] = nextNode;
-                
-                // 更新父节点的子节点映射
-                currentNode.childrenIds[choice] = nextNodeId;
-                
-                // 更新进度条
-                const progressInfo = { 
-                    current: Object.keys(currentStory.storyTree.nodes).length, 
-                    total: calculateTotalNodes() 
-                };
-                updateStoryGenerationProgress(progressInfo.current, progressInfo.total);
-                
-                // 在后台生成更深的分支
-                if (!isEnding) {
-                    setTimeout(() => {
-                        generateStoryBranches(nextNodeId, result.story, result.choices, nextNode.depth, progressInfo);
-                    }, 100);
-                }
+                const response = await this.makeRequest(request.prompt, request.segment);
+                this.cache.set(request.cacheKey, response);
+                request.resolve(response);
             } catch (error) {
-                console.error(`生成选项 "${choice}" 的子节点失败:`, error);
-                throw error;
+                request.reject(error);
+            }
+            
+            // 避免API限流
+            await Utils.sleep(500);
+        }
+        
+        this.isProcessing = false;
+    }
+    
+    async makeRequest(prompt, segment) {
+        const requestData = {
+            model: "deepseek-chat",
+            messages: [
+                {
+                    role: "system",
+                    content: `你是一个专业的互动小说作家。请根据用户的关键词和选择生成引人入胜的故事内容。
+
+要求：
+1. 这是第${segment}段，总共12段的故事
+2. 每段内容300-600字
+3. 内容要生动有趣，符合故事风格
+4. 在段落结尾提供3个不同的选择方向
+5. 确保故事连贯性和逻辑性
+
+请严格按照以下JSON格式返回：
+{
+    "content": "故事内容...",
+    "choices": [
+        "选择1的描述",
+        "选择2的描述", 
+        "选择3的描述"
+    ]
+}`
+                },
+                {
+                    role: "user",
+                    content: prompt
+                }
+            ],
+            temperature: 0.8,
+            max_tokens: 1500
+        };
+        
+        let lastError;
+        
+        for (let attempt = 0; attempt < API_CONFIG.maxRetries; attempt++) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.requestTimeout);
+                
+                const response = await fetch(API_CONFIG.url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.apiKey}`
+                    },
+                    body: JSON.stringify(requestData),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                    throw new Error('API返回数据格式错误');
+                }
+                
+                const content = data.choices[0].message.content.trim();
+                
+                try {
+                    const parsed = JSON.parse(content);
+                    if (!parsed.content || !parsed.choices || !Array.isArray(parsed.choices)) {
+                        throw new Error('返回内容格式不正确');
+                    }
+                    return parsed;
+                } catch (parseError) {
+                    // 如果JSON解析失败，尝试提取内容
+                    return this.parseNonJSONResponse(content);
+                }
+                
+            } catch (error) {
+                lastError = error;
+                console.warn(`API调用失败 (尝试 ${attempt + 1}/${API_CONFIG.maxRetries}):`, error);
+                
+                if (attempt < API_CONFIG.maxRetries - 1) {
+                    await Utils.sleep(API_CONFIG.retryDelay * (attempt + 1));
+                }
             }
         }
         
-        // 更新当前节点ID
-        currentStory.storyTree.currentNodeId = nextNodeId;
+        throw new Error(`API调用失败: ${lastError.message}`);
+    }
+    
+    parseNonJSONResponse(content) {
+        // 简单的内容解析逻辑
+        const lines = content.split('\n').filter(line => line.trim());
+        const storyContent = lines.slice(0, -3).join('\n');
+        const choices = lines.slice(-3);
         
-        // 更新当前场景索引
-        STORY_CONFIG.CURRENT_SCENE++;
-        
-        // 检查是否达到最大场景数或节点是结局
-        if (STORY_CONFIG.CURRENT_SCENE >= STORY_CONFIG.MAX_SCENES || nextNode.isEnding) {
-            // 标记故事已结束
-            STORY_CONFIG.IS_STORY_ENDED = true;
-        }
-        
-        // 显示新故事内容
-        displayStory(nextNode.content);
-        displayChoices(nextNode.choices || []);
-        
-        // 保存到故事状态
-        currentStory.scenes.push({
-            content: nextNode.content,
-            choices: nextNode.choices || [],
-            previousChoice: choice
-        });
-        
-        // 如果故事已结束，显示侧边栏信息
-        if (STORY_CONFIG.IS_STORY_ENDED) {
-            showStoryEndContent();
-        }
-        
-        // 检查是否需要预加载更多分支
-        checkAndPreloadMoreBranches();
-        
-    } catch (error) {
-        console.error('生成故事失败:', error);
-        choicesContainer.innerHTML = `<div class="error">生成故事失败: ${error.message}</div>`;
-        
-        // 添加重试按钮
-        const retryBtn = document.createElement('button');
-        retryBtn.className = 'retry-btn';
-        retryBtn.textContent = '重试';
-        retryBtn.addEventListener('click', () => makeChoice(index, choice));
-        choicesContainer.appendChild(retryBtn);
+        return {
+            content: storyContent || content,
+            choices: choices.length === 3 ? choices : [
+                "继续当前的故事线",
+                "选择不同的发展方向", 
+                "探索新的可能性"
+            ]
+        };
+    }
+    
+    generateCacheKey(prompt, segment) {
+        return `${segment}_${prompt.substring(0, 100)}`;
     }
 }
 
-/**
- * 检查并预加载更多分支
- */
-function checkAndPreloadMoreBranches() {
-    // 如果故事已结束或正在后台加载，则不进行预加载
-    if (STORY_CONFIG.IS_STORY_ENDED || currentStory.backgroundLoading) {
-        return;
+// ==================== 故事生成器 ====================
+class StoryGenerator {
+    constructor(apiManager) {
+        this.apiManager = apiManager;
     }
     
-    // 获取当前节点
-    const currentNodeId = currentStory.storyTree.currentNodeId;
-    const currentNode = currentStory.storyTree.nodes[currentNodeId];
-    
-    if (!currentNode) return;
-    
-    // 检查当前节点的深度是否接近预加载阈值
-    const remainingDepth = STORY_CONFIG.BRANCH_DEPTH - currentNode.depth;
-    
-    if (remainingDepth <= STORY_CONFIG.PRELOAD_THRESHOLD && !currentNode.isGenerated) {
-        console.log(`当前节点深度 ${currentNode.depth} 接近阈值，开始预加载更多分支...`);
-        
-        // 计算进度信息
-        const totalNodes = calculateTotalNodes();
-        const currentNodes = Object.keys(currentStory.storyTree.nodes).length;
-        const progressInfo = {
-            current: currentNodes,
-            total: totalNodes,
-            nodesGenerated: 0
+    generateStoryPrompt(keywords, genre, segment, previousContent = '', userChoice = '') {
+        const keywordStr = keywords.join('+');
+        const genreDescriptions = {
+            'adventure': '冒险探索，充满刺激和未知',
+            'scifi': '科幻未来，科技与想象结合',
+            'fantasy': '奇幻魔法，神秘超自然世界',
+            'mystery': '悬疑推理，谜团与真相',
+            'romance': '浪漫情感，温馨感人',
+            'horror': '恐怖惊悚，紧张刺激',
+            'historical': '历史穿越，跨越时空'
         };
         
-        // 在后台生成更多分支
-        setTimeout(() => {
-            generateStoryBranches(
-                currentNodeId,
-                currentNode.content,
-                currentNode.choices,
-                currentNode.depth,
-                progressInfo
-            );
-        }, 100);
-    }
-}
-
-/**
- * 显示故事结束后的内容
- */
-function showStoryEndContent() {
-    // 显示侧边栏信息
-    updateStoryStructure();
-    updateCharacterRelationships();
-    updateCharacterStats();
-    updateMemoryFragments();
-    
-    // 自动切换到故事结构标签
-    const structureTabBtn = document.querySelector('.tab-btn[data-tab="structure"]');
-    if (structureTabBtn) {
-        structureTabBtn.click();
-    }
-}
-
-/**
- * 更新故事结构信息
- */
-function updateStoryStructure() {
-    const narrativeNodesContainer = document.getElementById('narrative-nodes');
-    if (!narrativeNodesContainer) return;
-    
-    let html = '<div class="narrative-timeline">';
-    
-    // 为每个场景创建节点
-    currentStory.scenes.forEach((scene, index) => {
-        const nodeClass = index === currentStory.scenes.length - 1 ? 'narrative-node current-node' : 'narrative-node';
+        let prompt = `关键词: ${keywordStr}\n故事风格: ${genreDescriptions[genre] || '冒险探索'}\n`;
         
-        html += `
-            <div class="${nodeClass}">
-                <div class="node-title">场景 ${index + 1}</div>
-                <div class="node-description">${scene.previousChoice ? `选择: ${scene.previousChoice}` : '开始'}</div>
+        if (segment === 1) {
+            prompt += `请创作一个12段故事的第1段开头，要求：
+1. 根据关键词"${keywordStr}"设定故事背景和主要角色
+2. 风格为${genreDescriptions[genre] || '冒险探索'}
+3. 内容300-600字，生动有趣
+4. 在结尾提供3个不同的发展选择
+5. 为后续11段故事奠定基础`;
+        } else {
+            const storyPhases = {
+                1: '开头引入', 2: '背景展开', 3: '角色发展', 4: '情节推进',
+                5: '冲突出现', 6: '矛盾加剧', 7: '高潮前奏', 8: '故事高潮',
+                9: '高潮解决', 10: '情节收尾', 11: '结局准备', 12: '完美结局'
+            };
+            
+            prompt += `这是第${segment}段（${storyPhases[segment]}），共12段故事。
+            
+前情回顾：
+${previousContent}
+
+用户选择：${userChoice}
+
+请继续故事发展，要求：
+1. 承接前面的情节，保持连贯性
+2. 根据用户选择推进故事
+3. 内容300-600字
+4. ${segment < 12 ? '在结尾提供3个选择' : '给出完整结局，无需选择'}
+5. 符合${genreDescriptions[genre]}的风格`;
+        }
+        
+        return prompt;
+    }
+    
+    async generateSegment(keywords, genre, difficulty, segment, previousContent = '', userChoice = '') {
+        const prompt = this.generateStoryPrompt(keywords, genre, segment, previousContent, userChoice);
+        
+        try {
+            const response = await this.apiManager.callAPI(prompt, segment);
+            
+            // 分析角色信息
+            this.analyzeCharacters(response.content);
+            
+            return {
+                segment,
+                content: Utils.formatText(response.content),
+                choices: response.choices || [],
+                timestamp: new Date().toISOString()
+            };
+        } catch (error) {
+            throw new Error(`第${segment}段生成失败: ${error.message}`);
+        }
+    }
+    
+    analyzeCharacters(content) {
+        // 简单的角色分析逻辑
+        const characterPatterns = [
+            /([A-Za-z\u4e00-\u9fa5]{2,8})(说|道|想|做|走|来|去|看|听)/g,
+            /主角|主人公|他|她|我/g
+        ];
+        
+        characterPatterns.forEach(pattern => {
+            let match;
+            while ((match = pattern.exec(content)) !== null) {
+                const name = match[1] || match[0];
+                if (name && name.length > 1) {
+                    if (!currentStory.characters.has(name)) {
+                        currentStory.characters.set(name, {
+                            name,
+                            appearances: 0,
+                            relationships: new Set()
+                        });
+                    }
+                    currentStory.characters.get(name).appearances++;
+                }
+            }
+        });
+    }
+}
+
+// ==================== UI管理器 ====================
+class UIManager {
+    constructor() {
+        this.currentPage = 'setup';
+        this.initializeEventListeners();
+    }
+    
+    initializeEventListeners() {
+        // 导航事件
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = e.target.dataset.page;
+                this.switchPage(pageId);
+            });
+        });
+        
+        // 开始故事按钮
+        document.getElementById('submit').addEventListener('click', () => {
+            this.startStory();
+        });
+        
+        // 返回设置按钮
+        document.getElementById('back-to-setup').addEventListener('click', () => {
+            this.switchPage('setup');
+        });
+        
+        // 返回主页按钮
+        document.getElementById('back-to-home').addEventListener('click', () => {
+            this.switchPage('setup');
+        });
+        
+        // 信息面板按钮
+        document.getElementById('story-structure-btn').addEventListener('click', () => {
+            this.showStoryStructure();
+        });
+        
+        document.getElementById('character-relations-btn').addEventListener('click', () => {
+            this.showCharacterRelations();
+        });
+        
+        document.getElementById('export-story').addEventListener('click', () => {
+            this.exportStory();
+        });
+        
+        // 关闭面板
+        document.getElementById('close-panel').addEventListener('click', () => {
+            this.hideInfoPanel();
+        });
+        
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (this.currentPage === 'game' && !isGenerating) {
+                if (e.key >= '1' && e.key <= '3') {
+                    const choiceIndex = parseInt(e.key) - 1;
+                    const choiceButtons = document.querySelectorAll('.choice-btn');
+                    if (choiceButtons[choiceIndex]) {
+                        choiceButtons[choiceIndex].click();
+                    }
+                }
+            }
+        });
+    }
+    
+    switchPage(pageId) {
+        // 隐藏所有页面
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        // 显示目标页面
+        document.getElementById(`${pageId}-page`).classList.add('active');
+        
+        // 更新导航状态
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+        
+        this.currentPage = pageId;
+        
+        // 如果切换到游戏页面且有故事内容，显示控制按钮
+        if (pageId === 'game' && currentStory.segments.length > 0) {
+            this.showGameControls();
+        }
+    }
+    
+    async startStory() {
+        const keywords = document.getElementById('keywords').value.trim();
+        const genre = document.getElementById('genre-select').value;
+        const difficulty = parseInt(document.getElementById('difficulty-select').value);
+        
+        // 验证输入
+        const validation = Utils.validateKeywords(keywords);
+        if (!validation.valid) {
+            Utils.showToast(validation.message, 'error');
+            return;
+        }
+        
+        // 重置故事状态
+        currentStory = {
+            keywords: validation.keywords,
+            genre,
+            difficulty,
+            segments: [],
+            currentSegment: 0,
+            isComplete: false,
+            characters: new Map(),
+            storyTree: {}
+        };
+        
+        // 切换到游戏页面
+        this.switchPage('game');
+        
+        // 开始生成第一段
+        await this.generateNextSegment();
+    }
+    
+    async generateNextSegment(userChoice = '') {
+        if (isGenerating || currentStory.isComplete) {
+            return;
+        }
+        
+        isGenerating = true;
+        const nextSegment = currentStory.currentSegment + 1;
+        
+        try {
+            // 显示加载状态
+            this.showLoadingStatus(nextSegment);
+            
+            // 获取前面的故事内容
+            const previousContent = currentStory.segments
+                .map(s => s.content)
+                .join('\n\n');
+            
+            // 生成故事段落
+            const segment = await storyGenerator.generateSegment(
+                currentStory.keywords,
+                currentStory.genre,
+                currentStory.difficulty,
+                nextSegment,
+                previousContent,
+                userChoice
+            );
+            
+            // 添加到故事中
+            currentStory.segments.push(segment);
+            currentStory.currentSegment = nextSegment;
+            
+            // 检查是否完成
+            if (nextSegment >= STORY_CONFIG.TOTAL_SEGMENTS) {
+                currentStory.isComplete = true;
+            }
+            
+            // 更新UI
+            this.hideLoadingStatus();
+            this.updateStoryContent(segment);
+            
+            if (!currentStory.isComplete) {
+                this.showChoices(segment.choices);
+            } else {
+                this.showStoryComplete();
+            }
+            
+            // 显示控制按钮
+            this.showGameControls();
+            
+        } catch (error) {
+            console.error('故事生成失败:', error);
+            this.hideLoadingStatus();
+            Utils.showToast(`故事生成失败: ${error.message}`, 'error');
+        } finally {
+            isGenerating = false;
+        }
+    }
+    
+    showLoadingStatus(segment) {
+        const loadingStatus = document.getElementById('loading-status');
+        const currentSegmentSpan = loadingStatus.querySelector('.current-segment');
+        const totalSegmentsSpan = loadingStatus.querySelector('.total-segments');
+        
+        currentSegmentSpan.textContent = `第${segment}段`;
+        totalSegmentsSpan.textContent = `共${STORY_CONFIG.TOTAL_SEGMENTS}段`;
+        
+        loadingStatus.classList.remove('hidden');
+        document.getElementById('choices-container').innerHTML = '';
+    }
+    
+    hideLoadingStatus() {
+        document.getElementById('loading-status').classList.add('hidden');
+    }
+    
+    updateStoryContent(segment) {
+        const storyContent = document.getElementById('story-content');
+        storyContent.innerHTML = `
+            
+            <div class="segment-content">
+                ${segment.content.replace(/\n/g, '<br>')}
+            </div>
+        `;
+        storyContent.classList.add('has-content');
+    }
+    
+    showChoices(choices) {
+        const choicesContainer = document.getElementById('choices-container');
+        
+        choicesContainer.innerHTML = choices.map((choice, index) => `
+            <button class="choice-btn" data-choice="${index}">
+                <span class="choice-number">${index + 1}.</span>
+                <span class="choice-text">${choice}</span>
+            </button>
+        `).join('');
+        
+        // 添加选择事件监听
+        choicesContainer.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const choiceIndex = parseInt(e.currentTarget.dataset.choice);
+                const choiceText = choices[choiceIndex];
+                this.makeChoice(choiceText);
+            });
+        });
+    }
+    
+    async makeChoice(choiceText) {
+        if (isGenerating) return;
+        
+        // 禁用所有选择按钮
+        document.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.disabled = true;
+        });
+        
+        // 生成下一段
+        await this.generateNextSegment(choiceText);
+    }
+    
+    showStoryComplete() {
+        const choicesContainer = document.getElementById('choices-container');
+        choicesContainer.innerHTML = `
+            <div class="story-complete">
+                <h3>🎉 故事完成！</h3>
+                <p>恭喜你完成了这个精彩的12段互动故事！</p>
+                <div class="complete-actions">
+                    <button id="restart-story" class="primary-btn">开始新故事</button>
+                    <button id="export-complete-story" class="secondary-btn">导出完整故事</button>
+                </div>
             </div>
         `;
         
-        // 添加连接器（除了最后一个节点）
-        if (index < currentStory.scenes.length - 1) {
-            html += '<div class="node-connector"></div>';
-        }
-    });
-    
-    html += '</div>';
-    narrativeNodesContainer.innerHTML = html;
-}
-
-/**
- * 更新角色关系信息
- */
-function updateCharacterRelationships() {
-    const characterGraphContainer = document.getElementById('character-graph');
-    if (!characterGraphContainer) return;
-    
-    // 简单实现，实际项目中可以使用D3.js等库创建可视化图表
-    characterGraphContainer.innerHTML = '<div class="character-relationship-info">故事结束后的角色关系图将在这里显示</div>';
-}
-
-/**
- * 更新角色属性信息
- */
-function updateCharacterStats() {
-    const characterStatsContainer = document.getElementById('character-stats');
-    if (!characterStatsContainer) return;
-    
-    characterStatsContainer.innerHTML = '<div class="character-stats-info">故事结束后的角色属性将在这里显示</div>';
-}
-
-/**
- * 更新记忆碎片信息
- */
-function updateMemoryFragments() {
-    const memoryFragmentsContainer = document.getElementById('memory-fragments');
-    if (!memoryFragmentsContainer) return;
-    
-    memoryFragmentsContainer.innerHTML = '<div class="memory-fragment">故事结束后的记忆碎片将在这里显示</div>';
-}
-
-/**
- * 初始化导航系统
- */
-function initializeNavigation() {
-    const navLinks = document.querySelectorAll('.nav-link');
-    const backToSetupBtn = document.getElementById('back-to-setup');
-    const backToHomeBtn = document.getElementById('back-to-home');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const page = link.getAttribute('data-page');
-            switchPage(page);
+        // 添加事件监听
+        document.getElementById('restart-story').addEventListener('click', () => {
+            this.switchPage('setup');
         });
-    });
-    
-    if (backToSetupBtn) {
-        backToSetupBtn.addEventListener('click', () => switchPage('setup'));
+        
+        document.getElementById('export-complete-story').addEventListener('click', () => {
+            this.exportStory();
+        });
+        
+        Utils.showToast('故事已完成！', 'success');
     }
     
-    if (backToHomeBtn) {
-        backToHomeBtn.addEventListener('click', () => switchPage('setup'));
-    }
-}
-
-/**
- * 切换页面
- */
-function switchPage(pageName) {
-    // 隐藏所有页面
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => page.classList.remove('active'));
-    
-    // 显示目标页面
-    const targetPage = document.getElementById(pageName + '-page');
-    if (targetPage) {
-        targetPage.classList.add('active');
+    showGameControls() {
+        document.querySelectorAll('.info-btn').forEach(btn => {
+            btn.classList.remove('hidden');
+        });
     }
     
-    // 更新导航状态
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('data-page') === pageName) {
-            link.classList.add('active');
+    showStoryStructure() {
+        const content = this.generateStoryStructureHTML();
+        this.showInfoPanel('故事结构', content);
+    }
+    
+    showCharacterRelations() {
+        const content = this.generateCharacterRelationsHTML();
+        this.showInfoPanel('角色关系', content);
+    }
+    
+    showInfoPanel(title, content) {
+        const panel = document.getElementById('info-panel');
+        const panelTitle = document.getElementById('panel-title');
+        const panelContent = document.getElementById('panel-content');
+        
+        panelTitle.textContent = title;
+        panelContent.innerHTML = content;
+        panel.classList.remove('hidden');
+    }
+    
+    hideInfoPanel() {
+        document.getElementById('info-panel').classList.add('hidden');
+    }
+    
+    generateStoryStructureHTML() {
+        if (currentStory.segments.length === 0) {
+            return '<p>暂无故事内容</p>';
         }
-    });
-    
-    if (pageName === 'game') {
-        setGameUIVisibility(false);
+        
+        const timeline = currentStory.segments.map((segment, index) => {
+            const isActive = index === currentStory.segments.length - 1;
+            return `
+                <div class="timeline-item ${isActive ? 'active' : ''}">
+                    <div class="timeline-marker">${segment.segment}</div>
+                    <div class="timeline-content">
+                        <h4>第${segment.segment}段</h4>
+                        <p>${segment.content.substring(0, 100)}...</p>
+                        <small>${new Date(segment.timestamp).toLocaleString()}</small>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        return `
+            <div class="story-timeline">
+                ${timeline}
+            </div>
+            <style>
+                .story-timeline { margin: 20px 0; }
+                .timeline-item { 
+                    display: flex; 
+                    margin-bottom: 20px; 
+                    padding: 15px;
+                    border-radius: 8px;
+                    background: #f8fafc;
+                    border-left: 4px solid #e2e8f0;
+                }
+                .timeline-item.active { 
+                    background: #eff6ff; 
+                    border-left-color: #2563eb;
+                }
+                .timeline-marker { 
+                    width: 40px; 
+                    height: 40px; 
+                    background: #2563eb; 
+                    color: white; 
+                    border-radius: 50%; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    font-weight: bold;
+                    margin-right: 15px;
+                    flex-shrink: 0;
+                }
+                .timeline-content h4 { 
+                    margin: 0 0 8px 0; 
+                    color: #1e293b;
+                }
+                .timeline-content p { 
+                    margin: 0 0 8px 0; 
+                    color: #475569;
+                    line-height: 1.5;
+                }
+                .timeline-content small { 
+                    color: #64748b; 
+                }
+            </style>
+        `;
     }
-}
-
-/**
- * 初始化侧边栏标签系统
- */
-function initializeSidebarTabs() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
     
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabName = btn.getAttribute('data-tab');
+    generateCharacterRelationsHTML() {
+        if (currentStory.characters.size === 0) {
+            return '<p>暂无角色信息</p>';
+        }
+        
+        const characterList = Array.from(currentStory.characters.entries())
+            .map(([name, info]) => `
+                <div class="character-card">
+                    <h4>${name}</h4>
+                    <p>出现次数: ${info.appearances}</p>
+                </div>
+            `).join('');
+        
+        return `
+            <div class="characters-grid">
+                ${characterList}
+            </div>
+            <style>
+                .characters-grid { 
+                    display: grid; 
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+                    gap: 15px; 
+                    margin: 20px 0; 
+                }
+                .character-card { 
+                    background: #f8fafc; 
+                    padding: 15px; 
+                    border-radius: 8px; 
+                    border: 1px solid #e2e8f0;
+                }
+                .character-card h4 { 
+                    margin: 0 0 8px 0; 
+                    color: #1e293b; 
+                }
+                .character-card p { 
+                    margin: 0; 
+                    color: #64748b; 
+                    font-size: 0.9rem; 
+                }
+            </style>
+        `;
+    }
+    
+    exportStory() {
+        if (currentStory.segments.length === 0) {
+            Utils.showToast('暂无故事内容可导出', 'warning');
+            return;
+        }
+        
+        const storyText = this.generateExportContent();
+        const blob = new Blob([storyText], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `VibeStory-${currentStory.keywords.join('+')}-${new Date().toISOString().split('T')[0]}.md`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        Utils.showToast('故事导出成功！', 'success');
+    }
+    
+    generateExportContent() {
+        const keywordsStr = currentStory.keywords.join('+');
+        const genreNames = {
+            'adventure': '冒险',
+            'scifi': '科幻',
+            'fantasy': '奇幻',
+            'mystery': '悬疑',
+            'romance': '浪漫',
+            'horror': '恐怖',
+            'historical': '历史'
+        };
+        
+        let content = `# VibeStory 互动小说\n\n`;
+        content += `**关键词**: ${keywordsStr}\n`;
+        content += `**风格**: ${genreNames[currentStory.genre] || currentStory.genre}\n`;
+        content += `**复杂度**: ${currentStory.difficulty}\n`;
+        content += `**生成时间**: ${new Date().toLocaleString()}\n\n`;
+        content += `---\n\n`;
+        
+        currentStory.segments.forEach((segment, index) => {
+            content += `## 第${segment.segment}段\n\n`;
+            content += `${segment.content}\n\n`;
             
-            // 移除所有活动状态
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            // 激活当前标签
-            btn.classList.add('active');
-            const targetContent = document.getElementById(tabName + '-tab');
-            if (targetContent) {
-                targetContent.classList.add('active');
+            if (segment.choices && segment.choices.length > 0 && index < currentStory.segments.length - 1) {
+                content += `**选择选项**:\n`;
+                segment.choices.forEach((choice, i) => {
+                    content += `${i + 1}. ${choice}\n`;
+                });
+                content += `\n`;
             }
-        });
-    });
-}
-
-/**
- * 导出故事为文本文件
- */
-function exportStory() {
-    if (!currentStory.storyTree || Object.keys(currentStory.storyTree.nodes).length === 0) {
-        alert('没有可导出的故事内容');
-        return;
-    }
-    
-    let storyText = `# ${currentStory.title || '我的故事'} #\n\n`;
-    storyText += `关键词: ${currentStory.keywords.raw}\n`;
-    storyText += `难度: ${currentStory.settings.difficulty}\n`;
-    storyText += `类型: ${currentStory.settings.genre}\n\n`;
-    
-    // 添加用户当前选择的路径
-    storyText += `## 用户选择的路径 ##\n\n`;
-    
-    // 添加每个场景和选择
-    currentStory.scenes.forEach((scene, index) => {
-        storyText += `### 场景 ${index + 1} ###\n\n`;
-        storyText += `${scene.content}\n\n`;
-        
-        if (scene.choices && scene.choices.length > 0 && index < currentStory.scenes.length - 1) {
-            storyText += `选择: ${scene.selectedChoice}\n\n`;
-        }
-    });
-    
-    // 添加完整的故事树结构
-    storyText += `\n\n## 完整故事树 ##\n\n`;
-    
-    // 递归函数，用于遍历故事树并生成文本
-    function traverseStoryTree(nodeId, depth, path) {
-        const node = currentStory.storyTree.nodes[nodeId];
-        if (!node) return;
-        
-        // 添加缩进和场景内容
-        const indent = '  '.repeat(depth);
-        storyText += `${indent}### 深度 ${depth} - 节点 ${nodeId} ###\n\n`;
-        storyText += `${indent}${node.content}\n\n`;
-        
-        // 添加选择
-        if (node.choices && node.choices.length > 0) {
-            storyText += `${indent}可能的选择:\n`;
             
-            // 遍历每个选择及其子节点
-            node.choices.forEach((choice, index) => {
-                const childId = node.childrenIds[choice];
-                storyText += `${indent}- 选择 ${index + 1}: ${choice}`;
-                
-                // 标记当前路径
-                if (path.includes(choice)) {
-                    storyText += ` [用户选择的路径]`;
-                }
-                
-                storyText += `\n`;
-                
-                // 如果有子节点，递归遍历
-                if (childId) {
-                    traverseStoryTree(childId, depth + 1, path.slice(path.indexOf(choice) + 1));
-                }
+            content += `---\n\n`;
+        });
+        
+        // 添加角色信息
+        if (currentStory.characters.size > 0) {
+            content += `## 角色信息\n\n`;
+            Array.from(currentStory.characters.entries()).forEach(([name, info]) => {
+                content += `- **${name}**: 出现 ${info.appearances} 次\n`;
             });
-        } else if (node.isEnding) {
-            storyText += `${indent}[故事结束]\n\n`;
+            content += `\n`;
         }
         
-        storyText += `\n`;
+        content += `---\n\n`;
+        content += `*由 VibeStory 生成 - 关键词驱动的互动小说平台*\n`;
+        
+        return content;
+    }
+}
+
+// ==================== 初始化 ====================
+let apiManager, storyGenerator, uiManager;
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 初始化管理器
+    apiManager = new APIManager();
+    storyGenerator = new StoryGenerator(apiManager);
+    uiManager = new UIManager();
+    
+    // 检查API配置
+    if (API_CONFIG.apiKey === 'sk-your-deepseek-api-key-here') {
+        Utils.showToast('请在代码中配置您的DeepSeek API密钥', 'warning');
     }
     
-    // 从根节点开始遍历
-    traverseStoryTree(currentStory.storyTree.rootNodeId, 0, currentStory.currentPath);
-    
-    // 创建并下载文本文件
-    const blob = new Blob([storyText], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${currentStory.title || '我的故事'}_完整版.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
+    console.log('VibeStory 初始化完成');
+});
 
-/**
- * 解锁高级功能
- */
-function unlockPremiumFeature(feature) {
-    alert(`高级功能"${feature}"暂未实现，敬请期待！`);
-}
+// ==================== 错误处理 ====================
+window.addEventListener('error', (event) => {
+    console.error('全局错误:', event.error);
+    Utils.showToast('发生了一个错误，请刷新页面重试', 'error');
+});
 
-function setGameUIVisibility(isStoryReady) {
-    // 导出按钮
-    const exportBtn = document.getElementById('export-story');
-    if (exportBtn) exportBtn.classList.toggle('hidden', !isStoryReady);
-    // 侧边栏tab按钮
-    const tabBtns = document.querySelectorAll('.game-sidebar .tab-btn');
-    tabBtns.forEach(btn => btn.classList.toggle('hidden', !isStoryReady));
-}
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('未处理的Promise拒绝:', event.reason);
+    Utils.showToast('请求处理失败，请重试', 'error');
+});
 
-// 页面加载完成后初始化游戏
-document.addEventListener('DOMContentLoaded', initGame);

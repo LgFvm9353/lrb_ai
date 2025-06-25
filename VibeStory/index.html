@@ -1,131 +1,185 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VibeStory - 通过关键词创造你的互动故事">
     <title>VibeStory - 关键词驱动的互动小说平台</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Toast 通知容器 -->
+    <div id="toast-container"></div>
+    
+    <!-- 主容器 -->
     <div class="container">
-        <header>
-            <h1>VibeStory</h1>
-            <p>通过关键词创造你的互动故事</p>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#" class="nav-link active" data-page="setup">创建故事</a></li>
-                    <li><a href="#" class="nav-link" data-page="game">游戏界面</a></li>
-                    <li><a href="#" class="nav-link" data-page="about">关于</a></li>
-                </ul>
-            </nav>
-        </header>
-        
-        <!-- 创建故事页面 -->
-        <div class="page active" id="setup-page">
-            <div class="game-setup">
-                <!-- <h2>创建你的故事</h2> -->
-                <p class="setup-intro">输入关键词，设置游戏风格，开始你的冒险！</p>
+        <!-- 主卡片 -->
+        <div class="main-card">
+            <!-- 头部 -->
+            <header class="header">
+                <h1 class="logo">VibeStory</h1>
+                <p class="subtitle">通过关键词创造你的互动故事</p>
                 
-                <div class="input-group">
-                    <label for="keywords">输入关键词（用+连接）:</label>
-                    <input type="text" id="keywords" placeholder="例如: 末日废墟+机械义肢+失忆">
-                </div>
-                
-                <div class="setup-sections">
-                    <div class="setup-section">
-                        <!-- <h3>基本设置</h3> -->
-                        <div class="option-group">
-                            <label for="genre-select">风格:</label>
-                            <select id="genre-select">
-                                <option value="adventure">冒险</option>
-                                <option value="scifi">科幻</option>
-                                <option value="fantasy">奇幻</option>
-                                <option value="mystery">悬疑</option>
-                                <option value="romance">浪漫</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="submit" class="primary-btn">开始故事</button>
-            </div>
-        </div>
-        
-        <!-- 游戏界面页面 -->
-        <div class="page" id="game-page">
-            <div class="game-controls">
-                <button id="back-to-setup" class="secondary-btn">返回设置</button>
-                <button id="export-story" class="secondary-btn hidden">导出故事</button>
-            </div>
+                <!-- 导航标签 -->
+                <nav class="nav-tabs">
+                    <a href="#" class="nav-link active" data-page="setup">创建故事</a>
+                    <a href="#" class="nav-link" data-page="game">游戏界面</a>
+                    <a href="#" class="nav-link" data-page="about">关于</a>
+                </nav>
+            </header>
             
-            <div class="game-content">
-                <div class="story-section">
-                    <div id="story" class="story-container"></div>
-                    <div id="choices" class="choices-container"></div>
+            <!-- 创建故事页面 -->
+            <main class="page active" id="setup-page">
+                <div class="form-section">
+                    <h2 class="form-title">创建你的故事</h2>
+                    <p class="form-description">输入关键词，设置游戏风格，开始你的冒险！</p>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="keywords">输入关键词（用+连接）:</label>
+                        <input 
+                            type="text" 
+                            id="keywords" 
+                            class="form-input"
+                            placeholder="例如: 未来城市+机器人+爱情"
+                            autocomplete="off"
+                        >
+                        <div class="form-hint">使用"+"连接多个关键词</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="genre-select">故事风格:</label>
+                        <select id="genre-select" class="form-select">
+                            <option value="adventure">冒险 - 充满刺激的探索之旅</option>
+                            <option value="scifi">科幻 - 未来科技与想象</option>
+                            <option value="fantasy">奇幻 - 魔法与神秘世界</option>
+                            <option value="mystery">悬疑 - 谜团与推理</option>
+                            <option value="romance">浪漫 - 情感与爱情故事</option>
+                            <option value="horror">恐怖 - 惊悚与悬念</option>
+                            <option value="historical">历史 - 穿越时空的故事</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="difficulty-select">故事复杂度:</label>
+                        <select id="difficulty-select" class="form-select">
+                            <option value="1">简单 - 轻松愉快的故事</option>
+                            <option value="2">普通 - 适中的情节复杂度</option>
+                            <option value="3">复杂 - 丰富的故事线</option>
+                            <option value="4">专家 - 多层次叙事结构</option>
+                        </select>
+                    </div>
+                    
+                    <button id="submit" class="btn btn-primary btn-large btn-block">开始故事</button>
                 </div>
-                <div class="game-sidebar">
-                    <div class="sidebar-tabs">
-                        <button class="tab-btn hidden" data-tab="structure">故事结构</button>
-                        <button class="tab-btn hidden" data-tab="characters">角色关系</button>
-                        <button class="tab-btn hidden" data-tab="stats">角色属性</button>
-                        <button class="tab-btn hidden" data-tab="memory">记忆碎片</button>
+            </main>
+            
+            <!-- 游戏界面页面 -->
+            <main class="page" id="game-page">
+                <div class="game-container">
+                    <!-- 游戏控制按钮 -->
+                    <div class="game-controls">
+                        <button id="back-to-setup" class="btn btn-secondary">← 返回设置</button>
+                        <button id="story-structure-btn" class="info-btn hidden">📊 故事结构</button>
+                        <button id="character-relations-btn" class="info-btn hidden">👥 角色关系</button>
+                        <button id="export-story" class="info-btn hidden">📄 导出故事</button>
                     </div>
-                    <div class="sidebar-content">
-                        <div class="tab-content active" id="structure-tab">
-                            <div id="narrative-nodes" class="narrative-nodes-container"></div>
-                        </div>
-                        <div class="tab-content" id="characters-tab">
-                            <div id="character-graph" class="character-graph-container"></div>
-                        </div>
-                        <div class="tab-content" id="stats-tab">
-                            <div id="character-stats" class="character-stats-container"></div>
-                        </div>
-                        <div class="tab-content" id="memory-tab">
-                            <div id="memory-fragments" class="memory-fragments-container"></div>
+                    
+                    <!-- 故事内容区域 -->
+                    <div id="story-content" class="story-content">
+                        请点击"开始故事"生成你的专属故事
+                    </div>
+                    
+                    <!-- 加载状态 -->
+                    <div id="loading-status" class="loading-status hidden">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">正在生成故事内容...</div>
+                        <div class="progress-text">
+                            <span class="current-segment">第1段</span> / <span class="total-segments">共12段</span>
                         </div>
                     </div>
-                    <div class="story-generation-progress">
-                        <div class="progress-header">
-                            <h4>故事生成进度</h4>
-                            <span class="progress-percentage">0%</span>
-                        </div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="progress-status">准备中...</div>
+                    
+                    <!-- 选择按钮容器 -->
+                    <div id="choices-container" class="choices-container">
+                        <!-- 选择按钮将在这里动态生成 -->
                     </div>
                 </div>
+            </main>
+            
+            <!-- 关于页面 -->
+            <main class="page" id="about-page">
+                <div class="about-content">
+                    <h2 class="about-title">关于 VibeStory</h2>
+                    <p class="about-description">
+                        VibeStory 是一个创新的关键词驱动互动小说平台，通过先进的AI技术，
+                        将简单的关键词组合转化为丰富多彩、引人入胜的故事世界。
+                    </p>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🎯</div>
+                            <h3 class="feature-title">关键词驱动</h3>
+                            <p class="feature-description">
+                                只需输入几个关键词，AI即可生成完整
+                                的故事背景和情节
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🤖</div>
+                            <h3 class="feature-title">智能互动</h3>
+                            <p class="feature-description">
+                                在故事的关键节点做出选择，每个决定
+                                都会影响故事的走向
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">📚</div>
+                            <h3 class="feature-title">12段完整故事</h3>
+                            <p class="feature-description">
+                                精心设计的故事结构，确保每个故事都
+                                有完整的开头、发展、高潮和结局
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🎨</div>
+                            <h3 class="feature-title">多样化风格</h3>
+                            <p class="feature-description">
+                                支持科幻、奇幻、悬疑、浪漫等多种故
+                                事类型
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <button id="back-to-home" class="btn btn-primary btn-large">返回主页</button>
+                </div>
+            </main>
+            
+            <!-- 页脚 -->
+            <footer class="footer">
+                VibeStory - 关键词驱动的互动小说平台
+            </footer>
+        </div>
+    </div>
+    
+    <!-- 信息面板 -->
+    <div id="info-panel" class="info-panel hidden">
+        <div class="panel-content">
+            <div class="panel-header">
+                <h3 id="panel-title" class="panel-title">信息面板</h3>
+                <button id="close-panel" class="close-btn">×</button>
+            </div>
+            <div id="panel-content">
+                <!-- 面板内容将在这里动态生成 -->
             </div>
         </div>
-        
-        <!-- 关于页面 -->
-        <div class="page" id="about-page">
-            <div class="about-content">
-                <h2>关于 VibeStory</h2>
-                <p>VibeStory 是一个关键词驱动的互动小说平台，通过简单的关键词组合，创造出丰富多彩的故事世界。</p>
-                
-                <h3>主要特点</h3>
-                <ul>
-                    <li>关键词驱动：只需输入几个关键词，即可生成完整故事</li>
-                    <li>互动选择：在故事的关键节点做出选择，影响故事走向</li>
-                    <li>角色关系：查看角色之间的关系网络</li>
-                    <li>故事结构：了解故事的叙事结构和关键节点</li>
-                    <li>记忆碎片：收集故事中的重要记忆，解锁隐藏内容</li>
-                </ul>
-                
-                <h3>技术支持</h3>
-                <p>本项目使用 DeepSeek API 提供故事生成服务，支持本地模式、代理模式和自定义代理模式。</p>
-                
-                <button id="back-to-home" class="secondary-btn">返回主页</button>
-            </div>
-        </div>
-        
-        <footer>
-            <p> VibeStory - 关键词驱动的互动小说平台</p>
-        </footer>
     </div>
     
     <script src="script.js"></script>
 </body>
 </html>
+
