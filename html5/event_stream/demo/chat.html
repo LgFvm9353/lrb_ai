@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepSeek + SSE 流式聊天示例</title>
+  <style>
+    .chat-container {
+      width: 800px;
+      margin: 20px auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    #chat-messages {
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #f0f0f0;
+      border-radius: 4px;
+    }
+    .user-message {
+      text-align: right;
+      margin: 5px 0;
+      padding: 8px 12px;
+      background: #e6f7ff;
+      border-radius: 4px;
+    }
+    .ai-message {
+      text-align: left;
+      margin: 5px 0;
+      padding: 8px 12px;
+      background: #f5f5f5;
+      border-radius: 4px;
+    }
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+    #prompt {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #1890ff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>DeepSeek 流式聊天（SSE 实现）</h2>
+    <div id="chat-messages"></div>
+    <div class="input-area">
+      <input type="text" id="prompt" placeholder="请输入你的问题...">
+      <button onclick="sendMessage()" id="send-btn">发送</button>
+    </div>
+  </div>
+
+  <script>
+    let eventSource = null;
+    const messagesDiv = document.getElementById('chat-messages');
+    const promptInput = document.getElementById('prompt');
+    const sendBtn = document.getElementById('send-btn');
+
+    // 发送消息并建立 SSE 连接
+    function sendMessage() {
+      const prompt = promptInput.value.trim();
+      if (!prompt) return;
+
+      // 禁用按钮，避免重复发送
+      sendBtn.disabled = true;
+      // 添加用户消息到界面
+      messagesDiv.innerHTML += `<div class="user-message">你：${prompt}</div>`;
+      // 清空输入框
+      promptInput.value = '';
+      // 滚动到底部
+      scrollToBottom();
+
+      // 关闭之前的连接（如果存在）
+      if (eventSource) eventSource.close();
+
+      // 建立 SSE 连接，传递用户问题
+      eventSource = new EventSource(`/stream?prompt=${encodeURIComponent(prompt)}`);
+
+      // 初始化 AI 消息容器（用于实时拼接流式内容）
+      const aiMessageDiv = document.createElement('div');
+      aiMessageDiv.className = 'ai-message';
+      aiMessageDiv.innerHTML = 'DeepSeek：';
+      messagesDiv.appendChild(aiMessageDiv);
+
+      // 接收 SSE 流式数据
+      eventSource.onmessage = (event) => {
+        if (event.data === '[STREAM_END]') {
+          // 流结束，关闭连接并恢复按钮
+          eventSource.close();
+          sendBtn.disabled = false;
+          return;
+        }
+        // 拼接并更新 AI 回复内容
+        aiMessageDiv.innerHTML += event.data;
+        scrollToBottom();
+      };
+
+      // 连接错误处理
+      eventSource.onerror = (error) => {
+        console.error('SSE 连接错误：', error);
+        aiMessageDiv.innerHTML += '<br>（连接出错，请重试）';
+        eventSource.close();
+        sendBtn.disabled = false;
+      };
+    }
+
+    // 滚动到最新消息
+    function scrollToBottom() {
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  </script>
+</body>
+</html>
