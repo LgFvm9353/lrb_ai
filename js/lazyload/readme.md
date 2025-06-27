@@ -26,4 +26,14 @@
      data-original 中
      自定义属性 data-数据属性
      图片的原地址是img 数据
-     
+
+- 性能问题
+  - 解决了性能问题，首屏加载速度
+  - onScroll 触发太频繁
+  - forEach imgs
+  - getBoundingClientRect() 触发回流
+- 防抖 节流
+- InterSectionObserver
+  - observer 观察 异步
+  - intersection rect 和可视区域交叉
+  - 不再需要onscroll 不需要节流
