@@ -52,22 +52,30 @@
 }
 
 /* ==================== 全局样式 ==================== */
+html, body {
+    height: 100%; /* 确保html和body占据整个视口高度 */
+    overflow: hidden; /* 隐藏全局滚动条 */
+}
+
 body {
     font-family: var(--font-family);
     line-height: 1.6;
     color: var(--dark-gray);
     background: var(--gradient-bg);
-    min-height: 100vh;
-    overflow-x: hidden;
+    display: flex; /* 使用flex布局 */
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+    padding: var(--spacing-lg);
 }
 
 /* ==================== 主容器 ==================== */
 .container {
-    min-height: 100vh;
+    width: 100%;
+    max-width: 800px;
+    height: 100%; /* 确保容器占据可用高度 */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--spacing-lg);
 }
 
 /* ==================== 主卡片容器 ==================== */
@@ -81,12 +89,17 @@ body {
     position: relative;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex; /* 使用flex布局 */
+    flex-direction: column; /* 垂直排列子元素 */
+    max-height: 95vh; /* 限制最大高度，防止溢出 */
+    overflow: hidden; /* 隐藏main-card自身的滚动条 */
 }
 
 /* ==================== 头部样式 ==================== */
 .header {
     text-align: center;
-    margin-bottom: var(--spacing-xxl);
+    margin-bottom: var(--spacing-xl); /* 调整间距 */
+    flex-shrink: 0; /* 防止头部收缩 */
 }
 
 .logo {
@@ -105,48 +118,71 @@ body {
 
 /* ==================== 导航样式 ==================== */
 .nav-tabs {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
     justify-content: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-xl);
+    align-items: center;
+    gap: 4px;
+    padding: 0 4px;
+    margin-bottom: var(--spacing-lg);
+    overflow-x: auto;
     background: var(--light-gray);
-    padding: var(--spacing-xs);
     border-radius: var(--border-radius);
 }
 
 .nav-link {
-    padding: var(--spacing-sm) var(--spacing-lg);
-    border: none;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 1.15rem;
+    padding: 0.7em 1.5em;
+    border-radius: 12px;
+    margin: 0;
+    line-height: 1.2;
+    max-width: 200px;
     background: transparent;
     color: var(--medium-gray);
-    font-size: var(--font-size-base);
     font-weight: 500;
-    border-radius: calc(var(--border-radius) - 2px);
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    text-decoration: none;
-    display: inline-block;
-}
-
-.nav-link:hover {
-    color: var(--primary-blue);
-    background: rgba(74, 144, 226, 0.1);
+    border: none;
+    text-decoration: none !important;
+    transition: all 0.2s;
 }
 
 .nav-link.active {
     background: var(--primary-blue);
-    color: var(--white);
+    color: var(--white) !important;
     box-shadow: var(--shadow-light);
+}
+
+.nav-link:hover {
+    background: var(--secondary-blue);
+    color: var(--white) !important;
+    text-decoration: none !important;
 }
 
 /* ==================== 页面容器 ==================== */
 .page {
     display: none;
     animation: fadeIn var(--transition-normal);
+    flex-grow: 1; /* 允许页面内容区域填充剩余空间 */
+    flex-direction: column;
+    overflow-y: auto; /* 允许页面内容区域内部滚动 */
+    padding-right: 10px; /* 为滚动条留出空间 */
 }
 
 .page.active {
-    display: block;
+    display: flex; /* 使用flex布局，方便内容垂直排列 */
+}
+
+/* 针对setup-page和about-page，如果内容超出，允许内部滚动 */
+#setup-page, #about-page {
+    overflow-y: auto; /* 允许内部滚动 */
+    padding-right: 10px; /* 为滚动条留出空间 */
 }
 
 @keyframes fadeIn {
@@ -163,6 +199,10 @@ body {
 /* ==================== 表单样式 ==================== */
 .form-section {
     margin-bottom: var(--spacing-xl);
+    flex-grow: 1; /* 允许表单部分填充剩余空间 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直居中内容 */
 }
 
 .form-title {
@@ -300,14 +340,17 @@ body {
 
 /* ==================== 游戏界面样式 ==================== */
 .game-container {
-    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 允许游戏容器填充剩余空间 */
+    overflow: hidden; /* 隐藏游戏容器自身的滚动条 */
 }
 
 .story-content {
     background: var(--light-gray);
     border-radius: var(--border-radius);
     padding: var(--spacing-xl);
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-md); /* 调整间距 */
     border: 2px solid var(--border-color);
     min-height: 200px;
     display: flex;
@@ -315,13 +358,15 @@ body {
     justify-content: center;
     color: var(--medium-gray);
     font-style: italic;
+    flex-grow: 1; /* 允许故事内容区域填充剩余空间 */
+    overflow-y: auto; /* 允许故事内容区域内部滚动 */
+    text-align: left; /* 确保文本左对齐 */
 }
 
 .story-content.has-content {
     color: var(--dark-gray);
     font-style: normal;
     align-items: flex-start;
-    text-align: left;
 }
 
 .segment-header {
@@ -353,6 +398,13 @@ body {
     border-radius: var(--border-radius);
     margin-bottom: var(--spacing-lg);
     border: 2px dashed var(--primary-blue);
+    flex-shrink: 0; /* 防止加载状态收缩 */
+    /* 确保完全显示 */
+    min-height: 150px; /* 增加最小高度 */
+    display: flex; /* 使用flex布局 */
+    flex-direction: column; /* 垂直排列 */
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
 }
 
 .loading-status.hidden {
@@ -392,30 +444,39 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    margin-top: var(--spacing-md); /* 调整与故事内容的间距 */
+    flex-shrink: 0; /* 防止选项容器收缩 */
+    overflow-y: auto; /* 允许选项容器内部滚动 */
+    padding-right: 10px; /* 为滚动条留出空间 */
 }
 
 .choice-btn {
     display: flex;
     align-items: center;
-    padding: var(--spacing-lg);
-    background: var(--white);
-    border: 2px solid var(--border-color);
+    padding: var(--spacing-md); /* 减小内边距 */
+    background: var(--primary-blue);
+    color: var(--white);
+    border: 2px solid var(--primary-blue);
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: all var(--transition-normal);
-    text-align: left;
-    font-size: var(--font-size-base);
+    text-align: left; /* 确保文本左对齐 */
+    font-size: var(--font-size-base); /* 调整字体大小 */
+    line-height: 1.4; /* 调整行高 */
+    box-shadow: var(--shadow-light);
+    width: 100%; /* 确保按钮宽度为100% */
 }
 
 .choice-btn:hover {
-    border-color: var(--primary-blue);
-    background: rgba(74, 144, 226, 0.05);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-light);
+    background: var(--secondary-blue);
+    border-color: var(--secondary-blue);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
 }
 
 .choice-btn:active {
     transform: translateY(0);
+    box-shadow: var(--shadow-light);
 }
 
 .choice-btn:disabled {
@@ -428,20 +489,21 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    background: var(--primary-blue);
-    color: var(--white);
+    width: 28px; /* 调整编号圆圈大小 */
+    height: 28px;
+    background: var(--white);
+    color: var(--primary-blue);
     border-radius: 50%;
-    font-weight: 600;
-    font-size: var(--font-size-small);
+    font-weight: 700;
+    font-size: var(--font-size-small); /* 调整编号字体大小 */
     margin-right: var(--spacing-md);
     flex-shrink: 0;
 }
 
 .choice-text {
     flex: 1;
-    line-height: 1.5;
+    line-height: 1.4;
+    text-align: left; /* 确保选项内容左对齐 */
 }
 
 /* ==================== 故事完成样式 ==================== */
@@ -475,9 +537,16 @@ body {
 /* ==================== 控制按钮 ==================== */
 .game-controls {
     display: flex;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
-    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.game-controls .info-btn {
+    width: auto;
+    min-width: 0;
+    margin: 0;
+    flex: 1 1 0;
 }
 
 .info-btn {
@@ -565,6 +634,10 @@ body {
 /* ==================== 关于页面样式 ==================== */
 .about-content {
     text-align: center;
+    display: flex; /* 使用flex布局 */
+    flex-direction: column; /* 垂直排列 */
+    justify-content: center; /* 垂直居中内容 */
+    flex-grow: 1; /* 允许内容填充剩余空间 */
 }
 
 .about-title {
@@ -623,185 +696,406 @@ body {
 /* ==================== 页脚样式 ==================== */
 .footer {
     text-align: center;
-    margin-top: var(--spacing-xxl);
+    margin-top: var(--spacing-xl); /* 调整页脚间距 */
     padding-top: var(--spacing-xl);
-    border-top: 2px solid var(--border-color);
-    color: var(--light-blue);
+    border-top: 1px solid var(--border-color);
+    color: var(--medium-gray);
     font-size: var(--font-size-small);
-}
-
-/* ==================== 提示消息 ==================== */
-#toast-container {
-    position: fixed;
-    top: var(--spacing-lg);
-    right: var(--spacing-lg);
-    z-index: 1100;
-}
-
-.toast {
-    background: var(--white);
-    color: var(--dark-gray);
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-medium);
-    margin-bottom: var(--spacing-sm);
-    border-left: 4px solid var(--primary-blue);
-    animation: slideIn var(--transition-normal);
-}
-
-.toast-success {
-    border-left-color: #10b981;
-}
-
-.toast-error {
-    border-left-color: #ef4444;
-}
-
-.toast-warning {
-    border-left-color: #f59e0b;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+    flex-shrink: 0; /* 防止页脚收缩 */
 }
 
 /* ==================== 响应式设计 ==================== */
 @media (max-width: 768px) {
-    .container {
+    body {
         padding: var(--spacing-md);
     }
-    
+
     .main-card {
-        padding: var(--spacing-xl);
-        border-radius: var(--border-radius);
+        padding: var(--spacing-lg);
+        max-height: 98vh; /* 移动端更高比例 */
     }
-    
+
+    .header {
+        margin-bottom: var(--spacing-lg);
+    }
+
     .logo {
-        font-size: var(--font-size-xl);
+        font-size: 1.8rem;
     }
-    
+
+    .subtitle {
+        font-size: var(--font-size-base);
+        margin-bottom: var(--spacing-lg);
+    }
+
     .nav-tabs {
-        flex-direction: column;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 2px;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0 var(--spacing-xs);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .nav-link {
+        flex: 1 1 0;
+        min-width: 0;
+        text-align: center;
+        white-space: nowrap;
+        font-size: 1rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .form-title, .about-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-description, .about-description {
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group, .features-grid, .feature-card {
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .form-input, .form-select {
+        font-size: 0.95rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .btn, .btn-primary, .btn-secondary, .btn-large {
+        font-size: 0.95rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        min-height: 36px;
+    }
+
+    .story-content {
+        font-size: 0.95rem;
+        padding: var(--spacing-sm);
+    }
+
+    .choices-container {
         gap: var(--spacing-xs);
     }
-    
-    .nav-link {
-        text-align: center;
+
+    .choice-btn {
+        font-size: 0.95rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
     }
-    
+
+    .choice-number {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+        margin-right: var(--spacing-sm);
+    }
+
+    .about-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .about-description {
+        font-size: var(--font-size-base);
+        margin-bottom: var(--spacing-xl);
+    }
+
     .features-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-lg);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
     }
-    
-    .complete-actions {
+
+    .feature-card {
+        padding: 0.4rem;
+        font-size: 0.92rem;
+        min-width: 0;
+    }
+
+    .feature-title {
+        font-size: 0.98rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .feature-description {
+        font-size: 0.9rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .feature-icon {
+        font-size: 1.1rem;
+        margin-bottom: 0.2rem;
+    }
+
+    /* 移动端nav-link缩小 */
+    .nav-link {
+        font-size: 1rem;
+        padding: 0.4em 0.5em;
+        max-width: 120px;
+    }
+
+    #game-page .story-content {
+        height: 220px;
+        max-height: 220px;
+        min-height: 120px;
+        overflow-y: auto;
+        font-size: 0.98rem;
+        padding: var(--spacing-sm);
+    }
+
+    #game-page .choices-container {
+        height: 120px;
+        max-height: 120px;
+        min-height: 90px;
+        gap: 0.7rem;
+        display: flex;
         flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        overflow-y: auto;
+        padding-bottom: 0.2rem;
     }
-    
-    .game-controls {
-        justify-content: center;
+
+    .container,
+    .pages-wrapper,
+    .page,
+    #setup-page,
+    #about-page,
+    .about-content {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
     }
-    
-    .panel-content {
-        margin: var(--spacing-md);
-        padding: var(--spacing-lg);
-    }
-    
-    #toast-container {
-        left: var(--spacing-md);
-        right: var(--spacing-md);
-        top: var(--spacing-md);
+
+    .main-card {
+        max-height: 98vh;
+        overflow-y: auto;
     }
 }
 
 @media (max-width: 480px) {
     .main-card {
-        padding: var(--spacing-lg);
+        padding: var(--spacing-md);
     }
-    
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .subtitle {
+        font-size: var(--font-size-small);
+    }
+
+    .nav-tabs {
+        flex-direction: column; /* 更小的屏幕上导航垂直排列 */
+        gap: var(--spacing-xs);
+    }
+
+    .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-input, .form-select {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-small);
+    }
+
     .btn-large {
-        padding: var(--spacing-md) var(--spacing-lg);
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-small);
+        min-height: 40px;
+    }
+
+    .story-content {
+        min-height: 120px;
+        padding: var(--spacing-md);
+    }
+
+    .loading-status {
+        min-height: 100px;
+        padding: var(--spacing-md);
+    }
+
+    .choice-btn {
+        padding: var(--spacing-xs);
+        font-size: 0.8rem;
+    }
+
+    .choice-number {
+        width: 20px;
+        height: 20px;
+        font-size: 0.65rem;
+        margin-right: var(--spacing-xs);
+    }
+
+    .about-title {
+        font-size: var(--font-size-large);
+    }
+
+    .about-description {
+        font-size: var(--font-size-small);
+    }
+
+    .features-grid {
+        gap: var(--spacing-md);
+    }
+
+    .feature-card {
+        padding: var(--spacing-md);
+    }
+
+    .feature-icon {
+        font-size: var(--font-size-large);
+    }
+
+    .feature-title {
         font-size: var(--font-size-base);
     }
+}
+
+#game-page {
+    height: 600px;
+    min-height: 600px;
+    max-height: 600px;
+    overflow: hidden;
+}
+
+#game-page .story-content,
+#game-page .choices-container {
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+@media (max-width: 768px) {
+  .container,
+  .pages-wrapper,
+  .page,
+  #setup-page,
+  #about-page,
+  .about-content {
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow: visible !important;
+  }
+
+  .main-card {
+      max-height: 98vh;
+      overflow-y: auto;
+  }
+}
+
+/* ==================== 模态框样式 ==================== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn var(--transition-normal);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-heavy);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow: hidden;
+    animation: slideIn var(--transition-normal);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+    background: var(--light-gray);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--dark-gray);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: var(--spacing-lg);
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.modal-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.modal-body li {
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-body li:last-child {
+    border-bottom: none;
+}
+
+.modal-body strong {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.modal-body .text-muted {
+    color: var(--medium-gray);
+    font-size: var(--font-size-small);
+}
+
+/* 移动端模态框适配 */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
     
-    .choice-btn {
+    .modal-header {
         padding: var(--spacing-md);
     }
     
-    .story-content {
-        padding: var(--spacing-lg);
+    .modal-body {
+        padding: var(--spacing-md);
+        max-height: 70vh;
     }
 }
 
-/* ==================== 打印样式 ==================== */
-@media print {
-    .nav-tabs,
-    .game-controls,
-    .info-btn,
-    .btn {
-        display: none !important;
-    }
-    
-    .main-card {
-        box-shadow: none;
-        border: 1px solid var(--border-color);
-    }
-    
-    body {
-        background: var(--white);
-    }
-}
-
-/* ==================== 高对比度模式 ==================== */
-@media (prefers-contrast: high) {
-    :root {
-        --border-color: #000000;
-        --medium-gray: #000000;
-        --light-gray: #ffffff;
-    }
-    
-    .form-input,
-    .form-select,
-    .choice-btn {
-        border-width: 3px;
-    }
-}
-
-/* ==================== 减少动画模式 ==================== */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-/* ==================== 深色模式支持 ==================== */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --white: #1a1a1a;
-        --light-gray: #2d2d2d;
-        --dark-gray: #ffffff;
-        --medium-gray: #cccccc;
-        --border-color: #404040;
-    }
-    
-    body {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    }
-    
-    .main-card {
-        background: #1a1a1a;
-        border-color: #404040;
-    }
-}
 
