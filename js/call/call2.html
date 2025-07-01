@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let name = "Trump"
+     function gretting(){
+        return `hello,I am ${this.name}`;
+    }
+    const lj = {
+        name: "雷军"
+    }
+    // 考虑严格模式
+    'use strict';
+   Function.prototype.myCall = function(context, ...args) {
+       
+       
+       if (context === undefined || context === null) {
+           context = window; // 非严格模式下自动转为window
+       } else {
+           context = Object(context); // 严格模式下确保原始值被包装
+       }
+       
+       if (typeof this !== 'function') {
+           throw new TypeError('Function.prototype.myCall called on non-function');
+       }
+       
+       const fnKey = Symbol('fn');
+       Object.defineProperty(context, fnKey, {
+           value: this,
+           configurable: true
+       });
+       
+       try {
+           const result = context[fnKey](...args);
+           return result;
+       } finally {
+           delete context[fnKey];
+       }
+   }
+   console.log(gretting.myCall(null));
+</script>
+</html>

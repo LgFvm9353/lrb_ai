@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let name = "Trump"
+     function gretting(){
+        return `hello,I am ${this.name}`;
+    }
+    const lj = {
+        name: "雷军"
+    }
+    // 暂未考虑严格模式
+   Function.prototype.myCall = function(context,...args){
+    if(context === undefined || context === null){
+        context = window;
+    }
+    if(typeof this !== "function"){
+       throw new TypeError("Function.prototype.myCall called on non-function");
+    }
+    // 函数要运行
+    const fnKey = Symbol('fn');
+    // this 运行 内部this -> context
+    // this 是 context 上面的方法的时候
+    // 不要覆盖context 上的属性
+    context[fnKey] = this;
+    // 收集参数
+    // js对象的动态性
+    try {
+           const result = context[fnKey](...args);
+           return result;
+       } finally {
+           delete context[fnKey];
+       }
+
+    // context.fn = this;
+    // const result = context.fn(...args);
+    // delete context.fn
+   
+   }
+   console.log(gretting.myCall(lj));
+</script>
+</html>

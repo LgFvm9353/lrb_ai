@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let name = "Trump"
+    function gretting(){
+        return `hello,I am ${this.name}`;
+    }
+    const lj = {
+        name: "雷军"
+    }
+    console.log(gretting.call(lj));
+    console.log(gretting.apply(null));
+</script>
+</html>
