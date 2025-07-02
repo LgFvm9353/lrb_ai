@@ -50,7 +50,10 @@
 
 - 重绘 (repaint)：
   当页面中元素样式的改变并不影响它在文档流中的位置时（例如：color、background-color、visibility等），浏览器会将新样式赋予给元素并重新绘制它，这个过程称为重绘。
-
+  - 修改非布局样式：如 color（文字颜色）、background-color（背景色）、border-color（边框色）、box-shadow（阴影）、opacity（透明度，非 0 到 1 的极端情况）等。
+  - visibility 属性变化：visibility: hidden 会隐藏元素但保留占位，仅触发重绘；而 display: none 会移除元素，触发回流。
+  - 背景图变动：更换 background-image 或调整背景图位置（不影响元素尺寸时）。
+  - 文本样式调整：如 font-weight、text-decoration 等仅改变文字外观，不影响元素布局的属性。
 ## 页面是怎么渲染的？
   - 输入url
   - 下载html 
