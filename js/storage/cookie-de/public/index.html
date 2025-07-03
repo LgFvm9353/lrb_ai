@@ -8,6 +8,25 @@
 </head>
 <body>
     <h1>这是阿玛特拉斯</h1>
+    <div class="app">
+        <section id="loginSection" >
+            <form  id="loginForm">
+                <label for="username">用户名</label>
+                <input type="text" name="username" id="username" placeholder="Username" required>
+                <label for="password">密码</label>
+                <input type="text" name="password" id="password" placeholder="Password" required>
+                <button type="submit">提交</button>
+            </form>
+        </section>
+
+        <section id="welcomeSection" style="display: none;">
+            <p>Welcome,<span id="userDisplay"></span></p>
+            <button id="logoutBtn">Logout</button>
+        </section>
+
+        <button id="loginBtn">Login</button>
+    </div>
+
     <script src="./script.js"></script>
 </body>
 </html>

@@ -70,6 +70,49 @@ const server = http.createServer((req, res) => {
             res.end(data);
         })
     }
+
+    if(req.method === 'POST' && req.url === '/login')
+    {
+        //用户名和密码的校验
+        res.writeHead(200, { 
+            'Content-Type': 'application/json',
+            // 服务器端设置的cookie 客户端可以读取
+            "set-cookie": "username=admin;password=123"
+            // 'Set-Cookie': 'username=admin;password=123;path=/;httpOnly;max-age=3600'
+         }); 
+        res.end(
+            JSON.stringify({
+                success: true,
+                msg: '登录成功'
+            })
+        )
+    }
+    if(req.method === 'GET' && req.url === '/checkLogin')
+    {
+
+        if(req.headers.cookie) {
+            req.headers.cookie.split(';').forEach((cookie) => {
+                const [key, value] = cookie.split('=');
+                if(key === 'username' && value === 'admin')
+                {
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(
+                        JSON.stringify({
+                            success: true
+                        })
+                    )
+                }   
+            })
+        }
+        else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(
+                JSON.stringify({
+                    success: false
+                })
+            )
+        }
+    }
 })
 
 
