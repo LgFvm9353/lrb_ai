@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import PictureCard from './components/PictureCard'
+import { generateAudio } from './lib/audio'
 
 function App() {
   // 上传图片
@@ -69,6 +70,11 @@ function App() {
     setSentence(replyData.example_sentence)
     setExplanation(replyData.explanation.split('\n'))
     setExpReply(replyData.explanation_reply)
+    // url -> audio 一直都在
+    // base64 -> atob -> unit8Array -> blob -> URL.createObjectURL -> 临时地址  只在当前页面有效  资源比较小
+    const audioUrl = await generateAudio(replyData.example_sentence)
+    console.log(audioUrl)
+    setAudio(audioUrl)
   }
   return (
     <div className='container'>
