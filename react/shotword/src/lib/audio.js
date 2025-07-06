@@ -66,13 +66,19 @@ export const generateAudio = async (text)=>{
             pure_english_opt: '1',
         },
     };
-    const response = await fetch(endpoint, { 
-        method: 'POST', 
-        headers, 
-        body: JSON.stringify(payload) 
-    });
-    const data = await response.json();
-    console.log(data);
-    const url = getAudioUrl(data.data);
-    return url;
+    try{
+        const response = await fetch(endpoint, { 
+            method: 'POST', 
+            headers, 
+            body: JSON.stringify(payload) 
+        });
+        const data = await response.json();
+        console.log(data);
+        const url = getAudioUrl(data.data);
+        return url;
+    }catch(error){
+        console.error('语音生成失败:', error);
+        return null;
+    }
+   
 }

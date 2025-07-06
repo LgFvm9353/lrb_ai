@@ -38,43 +38,49 @@ function App() {
        Authorization: `Bearer ${import.meta.env.VITE_KIMI_API_KEY}` 
      };
     setWord('分析中...');
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify({
-        "model": "moonshot-v1-8k-vision-preview",
-        "messages": [
-          {
-            "role": "user",
-            "content": [
-              {
-                "type": "image_url",
-                "image_url": {
-                  "url": imageData
-                }
-              },
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+          "model": "moonshot-v1-8k-vision-preview",
+          "messages": [
+            {
+              "role": "user",
+              "content": [
                 {
-                  "type": "text",
-                  "text": picPrompt
-                }
-            ]
-          }
-        ],
-        stream: false,
+                  "type": "image_url",
+                  "image_url": {
+                    "url": imageData
+                  }
+                },
+                  {
+                    "type": "text",
+                    "text": picPrompt
+                  }
+              ]
+            }
+          ],
+          stream: false,
+        })
       })
-    })
-    const data = await response.json();
-    const replyData = JSON.parse(data.choices[0].message.content)
-    console.log(replyData)
-    setWord(replyData.representative_word)
-    setSentence(replyData.example_sentence)
-    setExplanation(replyData.explanation.split('\n'))
-    setExpReply(replyData.explanation_reply)
-    // url -> audio 一直都在
-    // base64 -> atob -> unit8Array -> blob -> URL.createObjectURL -> 临时地址  只在当前页面有效  资源比较小
-    const audioUrl = await generateAudio(replyData.example_sentence)
-    console.log(audioUrl)
-    setAudio(audioUrl)
+      const data = await response.json();
+      const replyData = JSON.parse(data.choices[0].message.content)
+      console.log(replyData)
+      setWord(replyData.representative_word)
+      setSentence(replyData.example_sentence)
+      setExplanation(replyData.explanation.split('\n'))
+      setExpReply(replyData.explanation_reply)
+      // url -> audio 一直都在
+      // base64 -> atob -> unit8Array -> blob -> URL.createObjectURL -> 临时地址  只在当前页面有效  资源比较小
+      const audioUrl = await generateAudio(replyData.example_sentence)
+      console.log(audioUrl)
+      setAudio(audioUrl)
+    }catch (error) {
+      setWord("分析失败，请重试");
+      console.error("API 调用出错：", error);
+    }
+   
   }
   return (
     <div className='container'>
@@ -83,34 +89,31 @@ function App() {
         audio={audio}
         uploadImg={uploadImg}
       />
-      <div className="output">
+     <div className="output">
         <div>{sentence}</div>
         <div className="details">
-          <button onClick={()=>setDetailExpand(!detailExpand)}>Talk about it</button>
+          <button onClick={() => setDetailExpand(!detailExpand)}>Talk about it</button>
           {
             detailExpand ? (
               <div className="expand">
-                <img src={imgPreview} alt="preview" />  
-                  {
-                    explanation.map((item,index)=>{
-                      <div key={index} className='explanation'>
-                        {item}
-                      </div>
-                    })
-                  }
-                  {
-                    expReply.map((item,index)=>{
-                      <div key={index} className='explanation-reply'>
-                        {item}
-                      </div>
-                    })
-                  }
-      
+                <img src={imgPreview} alt="preview"/>
+                {
+                  explanation.map((explanation, index) => (
+                    <div key={index} className="explanation">
+                      {explanation}
+                    </div>
+                  ))
+                }
+                {
+                  expReply.map((reply, index) => (
+                    <div key={index} className="reply">
+                      {reply}
+                    </div>
+                  ))
+                }
               </div>
-            ) : (
-              <div className="fold">
-                
-              </div>
+            ): (
+              <div className="fold" />
             )
           }
         </div>
