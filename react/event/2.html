@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件委托</title>
+</head>
+<body>
+    <ul id="myList">
+        <li>item1</li>
+        <li>item2</li>
+        <li>item3</li>
+        <li>item4</li>
+    </ul>
+</body>
+<script>
+    // 不可以给nodelist 一次性声明
+    document.querySelector('#myList').addEventListener('click', function (e) {
+        console.log(e.target)
+    })
+    // // 利用迭代器循环
+    // for(let item of lis)
+    // {
+    // }
+    // event.target 目标阶段  事件发生在的元素，而不是事件监听的元素
+    // 委托给父元素，react性能优化到了极致  # root 挂载点
+
+</script>
+</html>
