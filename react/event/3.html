@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root">
+        <ul id="myList">
+            <li data-item="123">Item 1</li>
+            <li data-item="456">Item 2</li>
+            <li data-item="789">Item 3</li>
+            <li data-item="012">Item 4</li>
+        </ul>
+        <div id="container" data-item="ab">hello</div>
+    </div>
+   
+</body>
+<script>
+    
+   // 事件委托
+   document.getElementById('root').addEventListener('click', function(event) {
+        console.log(event.target.dataset.item)
+        if (event.target.tagName === 'LI') {
+            console.log('Clicked on:', event.target.textContent);
+        }
+        if(event.target.dataset.item === 'ab')
+        {
+            console.log('Clicked on:', event.target.textContent);
+            const newLi = document.createElement('li');
+            newLi.appendChild(
+                document.createTextNode('item-new')
+            )
+            newLi.addEventListener('click', function() {
+                console.log('haha');
+            })
+            document.getElementById('myList').appendChild(newLi)
+        }
+        
+   
+   });
+
+ 
+</script>
+</html>
