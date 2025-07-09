@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" name="" id="inputA">
+    <input type="text" id="inputB">
+    <script>
+        let inputA = document.getElementById("inputA");
+        let inputB = document.getElementById("inputB");
+        inputA.addEventListener("keyup", function(event){
+            // 耗时性的
+            // google suggest 搜索建议  
+            // 图片懒加载 scroll + getBoundingClientRect()  触发的频率太高
+            // 为什么要减少触发频率？ 减轻服务器的压力，减少网络请求 不做没有意义的事情
+            ajax(event.target.value)
+
+            console.log(event.keyCode);
+            console.log(event.target.value)
+        })
+        function ajax(value){
+            console.log("AJAX request with:", value);
+        }
+        let debounceAjax = debounce(ajax, 500);
+        inputB.addEventListener("keyup", function(event){
+            debounceAjax(event.target.value)
+        }, 500)
+        
+        function debounce(fn, delay){
+            let timer = null;
+            return function(){
+                let context = this;
+                let args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function(){
+                    fn.apply(context, args)
+                }, delay)
+            }
+        }
+    </script>
+
+</body>
+</html>
