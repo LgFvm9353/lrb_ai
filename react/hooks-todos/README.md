@@ -58,3 +58,41 @@
       <input value={text} onChange={() => setText(text);}>
   - 为什么react 不做双向绑定，为什么双向绑定比单项绑定性能差？
   
+
+- 本地存储
+  - localStorage  
+    localStorage.getItem("key")
+    localStorage.setItem("key","value")
+    localStorage.removeItem("key")
+    localStorage.clear()
+    数据量小，生命周期长，数据永久存储
+    缺点：
+      只能存储字符串
+      只能存储键值对
+      只能存储一个值
+  - localStore与cookie有什么异同
+    - http 无状态的，head 带 cookie
+    - 若 cookie 太大 会影响 http 传输性能  4k左右 
+    - cookie 前端，后端都可以设置
+    - localstorage 只能在浏览器设置  5-10M 
+    - cookie 可以设置过期时间，localstorage 永久存储
+    - IndexDB  本地数据库  可以存储二进制数据
+    - cookie 可以设置过期时间，localstorage 永久存储
+      domain 隔离
+  - BOM Browser Object Model
+    - window.localStorage
+    - window.sessionStorage
+    - window.cookie
+  - DOM Document Object Model
+
+
+
+- 渲染与组件挂载的关系
+  - 组件首先被挂载(创建实例)
+  - 然后执行render方法进行渲染
+  - 最后完成挂载(插入DOM)
+    - 挂载是指React组件实例被创建并插入DOM树的过程
+    - 渲染是指React调用组件的render方法生成虚拟DOM
+    - 在函数组件中，相当于整个函数体的执行就是render过程
+    - 使用Hooks时，useEffect(()=>{}, [])相当于componentDidMount
+    

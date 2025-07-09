@@ -1,8 +1,8 @@
 import TodoForm from "./TodoForm"
 import TodoList from "./TodoList"
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 const Todos = () => {
-    const [todos,setTodos] = useState([
+    const [todos,setTodos] = useState(JSON.parse(localStorage.getItem('todos') || [
         {
           id: 1,
           text: '学习react',
@@ -13,19 +13,19 @@ const Todos = () => {
           text: '学习vue',
           isCompleted: false,
         },
-      ])
-
+      ]))
+    
       const onToggle = (id)=>{
         // todos 数组找到id 为id isCompleted = !isCompleted
         // 响应式 ？ 返回一个新的数组
-          setTodos(todos.map(todo=>{
+          setTodos(preTodo =>preTodo.map(todo=>{
              return todo.id === id 
              ? {...todo,isCompleted:!todo.isCompleted}
              : todo
           }))
       }
       const addTodo = (todo) => {
-        setTodos([...todos,
+        setTodos(preTodo=>[...preTodo,
           {
             id: Date.now(),
             text: todo,
@@ -34,8 +34,12 @@ const Todos = () => {
         ])
       }
       const onDelete = (id) =>{
-        setTodos(todos.filter(todo =>todo.id !== id ))
+        setTodos(preTodo => preTodo.filter(todo =>todo.id !== id ))
       }
+
+      useEffect(()=>{
+        localStorage.setItem('todos',JSON.stringify(todos))
+     },[todos])
      return (
         <div className="app">
            {/* 自定义事件 */}
