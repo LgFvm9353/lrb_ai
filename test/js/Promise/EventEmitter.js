@@ -66,7 +66,7 @@ EventEmitter.prototype.emit = function(type,...args){
     if(Array.isArray(handler)){
         // 遍历列表，执行回调
         handler.map(item=>{
-            item.callback.call(this,args)
+            item.callback.call(this,...args)
             // 标记once:true的项 直接移除
             if(item.once) this.removeListener(type,item)
         })
