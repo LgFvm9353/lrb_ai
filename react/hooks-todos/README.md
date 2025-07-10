@@ -95,4 +95,33 @@
     - 渲染是指React调用组件的render方法生成虚拟DOM
     - 在函数组件中，相当于整个函数体的执行就是render过程
     - 使用Hooks时，useEffect(()=>{}, [])相当于componentDidMount
-    
+
+
+## 自定义 hooks
+  - 自己定义的，以use开头的函数
+  - 某一项功能
+      简单函数的封装
+      响应式的状态
+  - 自定义hooks
+    - 现代react app 架构中的一部分
+    - hook目录
+      - 自定义hooks 可以被多个组件使用
+      - 自定义hooks 可以被其他自定义hooks 使用
+      - 框架common 部分
+      - 业务定制 hooks
+    - use 开头
+      state effect 逻辑封装复用
+    - return 出去 
+      todos 
+      toggleTodo
+      addTodo
+      deleteTodo
+      函数式编程思想的体现
+    - 组件更好地聚焦于模板渲染
+    - 全面hooks函数式编程
+
+- 两个遗憾
+  - ../../路由路径问题 
+    vite 配置alias段路径
+  - toggle、delete 跨级组件层级有点多 
+    useContext 解决跨级组件层级问题
