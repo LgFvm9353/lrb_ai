@@ -1,72 +1,131 @@
-function EventEmitter(){
-    // 使用Map 存储事件类型与回调的映射
+// 优化版 EventEmitter 实现
+
+function EventEmitter(maxListeners = 10) {
     this.events = new Map();
+    this.maxListeners = maxListeners;
 }
 
-const wrapCallback = (fn,once)=>({
+// 回调包装函数
+const wrapCallback = (fn, once = false) => ({
     callback: fn,
     once,
-})
-EventEmitter.prototype.addListener = function (type, fn,once=false) {
-    let handler = this.events.get(type);
-    if(!handler) this.events.set(type,wrapCallback(fn,once))
-    else if(! Array.isArray(handler))
-    {
-        this.events.set(type,[handler,wrapCallback(fn,once)])
-    }else {
-        handler.push(wrapCallback(fn,once))
+});
+
+EventEmitter.prototype.addListener = function (type, fn, once = false) {
+    // 事件名称验证
+    if (typeof type !== 'string') {
+        throw new TypeError('Event type must be a string');
     }
-}
-// 删除监听
-EventEmitter.prototype.removeListener = function(type,listener){
-    let handler = this.events.get(type);
-    if(!handler) return 
-    if(!Array.isArray(handler))
-    {
-        if(handler.callback === listener.callback)
-        {
-            this.events.delete(type)
-        }else return
+    
+    // 回调函数检查
+    if (typeof fn !== 'function') {
+        throw new TypeError('Listener must be a function');
     }
-    for(let i=0;i<handler.length;i++){
-        let item = handler[i]
-        if(item.callback === listener.callback){
-            handler.splice(i,1)
-            i--
-            if(handler.length === 1)
-            {
-                this.events.set(type,handler[0])
+    
+    let handler = this.events.get(type);
+    
+    if (!handler) {
+        this.events.set(type, wrapCallback(fn, once));
+    } else if (typeof handler.callback === 'function') {
+        this.events.set(type, [handler, wrapCallback(fn, once)]);
+        
+        // 首次转为数组时检查最大监听器数
+        if (this.maxListeners > 0 && this.events.get(type).length > this.maxListeners) {
+            console.warn(`Possible EventEmitter memory leak detected for event "${type}". ${this.events.get(type).length} listeners added.`);
+        }
+    } else {
+        handler.push(wrapCallback(fn, once));
+        
+        // 检查最大监听器数
+        if (this.maxListeners > 0 && handler.length > this.maxListeners) {
+            console.warn(`Possible EventEmitter memory leak detected for event "${type}". ${handler.length} listeners added.`);
+        }
+    }
+    
+    // 支持链式调用
+    return this;
+};
+
+EventEmitter.prototype.removeListener = function (type, listener) {
+    // 事件名称验证
+    if (typeof type !== 'string') {
+        throw new TypeError('Event type must be a string');
+    }
+    
+    // 验证 listener 是否为有效包装对象
+    if (!listener || typeof listener.callback !== 'function') {
+        return this;
+    }
+    
+    let handler = this.events.get(type);
+    if (!handler) return this;
+    
+    if (!Array.isArray(handler)) {
+        if (handler.callback === listener.callback) {
+            this.events.delete(type);
+        }
+    } else {
+        for (let i = 0; i < handler.length; i++) {
+            let item = handler[i];
+            if (item.callback === listener.callback) {
+                handler.splice(i, 1);
+                i--;
+                if (handler.length === 1) {
+                    this.events.set(type, handler[0]);
+                }
             }
         }
     }
-}
-EventEmitter.prototype.removeAllListener = function(type)
-{
-    let handler = this.events.get(type);
-    if(!handler) return ;
-    this.events.delete(type)
-}
-EventEmitter.prototype.once = function(type,fn){
-    this.addListener(type,fn,true)
-}
+    
+    // 支持链式调用
+    return this;
+};
 
+EventEmitter.prototype.once = function (type, fn) {
+    // 事件名称验证和回调函数检查通过 addListener 完成
+    this.addListener(type, fn, true);
+    return this; // 支持链式调用
+};
 
-// 触发事件
-EventEmitter.prototype.emit = function(type,...args){
-    let handler = this.events.get(type);
-    if(!handler) return ;
-    if(Array.isArray(handler)){
-        // 遍历列表，执行回调
-        handler.map(item => {
-            item.callback.call(this,args)
-            if(item.once) this.removeListener(type,item)
-        })
-    }else {
-        // 只有一个回调则直接执行
-        handler.callback.apply(this,args)
-        if(handler.once) this.events.delete(type);
+EventEmitter.prototype.emit = function (type, ...args) {
+    // 事件名称验证
+    if (typeof type !== 'string') {
+        throw new TypeError('Event type must be a string');
     }
-}
+    
+    let handler = this.events.get(type);
+    if (!handler) return false;
+    
+    if (Array.isArray(handler)) {
+        // 创建副本防止删除导致的遍历问题
+        const handlers = [...handler];
+        handlers.forEach(item => {
+            item.callback.apply(this, args);
+            if (item.once) this.removeListener(type, item);
+        });
+    } else {
+        handler.callback.apply(this, args);
+        if (handler.once) this.events.delete(type);
+    }
+    
+    return true;
+};
+
+EventEmitter.prototype.removeAllListener = function (type) {
+    // 事件名称验证
+    if (typeof type !== 'string') {
+        throw new TypeError('Event type must be a string');
+    }
+    
+    if (type) {
+        this.events.delete(type);
+    } else {
+        // 清空所有事件
+        this.events.clear();
+    }
+    
+    return this; // 支持链式调用
+};
 
 let e = new EventEmitter();
 e.addListener('type', () => {
