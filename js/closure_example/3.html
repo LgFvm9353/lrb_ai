@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function Book(title, author, year) {
+            // 对内
+            this.title = title;
+            this.author = author;
+            this.year = year;
+            // 对外
+            let _title = title;  //以_开始的变量 私有变量 有利于可读性的编程风格
+            let _author = author;
+            let _year = year;
+
+            this.getTitle = function() {
+                return _title;
+            }
+            this.getAuthor = function() {
+                return _author;
+            }
+            this.getYear = function() {
+                return _year;
+            }
+            this.setTitle = function(newTitle) {
+                _title = newTitle;
+            }
+            this.setAuthor = function(newAuthor) {
+                _author = newAuthor;
+            }
+            this.setYear = function(newYear) {
+                if(typeof newYear === 'number' && newYear > 0 && newYear <= new Date().getFullYear())  
+                    _year = newYear;
+            }
+            this.getFullInfo = function() {
+                return `${_title} by ${_author}, published in ${_year}`;
+            }
+
+        }
+
+        const book = new Book('JavaScript高级程序设计', 'Nicholas C.Zakas', 2011);
+        console.log(book.getFullInfo()); // JavaScript高级程序设计 by Nicholas C.Zakas, published in 2011
+    </script>
+</body>
+</html>

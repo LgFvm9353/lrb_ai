@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        const Counter = (function(){
+            let count = 0;
+            function increment(){
+                return ++count;
+            }
+            function decrement(){
+                return --count;
+            }
+            function reset(){
+                return count = 0;
+            }
+            return function(){
+            return {
+                getCount: function(){
+                    return count;
+                },
+                increment: function(){
+                    return increment();
+                },
+                decrement: function(){
+                    return decrement();
+                },
+                reset: function(){
+                    reset()
+                }
+            }
+        }
+        })()
+        
+        console.log(new Counter()); // 0
+    </script>
+</body>
+</html>

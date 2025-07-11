@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件监听</title>
+</head>
+<body>
+    <input type="button" class="myButton" value="Click me"> 
+    <script>
+        const obj = {
+            message: 'Hello World',
+            init: function() {
+                const button = document.querySelector('.myButton');
+                const that = this;
+                button.addEventListener('click', function() {
+                    console.log(this.message); // 输出 undefined
+                    console.log(that.message); // 输出 Hello World
+                });
+            },
+        }
+        obj.init();
+    </script>
+</body>
+</html>

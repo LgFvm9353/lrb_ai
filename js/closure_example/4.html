@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="inputc">
+
+    <script>
+        let inputc = document.getElementById('inputc')
+        const ajax = function(content)  // 被节流的函数
+        {
+            console.log('ajax request'+content)
+        }
+        function throttle(fn,delay) 
+        {
+            let last,deferTimer;
+
+            return function(...args){
+                let that = this; // 闭包的应用场景
+                let now = Date.now() // 记录当前时间戳
+                if(last && now < last + delay)  // 如果当前时间戳小于上一次执行的时间戳+延迟时间
+                {
+                    clearTimeout(deferTimer);  // 清除定时器
+                    deferTimer = setTimeout(function(){  // 重新设置定时器
+                        last = now;  // 更新上一次执行的时间戳
+                        fn.apply(that,args);  // 执行函数
+                    },delay);
+                }else{  // 如果当前时间戳大于上一次执行的时间戳+延迟时间
+                    last = now;  // 更新上一次执行的时间戳
+                    fn.apply(that,args);  // 执行函数
+                }
+            }
+        }
+        let throttleAjax = throttle(ajax,200)  // 节流函数
+        inputc.addEventListener('keyup',function(e){
+            throttleAjax(e.target.value)
+        })
+
+    </script>
+</body>
+</html>
