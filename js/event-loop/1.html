@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 一个script宏任务开始
+        // 同步任务
+            // js 调用栈
+            // CPU 计算
+        // 异步任务 耗时性任务 任务放到某个地方？
+        // 单线程
+         console.log('script start') // 宏任务
+        Promise.resolve().then(() => {
+            console.log('promise1')
+            setTimeout(() => {
+                console.log('setTimeout1')
+            }, 0)
+        })
+        console.log('script end') // 宏任务
+    </script>
+</body>
+</html>
