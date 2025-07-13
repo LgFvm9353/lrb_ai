@@ -7,9 +7,11 @@ import {
 import './App.css'
 import Home from './pages/Home'
 import About from './pages/About'
+import UserProfile from './pages/UserProfile'
+import Products from './pages/Products'
+import ProductDetail from './pages/Products/ProductDetail'
+import NewProduct from './pages/Products/NewProduct'
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
     {/* 前端路由接管一切，配置 */}
@@ -17,6 +19,12 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />}/>
           <Route path='/about' element={<About />}/>
+          <Route path='/user/:id'element={<UserProfile/>}/>
+          <Route path='/products' element={<Products/>}>
+            {/* 二级路由 */}
+            <Route path=':productId' element={<ProductDetail/>}/>
+            <Route path=':productId/:description' element={<NewProduct/>}/>
+          </Route>
         </Routes>
      </Router>
     </>
