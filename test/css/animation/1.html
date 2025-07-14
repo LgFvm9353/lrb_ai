@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>基础过渡动画示例</title>
+  <style>
+    .box {
+      width: 100px;
+      height: 100px;
+      background: #42b983;
+      transition: all 0.5s;
+      margin: 20px;
+    }
+    .box:hover {
+      width: 200px;
+      background: #ff4400;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      transition: all 0.3s ease-out;
+      margin: 20px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #3498db;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="box"></div>
+  <button class="btn">hover效果按钮</button>
+</body>
+</html>

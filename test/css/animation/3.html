@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D翻书动画</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f5f5f5;
+    }
+    
+    .book-container {
+      perspective: 1500px;
+      width: 300px;
+      height: 450px;
+    }
+    
+    .book {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 1.2s ease-in-out;
+      transform-origin: left center;
+    }
+    
+    .book:hover {
+      transform: rotateY(-160deg);
+    }
+    
+    .book-page {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 5px 15px 15px 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+      transition: all 0.5s ease;
+    }
+    
+    .front {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      transform: rotateY(0deg);
+      z-index: 2;
+    }
+    
+    .back {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      transform: rotateY(180deg);
+    }
+    
+    /* 书脊效果 */
+    .book::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 100%;
+      background: linear-gradient(to right, #1a5276, #1e8449);
+      transform: rotateY(90deg) translateX(-5px);
+      z-index: 3;
+    }
+    
+    /* 翻页时的阴影效果 */
+    .book:hover .front {
+      box-shadow: -15px 5px 30px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="book-container">
+    <div class="book">
+      <div class="book-page front">封面</div>
+      <div class="book-page back">内页</div>
+    </div>
+  </div>
+</body>
+</html>
