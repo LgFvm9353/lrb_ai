@@ -1,0 +1,17 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+
+/* .grid-item {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+} */
+/* 
+.grid-item {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 3;
+  } */

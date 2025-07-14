@@ -1,0 +1,15 @@
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); /* 3列等宽 */
+    grid-template-rows: repeat(3, 100px); /* 3行，每行高度100px */
+    gap: 10px; /* 网格间隙 */
+}
+
+.grid-item {
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #999;
+}
