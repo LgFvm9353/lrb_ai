@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闭包-单例模式</title>
+</head>
+<body>
+    <script>
+        // 回到函数，闭包
+        // 自由变量 唯一的实例
+        function StorageBase(){
+            
+        }
+        StorageBase.prototype.setItem = function(key,value){
+            localStorage.setItem(key,value);
+        }
+
+        StorageBase.prototype.getItem = function(key){
+            return localStorage.getItem(key);
+        }
+
+        StorageBase.prototype.removeItem = function(key){
+            localStorage.removeItem(key);
+        }
+
+        StorageBase.prototype.clear = function(){
+            localStorage.clear();
+        }
+
+        const Storage = (function(){
+            let instance = null;
+            return function(){
+                if(!instance){
+                    instance = new StorageBase();
+                }
+                return instance;
+            }
+        })()
+
+        const s1 = new Storage();
+        const s2 = new Storage();
+        console.log(s1 === s2);
+    </script>
+</body>
+</html>

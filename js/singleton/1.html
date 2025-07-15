@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计模式之单例模式</title>
+</head>
+<body>
+    <script>
+        /*
+        * Storage 本地存储类
+        * 单例模式 gentInstance 静态方法
+        * @func setItem(key,value) 设置本地存储
+        * @func getItem(key) 获取本地存储
+        * @func removeItem(key) 删除本地存储
+        * @func clear() 清空本地存储
+        */
+        // 函数 + prototype 完成类的构建  js是原型式的
+        // js 的原型式的 灵活、优雅
+        // es6为了拥抱更多开发者，出现了class
+        class Storage{
+            static instance;
+            static getInstance(){
+            // 返回一个实例
+            // 如果实例化过 返回之前的
+                if(!Storage.instance){
+                    Storage.instance = new StorageBase();
+                }
+                return Storage.instance;
+            }
+            setItem(key,value){
+                localStorage.setItem(key,value);
+            }
+            getItem(key){
+                return localStorage.getItem(key);
+            }
+            removeItem(key){
+                localStorage.removeItem(key);
+            }
+            clear(){
+                localStorage.clear();
+            }
+        }
+        const storage1 = Storage.getInstance();
+        const storage2 = Storage.getInstance();
+        console.log(storage1 === storage2); // true
+        // instance 静态方法属于类的方法，不用实例化
+
+    </script>
+</body>
+</html>
