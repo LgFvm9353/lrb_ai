@@ -8,7 +8,7 @@
   - 跨层级 全局通信  useContext
 
 - useContext + createContext 打理复杂的全局跨层级共享
-  有些力不从心，还是需要redux
+  有些力不从心，还是需要reducer
 - useReducer 全局状态管理
   - 不像俄罗斯套娃一样
   - 多状态
