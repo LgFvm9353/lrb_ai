@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS流星雨效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1a1a2e 100%);
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* 山脉轮廓 */
+        .mountains {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, #0a0a0a 0%, #1a1a1a 50%, transparent 100%);
+            clip-path: polygon(
+                0% 100%, 
+                0% 70%, 
+                10% 60%, 
+                20% 65%, 
+                30% 55%, 
+                40% 60%, 
+                50% 50%, 
+                60% 55%, 
+                70% 45%, 
+                80% 50%, 
+                90% 40%, 
+                100% 45%, 
+                100% 100%
+            );
+        }
+
+        /* 星空背景 */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(0.5px 0.5px at 90px 40px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(0.5px 0.5px at 160px 30px, rgba(255,255,255,0.7), transparent);
+            background-repeat: repeat;
+            background-size: 200px 150px;
+            animation: twinkle 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* 流星容器 */
+        .meteor-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* 流星基础样式 */
+        .meteor {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        /* 流星尾光 */
+        .meteor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 1) 0%,
+                rgba(255, 255, 255, 0.8) 20%,
+                rgba(255, 255, 255, 0.6) 40%,
+                rgba(255, 255, 255, 0.3) 70%,
+                transparent 100%);
+            transform: rotate(-135deg);
+            transform-origin: 0 0;
+        }
+
+        /* 流星动画 */
+        @keyframes meteor-fall {
+            0% {
+                opacity: 0;
+                transform: translateX(-200px) translateY(-200px);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(calc(100vw + 200px)) translateY(calc(100vh + 200px));
+            }
+        }
+
+        /* 不同的流星样式 */
+        .meteor:nth-child(1) {
+            left: 10%;
+            top: 5%;
+            animation: meteor-fall 3s linear infinite;
+            animation-delay: 0s;
+        }
+
+        .meteor:nth-child(2) {
+            left: 20%;
+            top: 8%;
+            animation: meteor-fall 2.5s linear infinite;
+            animation-delay: 0.5s;
+        }
+
+        .meteor:nth-child(3) {
+            left: 15%;
+            top: 12%;
+            animation: meteor-fall 3.2s linear infinite;
+            animation-delay: 1s;
+        }
+
+        .meteor:nth-child(4) {
+            left: 30%;
+            top: 6%;
+            animation: meteor-fall 2.8s linear infinite;
+            animation-delay: 1.5s;
+        }
+
+        .meteor:nth-child(5) {
+            left: 25%;
+            top: 15%;
+            animation: meteor-fall 3.5s linear infinite;
+            animation-delay: 2s;
+        }
+
+        .meteor:nth-child(6) {
+            left: 40%;
+            top: 10%;
+            animation: meteor-fall 2.7s linear infinite;
+            animation-delay: 2.5s;
+        }
+
+        .meteor:nth-child(7) {
+            left: 35%;
+            top: 18%;
+            animation: meteor-fall 3.1s linear infinite;
+            animation-delay: 3s;
+        }
+
+        .meteor:nth-child(8) {
+            left: 50%;
+            top: 8%;
+            animation: meteor-fall 2.9s linear infinite;
+            animation-delay: 3.5s;
+        }
+
+        .meteor:nth-child(9) {
+            left: 45%;
+            top: 20%;
+            animation: meteor-fall 3.3s linear infinite;
+            animation-delay: 4s;
+        }
+
+        .meteor:nth-child(10) {
+            left: 60%;
+            top: 12%;
+            animation: meteor-fall 2.6s linear infinite;
+            animation-delay: 4.5s;
+        }
+
+        .meteor:nth-child(11) {
+            left: 55%;
+            top: 25%;
+            animation: meteor-fall 3.4s linear infinite;
+            animation-delay: 5s;
+        }
+
+        .meteor:nth-child(12) {
+            left: 70%;
+            top: 15%;
+            animation: meteor-fall 2.4s linear infinite;
+            animation-delay: 5.5s;
+        }
+
+        .meteor:nth-child(13) {
+            left: 65%;
+            top: 30%;
+            animation: meteor-fall 3.6s linear infinite;
+            animation-delay: 6s;
+        }
+
+        .meteor:nth-child(14) {
+            left: 80%;
+            top: 18%;
+            animation: meteor-fall 2.8s linear infinite;
+            animation-delay: 6.5s;
+        }
+
+        .meteor:nth-child(15) {
+            left: 75%;
+            top: 35%;
+            animation: meteor-fall 3.2s linear infinite;
+            animation-delay: 7s;
+        }
+
+        /* 大流星样式 */
+        .meteor.large {
+            width: 3px;
+            height: 3px;
+        }
+
+        .meteor.large::before {
+            width: 150px;
+            height: 2px;
+        }
+
+        /* 小流星样式 */
+        .meteor.small {
+            width: 1px;
+            height: 1px;
+        }
+
+        .meteor.small::before {
+            width: 60px;
+            height: 0.5px;
+        }
+
+        /* 明亮流星样式 */
+        .meteor.bright {
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        }
+
+        .meteor.bright::before {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 1) 0%,
+                rgba(255, 255, 255, 0.9) 20%,
+                rgba(255, 255, 255, 0.7) 40%,
+                rgba(255, 255, 255, 0.4) 70%,
+                transparent 100%);
+        }
+
+        /* 暗淡流星样式 */
+        .meteor.dim {
+            opacity: 0.6;
+        }
+
+        .meteor.dim::before {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.7) 0%,
+                rgba(255, 255, 255, 0.5) 20%,
+                rgba(255, 255, 255, 0.3) 40%,
+                rgba(255, 255, 255, 0.1) 70%,
+                transparent 100%);
+        }
+
+        /* 随机样式应用 */
+        .meteor:nth-child(odd) {
+            animation-duration: 2.5s;
+        }
+
+        .meteor:nth-child(even) {
+            animation-duration: 3.5s;
+        }
+
+        .meteor:nth-child(3n) {
+            animation-duration: 2.8s;
+        }
+
+        .meteor:nth-child(4n) {
+            animation-duration: 3.2s;
+        }
+
+        .meteor:nth-child(5n) {
+            animation-duration: 2.7s;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .meteor::before {
+                width: 60px;
+            }
+            
+            .meteor.large::before {
+                width: 100px;
+            }
+            
+            .meteor.small::before {
+                width: 40px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="mountains"></div>
+    
+    <div class="meteor-container">
+        <!-- 基础流星 -->
+        <div class="meteor"></div>
+        <div class="meteor small dim"></div>
+        <div class="meteor large bright"></div>
+        <div class="meteor"></div>
+        <div class="meteor bright"></div>
+        <div class="meteor small"></div>
+        <div class="meteor large"></div>
+        <div class="meteor dim"></div>
+        <div class="meteor"></div>
+        <div class="meteor bright"></div>
+        <div class="meteor small dim"></div>
+        <div class="meteor"></div>
+        <div class="meteor large bright"></div>
+        <div class="meteor"></div>
+        <div class="meteor"></div>
+    </div>
+
+    <script>
+        // 最少的JavaScript代码，仅用于交互
+        let meteorCount = 15;
+        
+        function createMeteor() {
+            const container = document.querySelector('.meteor-container');
+            const meteor = document.createElement('div');
+            meteor.className = 'meteor';
+            
+            // 随机样式
+            const styles = ['', 'small', 'large', 'bright', 'dim', 'small dim', 'large bright'];
+            const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+            meteor.className = 'meteor ' + randomStyle;
+            
+            // 随机位置
+            meteor.style.left = Math.random() * 80 + '%';
+            meteor.style.top = Math.random() * 40 + '%';
+            
+            // 随机动画时长
+            meteor.style.animationDuration = (2 + Math.random() * 2) + 's';
+            meteor.style.animationDelay = Math.random() * 2 + 's';
+            
+            container.appendChild(meteor);
+            meteorCount++;
+            
+            // 5秒后移除
+            setTimeout(() => {
+                if (meteor.parentNode) {
+                    meteor.parentNode.removeChild(meteor);
+                    meteorCount--;
+                }
+            }, 7000);
+        }
+        
+        // 点击添加流星
+        document.addEventListener('click', () => {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => createMeteor(), i * 200);
+            }
+        });
+        
+        // 定期自动添加流星
+        setInterval(() => {
+            if (meteorCount < 20) {
+                createMeteor();
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
+
