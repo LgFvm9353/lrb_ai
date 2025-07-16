@@ -15,3 +15,14 @@ setItem(key,value) 和getItem(key)
   实例的时候一定要这样
 - 性能特别好，好管理
 
+
+- 实现一个登录弹窗
+   - 体验
+     不用跳转路由，盖在页面上
+     z-index display none| block
+   - 性能
+     90% 用户 不登录
+     Model html js css 比较多
+     把需要用到的功能推迟到第一次用的时候
+
+
