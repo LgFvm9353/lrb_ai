@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>history SPA</title>
+</head>
+<body>
+    <h2>SPA 路由模拟</h2>
+    <div id="view">当前试图</div>
+    <button onclick="navigate('/home')">首页</button>
+    <button onclick="navigate('/about')">关于</button>
+    <button onclick="navigate('/contact')">联系</button>
+    <button onclick="replace('/login')">登录</button>
+    <button onclick="replace('pay')">支付</button>
+
+    <script>
+        function renderView(path) {
+            document.getElementById('view').innerText = `当前视图：${path}`; // 渲染当前路径对应的内容，比如：/home 对应 首页内容，/about 对应 关于内容，/contact 对应 联系内容，以此类同
+            
+        }
+        function navigate(path) {
+            // url 含义，持有数据状态
+            
+            // 入 history 栈 
+            history.pushState({path}, '', path); // 更新URL但不刷新页面
+            renderView(path); 
+        }
+        window.addEventListener('popstate', function(e) { // 监听 popstate 事件，当用户点击浏览器的后退或前进按钮时触发
+            // 重新渲染视图
+            console.log('popstate', e);
+            renderView(e.state?.path || location.pathname); // 从 state 中获取 path，如果没有则使用当前路径
+        });
+
+        function replace(path) {
+            // 入 history 栈
+            history.replaceState({path}, '', path); // 更新URL但不刷新页面
+            renderView(path); // 重新渲染视图
+        }
+    </script>
+</body>
+
+</html>
