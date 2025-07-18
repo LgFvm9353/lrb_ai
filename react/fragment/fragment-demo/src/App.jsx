@@ -37,9 +37,9 @@ function App() {
     }
   ]
   return (
-    <>
+    <div>
       <Demo items={items}/>
-    </>
+    </div>
   )
 }
 
