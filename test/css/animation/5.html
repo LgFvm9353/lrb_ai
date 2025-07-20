@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .carousel {
+          width: 300px;
+          height: 200px;
+          overflow: hidden;
+          position: relative;
+          margin: 0 auto;
+        }
+        
+        .slides {
+          display: flex;
+          width: 300%;
+          height: 100%;
+          transition: transform 0.5s ease-in-out;
+        }
+        
+        .slide {
+          flex: 1 0 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 3rem;
+          color: white;
+        }
+        
+        .dots {
+          position: absolute;
+          bottom: 10px;
+          left: 0;
+          right: 0;
+          text-align: center;
+        }
+        
+        .dots label {
+          display: inline-block;
+          width: 12px;
+          height: 12px;
+          margin: 0 5px;
+          background: rgba(255,255,255,0.5);
+          border-radius: 50%;
+          cursor: pointer;
+        }
+        
+        /* 精确控制滑动位置 */
+        #slide1:checked ~ .slides { transform: translateX(0); }
+        #slide2:checked ~ .slides { transform: translateX(-33.333%); }
+        #slide3:checked ~ .slides { transform: translateX(-66.666%); }
+        
+        /* 当前选中指示点高亮 */
+        #slide1:checked ~ .dots label:nth-child(1),
+        #slide2:checked ~ .dots label:nth-child(2),
+        #slide3:checked ~ .dots label:nth-child(3) {
+          background: white;
+        }
+        </style>
+        
+</head>
+<body>
+    <div class="carousel">
+        <input type="radio" name="slides" id="slide1" checked hidden>
+        <input type="radio" name="slides" id="slide2" hidden>
+        <input type="radio" name="slides" id="slide3" hidden>
+        
+        <div class="slides">
+          <div class="slide" style="background: #ff9aa2;">1</div>
+          <div class="slide" style="background: #ffb7b2;">2</div>
+          <div class="slide" style="background: #ffdac1;">3</div>
+        </div>
+        
+        <div class="dots">
+          <label for="slide1"></label>
+          <label for="slide2"></label>
+          <label for="slide3"></label>
+        </div>
+      </div>
+</body>
+</html>
