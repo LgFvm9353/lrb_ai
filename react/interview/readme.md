@@ -37,3 +37,29 @@
     document.createElement('ul')
         document.createElement('li')
  
+
+## 受控组件与非受控组件
+- 表单 手机用户数据
+   - 受state 控制  
+      value={state} onChange={e => setState(e.target.value)}
+
+   - 非受控
+     另外一种 收集用户输入的方法
+     ref 引用
+     ref={inputRef}
+  
+
+- 受控组件
+   状态由react组件状态（state）自身管理
+  
+- 非受控组件
+   状态由DOM节点自身维护
+
+- 什么时候使用受控组件？  
+   需要实时验证、复杂表单交互、表单数据需要实时处理
+   但是需要注意性能问题，因为每次状态改变都会触发重新渲染
+   可以通过shouldComponentUpdate来优化性能，防抖、节流
+
+- 什么时候使用非受控组件？
+   简单表单、表单数据不需要实时处理、表单数据不需要实时验证 等交互性不强
+   性能好 
