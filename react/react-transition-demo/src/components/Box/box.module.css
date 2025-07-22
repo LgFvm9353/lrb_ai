@@ -1,0 +1,10 @@
+.box {
+    width: 100px;
+    height: 10px;
+    background-color: lightblue;
+    transition: height 0.3s ease-in-out;
+    overflow: hidden;
+}
+.box-open {
+    height: 100px;
+}
