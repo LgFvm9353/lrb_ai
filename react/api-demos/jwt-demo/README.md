@@ -26,4 +26,22 @@
     verify 验证token user
     - pnpm i jwt
     - import jwt from 'jsonwebtoken'
+    - sign
+    - HTTP 请求 Authorization: Bearer token
+    - Cookie 每次会自动带上
+    - token 需要手动设置
+
+- 加盐
+   secret
+   传递token的时候，前面会加上Bearer  
+   通过 http headers Authorization 
+
+- 前端的用户权限状态 流程
+  - zustand 
+     登录、user useUserStore、
+  - 登录页面 
+     受控或非受控组件
+  - 路由
+     路由守卫
+  - api 
     
