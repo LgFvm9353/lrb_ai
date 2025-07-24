@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纯3D地球仪 - CSS实现</title>
+    <style>
+        /* 基础样式 */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #0a1a2e 0%, #000 70%);
+            overflow: hidden;
+            perspective: 1200px;
+        }
+
+        /* 3D场景容器 */
+        .scene {
+            width: 400px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        /* 地球球体 - 3D核心 */
+        .earth {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate 40s infinite linear;
+            cursor: grab;
+        }
+
+        /* 3D球面分段（经线环） */
+        .meridian {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        /* 3D球面分段（纬线环） */
+        .parallel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        /* 3D面片 - 每个网格单元 */
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.08) 40%, rgba(0,0,0,0.18) 100%),
+                url('https://raw.githubusercontent.com/d3/d3-geo-projection/master/img/earth.jpg');
+            background-blend-mode: lighten;
+            background-size: 400% 200%;
+            transform-style: preserve-3d;
+            box-shadow: inset 0 0 10px rgba(0, 100, 255, 0.3);
+            filter: brightness(1.1) contrast(1.1);
+            opacity: 0.65; /* 更低透明度 */
+        }
+
+        /* 创建3D球体结构 - 经线 */
+        .meridian:nth-child(1) { transform: rotateY(0deg); }
+        .meridian:nth-child(2) { transform: rotateY(15deg); }
+        .meridian:nth-child(3) { transform: rotateY(30deg); }
+        .meridian:nth-child(4) { transform: rotateY(45deg); }
+        .meridian:nth-child(5) { transform: rotateY(60deg); }
+        .meridian:nth-child(6) { transform: rotateY(75deg); }
+        .meridian:nth-child(7) { transform: rotateY(90deg); }
+        .meridian:nth-child(8) { transform: rotateY(105deg); }
+        .meridian:nth-child(9) { transform: rotateY(120deg); }
+        .meridian:nth-child(10) { transform: rotateY(135deg); }
+        .meridian:nth-child(11) { transform: rotateY(150deg); }
+        .meridian:nth-child(12) { transform: rotateY(165deg); }
+
+        /* 创建3D球体结构 - 纬线 */
+        .parallel:nth-child(13) { transform: rotateX(75deg); }
+        .parallel:nth-child(14) { transform: rotateX(60deg); }
+        .parallel:nth-child(15) { transform: rotateX(45deg); }
+        .parallel:nth-child(16) { transform: rotateX(30deg); }
+        .parallel:nth-child(17) { transform: rotateX(15deg); }
+        .parallel:nth-child(18) { transform: rotateX(0deg); }
+        .parallel:nth-child(19) { transform: rotateX(-15deg); }
+        .parallel:nth-child(20) { transform: rotateX(-30deg); }
+        .parallel:nth-child(21) { transform: rotateX(-45deg); }
+        .parallel:nth-child(22) { transform: rotateX(-60deg); }
+        .parallel:nth-child(23) { transform: rotateX(-75deg); }
+
+        /* 为每个面片设置正确的地图部分 */
+        .meridian:nth-child(1) .face { background-position: 0% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(2) .face { background-position: 8.33% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(3) .face { background-position: 16.66% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(4) .face { background-position: 25% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(5) .face { background-position: 33.33% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(6) .face { background-position: 41.66% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(7) .face { background-position: 50% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(8) .face { background-position: 58.33% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(9) .face { background-position: 66.66% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(10) .face { background-position: 75% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(11) .face { background-position: 83.33% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .meridian:nth-child(12) .face { background-position: 91.66% 0%; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+
+        /* 大气层光晕 */
+        .atmosphere {
+            position: absolute;
+            width: 105%;
+            height: 105%;
+            top: -2.5%;
+            left: -2.5%;
+            background: radial-gradient(circle at 30% 40%, 
+                      rgba(200, 230, 255, 0.9) 0%,
+                      rgba(80, 150, 255, 0.3) 40%,
+                      transparent 70%);
+            border-radius: 50%;
+            transform-style: preserve-3d;
+            opacity: 0.8;
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+        /* 网格线 */
+        .grid-line {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(0, 200, 255, 0.7); /* 加粗加亮 */
+            border-radius: 50%;
+            box-shadow: 0 0 8px 2px rgba(0, 200, 255, 0.5); /* 增加光晕 */
+            mix-blend-mode: lighten; /* 让线条在深色背景下更亮 */
+            pointer-events: none;
+        }
+
+        /* 动画 */
+        @keyframes rotate {
+            from { transform: rotateY(0); }
+            to { transform: rotateY(360deg); }
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <div class="earth" id="earth">
+            <!-- 这里的经线和纬线将由JS动态生成 -->
+            <div class="atmosphere"></div>
+        </div>
+    </div>
+
+<script>
+// 动态生成更多经线和纬线
+const earth = document.getElementById('earth');
+const meridianCount = 36; // 经线数量
+const parallelCount = 24; // 纬线数量
+
+// 生成经线
+for (let i = 0; i < meridianCount; i++) {
+    const meridian = document.createElement('div');
+    meridian.className = 'meridian';
+    meridian.style.transform = `rotateY(${(360 / meridianCount) * i}deg)`;
+    // 面片
+    const face = document.createElement('div');
+    face.className = 'face';
+    // 让每个面片显示不同的地球部分
+    face.style.backgroundPosition = `${(100 / meridianCount) * i}% 0%`;
+    // grid线
+    const grid = document.createElement('div');
+    grid.className = 'grid-line';
+    meridian.appendChild(face);
+    meridian.appendChild(grid);
+    earth.insertBefore(meridian, earth.querySelector('.atmosphere'));
+}
+// 生成纬线
+for (let i = 0; i < parallelCount; i++) {
+    const parallel = document.createElement('div');
+    parallel.className = 'parallel';
+    // 纬线角度分布（-90到+90度，去掉极点）
+    const angle = 90 - ((180 / (parallelCount + 1)) * (i + 1));
+    parallel.style.transform = `rotateX(${angle}deg)`;
+    // 面片
+    const face = document.createElement('div');
+    face.className = 'face';
+    // grid线
+    const grid = document.createElement('div');
+    grid.className = 'grid-line';
+    parallel.appendChild(face);
+    parallel.appendChild(grid);
+    earth.insertBefore(parallel, earth.querySelector('.atmosphere'));
+}
+</script>
+</body>
+</html>
