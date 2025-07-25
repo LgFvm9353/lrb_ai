@@ -37,8 +37,12 @@ const MainLayout = () => {
       setActive(index !== -1 ? index : 0)
   },[location.pathname])
   return (
-      <>
+      <div className='flex flex-col h-screen'
+       style={{paddingBottom: '50px'}}>
+        <div className='flex-1'>
           <Outlet />
+        </div>
+        
           {/* tabbar 高亮显示和页面跳转*/}
           <Tabbar value={active} onChange={
               (key) => { 
@@ -56,7 +60,7 @@ const MainLayout = () => {
                   </Tabbar.Item>
               ))}
           </Tabbar>
-      </>
+      </div>
   )
 }
 
