@@ -167,66 +167,27 @@ const Trip = () => {
       id: 1,
       content: 'hello I am your assistant',
       role: 'assistant'
-    }, {
+    },
+    {
       id:2,
       content: 'hello world',
       role: 'user'
     },
-    // {
-    //   id: 1,
-    //   content: 'hello I am your assistant',
-    //   role: 'assistant'
-    // },
-    // {
-    //   id:2,
-    //   content: 'hello world',
-    //   role: 'user'
-    // },
-    // {
-    //   id: 1,
-    //   content: 'hello I am your assistant',
-    //   role: 'assistant'
-    // },
-    // {
-    //   id:2,
-    //   content: 'hello world',
-    //   role: 'user'
-    // },
-    // {
-    //   id: 1,
-    //   content: 'hello I am your assistant',
-    //   role: 'assistant'
-    // },
-    // {
-    //   id:2,
-    //   content: 'hello world',
-    //   role: 'user'
-    // },
-    // {
-    //   id: 1,
-    //   content: 'hello I am your assistant',
-    //   role: 'assistant'
-    // },
-    // {
-    //   id:2,
-    //   content: 'hello world',
-    //   role: 'user'
-    // },
-    // {
-    //   id: 1,
-    //   content: 'hello I am your assistant',
-    //   role: 'assistant'
-    // },
-    // {
-    //   id:2,
-    //   content: 'hello world',
-    //   role: 'user'
-    // },
-    // {
-    //   id: 1,
-    //   content: 'hello I am your assistant',
-    //   role: 'assistant'
-    // }
+    {
+      id: 1,
+      content: 'hello I am your assistant',
+      role: 'assistant'
+    },
+    {
+      id:2,
+      content: 'hello world',
+      role: 'user'
+    },
+    {
+      id: 1,
+      content: 'hello I am your assistant',
+      role: 'assistant'
+    },
 
   ])
   const handleChat = async()=>{
