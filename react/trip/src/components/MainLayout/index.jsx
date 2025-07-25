@@ -42,7 +42,6 @@ const MainLayout = () => {
         <div className='flex-1'>
           <Outlet />
         </div>
-        
           {/* tabbar 高亮显示和页面跳转*/}
           <Tabbar value={active} onChange={
               (key) => { 

@@ -218,9 +218,15 @@ const Trip = () => {
   ]))
     setIsSending(false)
   }
- 
+   // 自动滚动到底部
+  useEffect(() => {
+    const chatArea = document.querySelector(`.${styles.chatArea}`);
+    if (chatArea) {
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+  }, [messages]); // 当messages变化时触发滚动
     return (
-      <div className='flex flex-col h-all'>
+      <div className={`flex flex-col h-all ${styles.chatContainer}`}>
         <div className={`flex-1 ${styles.chatArea}`}>
             {
                 messages.map((msg, index) => (

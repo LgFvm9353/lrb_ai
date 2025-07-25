@@ -1,17 +1,26 @@
+.chatContainer{
+    height: calc(100vh -50px);
+    position: relative;
+}
 .chatArea{
     padding: 24px;
-    
     background-color: #f7f8fa;
-    overflow: auto;
-    scroll-behavior: smooth;
-    
+    overflow-y: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 100px;
 }
 .inputArea{
-  
     padding: 16px;
     padding-bottom: 1px;
     border-top: 1px solid #ddd;
     background: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 .input{
     margin-right: 8px;
