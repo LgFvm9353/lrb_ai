@@ -13,11 +13,12 @@ const Trip = lazy(() => import('@/pages/Trip'))
 const Account = lazy(() => import('@/pages/Account'))
 import MainLayout from '@/components/MainLayout'
 import BlankLayout from '@/components/BlankLayout'
+import Loading from '@/components/Loading'
 function App() {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading />}>
        {/* 一组一组路由，带有tabbar的Layout */}
        <Routes>
         <Route element={<MainLayout />}>

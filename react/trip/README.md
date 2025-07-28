@@ -117,6 +117,13 @@
    - chatbot 模块
      - llm 模块 chat封装
      - 迭代chat,支持任意模型
+   - search 模块
+     - 防抖
+     - api 
+        GoogleSuggest
+     - localStorage 
+     - 搜索框
+     - 搜索结果
 ## 项目难点
 - 前端智能
    - 封装一个chat 函数
@@ -153,7 +160,16 @@
    - 上下文
    - coze 工作流接口调用
 
+## 通用组件开发
+- Loading 
+  - 居中方案
+     position: fixed + tlrb + margin:auto
+  - React.memo 无状态组件不重新渲染
+  - animation 
+
 ## 项目中遇到过什么问题，怎么解决的
 - chat message 遇到message覆盖问题
 - 闭包陷阱问题
    依次事件里面，两次setMessages()
+
+
