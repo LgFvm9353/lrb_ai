@@ -27,7 +27,7 @@ const Account = () => {
         avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
     })
     useTitle("我的")
-    const [showActionSheet,setShowActionSheet] = useState(true)
+    const [showActionSheet,setShowActionSheet] = useState(false)
     const handleAction = async (e)=>{
         console.log(e)
         if(e.type === 1 )
