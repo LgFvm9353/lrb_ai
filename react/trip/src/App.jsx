@@ -14,6 +14,7 @@ const Account = lazy(() => import('@/pages/Account'))
 import MainLayout from '@/components/MainLayout'
 import BlankLayout from '@/components/BlankLayout'
 import Loading from '@/components/Loading'
+const Detail = lazy(() => import('@/pages/Detail'))
 function App() {
 
   return (
@@ -31,6 +32,7 @@ function App() {
         </Route>
         <Route element={<BlankLayout />}>
           <Route path='/search' element={<Search/>}/>
+          <Route path='/detail/:id' element={<Detail />}/>
         </Route>
       </Routes>
       </Suspense>
