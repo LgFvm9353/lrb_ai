@@ -136,7 +136,19 @@
      数据驱动页面（2列） 根据奇偶分配
   - 加载更多 位于盒子底部的元素 通过使用 IntersectionObserver 
     观察它是否出现在视窗，性能更好，使用了观察者模式
+    组件卸载时，直接使用disconnext 释放资源，防止内存泄露
   - key id 下拉刷新
+  - 使用IntersectionObserver 实现图片懒加载
+- toast组件封装
+   - 需要自定义，UI组件库不满足需求 
+   - UI props 
+   - JS 显示出来 跨层级通信
+      观察者 
+   - mitt eventBus事件总线 
+      - 实例化  mitt()
+      - on ('自定义事件的名字',callback)
+      - emit('自定义事件的名字',data)
+      组件通过监听一个自定义事件，实现基于事件的组件通信
 ## 项目难点
 - 前端智能
    - 封装一个chat 函数
@@ -193,5 +205,10 @@
 - chat message 遇到message覆盖问题
 - 闭包陷阱问题
    一次事件里面，两次setMessages()
-
+- 升级瀑布流？
+   - 骨架屏
+   - 奇偶 两列分配图片的方式可以会像天残脚一样
+     两个响应式数组，判断那一列高度更小，将新得到的图片放到这个数组中
+   - intersectionObserver 用了两次 重复 违反了dry原则
+     封装为hooks 
 
