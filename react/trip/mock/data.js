@@ -1,4 +1,16 @@
 import Mock from 'mockjs'
+
+// 每页 10 张
+const getImages = (page = 1, pageSize = 10) => {
+
+    // index是Array.from 方法自动提供的索引，不需要手动初始化，从0开始
+    return Array.from({ length: pageSize }, (_, index) => ({
+        // 
+        id: (page - 1) * pageSize + index + 1,
+        height: Mock.Random.integer(300,600),
+        url: Mock.Random.image('300x400', Mock.Random.color(), '#fff', 'img')
+    }))
+}
 export default [
     {
         url: '/api/search',
@@ -36,31 +48,7 @@ export default [
                     }
                 }
         }
-     },
-    // {
-    //    url:"/api/detail/:id",
-    //    method:"GET",
-    //    timeout:1000,
-    //    response: (req,res) => {
-    //     // const id = req.params?.id;
-    //     return {
-    //       code: 0,
-    //       message:'success',
-    //       data: Mock.mock({
-    //         // id,
-    //         title: '@ctitle(5,10)',
-    //         price: '@integer(60,100)',
-    //         desc: '@cparagraph(10-30)',
-    //         'images|5': [
-    //           {
-    //             url: '@image(300x200.@color,#fff,图片)',
-    //             alt: '@ctitle(5,10)'
-    //           }
-    //         ]
-    //       })
-    //     }
-    //   }
-    // }
+     }
     ,{
         url: '/api/detail/:id',
         method: 'get',
@@ -91,6 +79,22 @@ export default [
                 message: 'success',
                 data: randomData
             }
+        }
+    },
+    {
+        // ?page=1&pageSize=10
+        url: '/api/images',
+        method: 'GET',
+        timeout: 1000,
+        response: ({query}) => {
+           const page = Number(query.page) || 1; // 当前页码，默认为1
+           const pageSize = Number(query.pageSize) || 10; // 每页显示的数量，默认为10
+           return {
+               code: 0,
+               message: 'success',
+               data: getImages(page,pageSize)
+           }
+
         }
     }
 ]

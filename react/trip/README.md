@@ -110,20 +110,33 @@
         - Route 不加path 对应的路由自由选择
         - tabbar 模板
         - blank 模板
-   - tabbar 组件
-     - react-vant + @react-vant/icons
-     - value + onChange 响应式
-     - 直接点击连接分享 active 的设置    
-   - chatbot 模块
-     - llm 模块 chat封装
-     - 迭代chat,支持任意模型
-   - search 模块
-     - 防抖
-     - api 
-        GoogleSuggest
-     - localStorage 
-     - 搜索框
-     - 搜索结果
+- tabbar 组件
+   - react-vant + @react-vant/icons
+   - value + onChange 响应式
+   - 直接点击连接分享 active 的设置    
+- chatbot 模块
+   - llm 模块 chat封装
+   - 迭代chat,支持任意模型
+- search 模块
+   - 防抖
+   - api 
+      GoogleSuggest
+   - localStorage 
+   - 搜索框
+   - 搜索结果
+- 瀑布流
+  - 小红书等主流App的美容浏览用户体验产品
+     两列、图片高度不一致、落差感
+     滚动加载更多、图片懒加载
+  - 接口 
+     /api/images?page=${num}&pageSize=${n}
+     唯一id
+     高度随机  随机图片
+  - images 怎么放到两列中？ MVVM
+     数据驱动页面（2列） 根据奇偶分配
+  - 加载更多 位于盒子底部的元素 通过使用 IntersectionObserver 
+    观察它是否出现在视窗，性能更好，使用了观察者模式
+  - key id 下拉刷新
 ## 项目难点
 - 前端智能
    - 封装一个chat 函数
@@ -159,7 +172,8 @@
    - arr.findIndex
    - arr.startWith
    - promise
-
+   瀑布流随机数据生成
+   - Array.from({ length: pageSize }, (_, index) => {...}) 
 - 项目迭代
    - 功能由浅入深
    - chatbot deepseek 简单chat
@@ -178,6 +192,6 @@
 ## 项目中遇到过什么问题，怎么解决的
 - chat message 遇到message覆盖问题
 - 闭包陷阱问题
-   依次事件里面，两次setMessages()
+   一次事件里面，两次setMessages()
 
 
