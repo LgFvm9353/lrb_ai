@@ -16,6 +16,7 @@ import BlankLayout from '@/components/BlankLayout'
 import Loading from '@/components/Loading'
 const Detail = lazy(() => import('@/pages/Detail'))
 import Toast from '@/components/Toast'
+const Coze = lazy(() => import('@/pages/Coze'))
 function App() {
 
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route element={<BlankLayout />}>
           <Route path='/search' element={<Search/>}/>
           <Route path='/detail/:id' element={<Detail />}/>
+          <Route path="/coze" element={<Coze />}/>
         </Route>
       </Routes>
       </Suspense>

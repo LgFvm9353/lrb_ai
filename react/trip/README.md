@@ -174,8 +174,8 @@
    - SPA 
    - Skeleton 骨架屏
       不用让用户等待了
-      
-
+   - 文件上传的preview
+      用的html5的 FileReader()
 - 自定义hooks
    - useTitle 设置标题，一定要设置
 
@@ -193,7 +193,26 @@
    - 流式输出
    - 上下文
    - coze 工作流接口调用
-
+- 智能生成图片
+  - 产品
+    冰球社群的宠物
+    coze 工作流 智能编排AI流程 编程的一种
+  - 设计工作流
+    - 创建工作流 ani_pic
+        上传宠物照片，生成宠物冰球运动员照片
+    - 代码节点
+       参数校验和逻辑功能，返回运行的结果
+    - 图片生成流程
+       - 图片理解插件   计算机视觉
+       - 大模型 特征提取 
+         prompt
+    - workflow_id   7533134865484300303
+    - token 
+    - coze 图片要先上传到coze空间中，拿到返回的图片url
+       uploadUrl + token + new FormData().append(file) 
+       拿到file_id
+    - workflow_id + workflowUrl + token 
+       工作流需要的参数 调用工作流
 ## 通用组件开发
 - Loading 
   - 居中方案
