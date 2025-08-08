@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>拖拽上传文件</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+  </style>
+</head>
+<body>
+ <div id="dropZone" style="height: 200px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center;">
+  拖拽文件到这里上传
+</div>
+</body>
+<script>
+   const dropZone = document.getElementById('dropZone');
+
+    dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.backgroundColor = '#f0f0f0';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+    dropZone.style.backgroundColor = '';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.backgroundColor = '';
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        const file = files[0];
+        console.log('上传文件:', file.name, file.size, 'bytes');
+
+        // 这里可以上传到服务器
+        // const formData = new FormData();
+        // formData.append('file', file);
+        // fetch('/upload', { method: 'POST', body: formData });
+    }
+    });
+</script>
+</html>

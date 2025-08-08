@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>图片拖拽 Demo</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+    box-sizing: border-box;
+    }
+
+    body {
+    background-color: steelblue;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    gap: 20px;
+    padding: 20px;
+    }
+
+    .empty {
+    height: 150px;
+    width: 150px;
+    border: 3px solid #000;
+    background: white;
+    transition: all 0.2s ease;
+    }
+
+    .fill {
+    background-image: url('https://img1.baidu.com/it/u=400864332,910444934&fm=253&fmt=auto&app=138&f=JPEG?w=514&h=500');
+    width: 145px;
+    height: 145px;
+    cursor: grab;
+    background-position: center;
+    background-size: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .hold {
+    border: 5px solid #ccc;
+    transform: scale(1.05);
+    }
+
+    .hovered {
+    background-color: #333;
+    border-color: white;
+    border-style: dashed;
+    }
+
+    .invisible {
+    display: none;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .empty, .fill {
+        width: 120px;
+        height: 120px;
+    }
+    }
+  </style>
+</head>
+<body>
+  <div class="empty">
+    <div class="fill" draggable="true"></div>
+  </div>
+  <div class="empty"></div>
+  <div class="empty"></div>
+  <div class="empty"></div>
+  <div class="empty"></div>
+  <script src="script.js"></script>
+</body>
+<script>
+  const fill = document.querySelector('.fill');
+const empties = document.querySelectorAll('.empty');
+
+// === 拖拽源事件 ===
+fill.addEventListener('dragstart', (e) => {
+  e.target.classList.add('hold');
+  // 延迟清空，避免拖拽瞬间消失
+  setTimeout(() => {
+    e.target.classList.add('invisible');
+  }, 0);
+});
+
+fill.addEventListener('dragend', (e) => {
+  e.target.classList.remove('hold', 'invisible');
+});
+
+// === 投放区事件 ===
+empties.forEach(empty => {
+  empty.addEventListener('dragover', (e) => {
+    e.preventDefault(); // 关键！允许投放
+  });
+
+  empty.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    empty.classList.add('hovered');
+  });
+
+  empty.addEventListener('dragleave', (e) => {
+    empty.classList.remove('hovered');
+  });
+
+  empty.addEventListener('drop', (e) => {
+    e.preventDefault();
+    empty.classList.remove('hovered');
+    
+    // 清空当前容器并放入图片
+    empty.innerHTML = '';
+    empty.appendChild(fill);
+  });
+});
+</script>
+</html>
