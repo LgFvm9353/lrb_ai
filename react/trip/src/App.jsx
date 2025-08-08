@@ -17,6 +17,8 @@ import Loading from '@/components/Loading'
 const Detail = lazy(() => import('@/pages/Detail'))
 import Toast from '@/components/Toast'
 const Coze = lazy(() => import('@/pages/Coze'))
+const Article = lazy(()=>import('@/pages/Article'))
+const ArticleNew = lazy(()=>import('@/pages/Article/ArticleNew'))
 function App() {
 
   return (
@@ -36,6 +38,9 @@ function App() {
           <Route path='/search' element={<Search/>}/>
           <Route path='/detail/:id' element={<Detail />}/>
           <Route path="/coze" element={<Coze />}/>
+          <Route path='/Article' element={<Article />}>
+             <Route path='new' element={<ArticleNew />} />
+          </Route>
         </Route>
       </Routes>
       </Suspense>

@@ -213,6 +213,14 @@
        拿到file_id
     - workflow_id + workflowUrl + token 
        工作流需要的参数 调用工作流
+- 语音输入发表文章
+   - 字节tts
+   - onMouseDown 
+   - BOM html5
+   window.navigator.mediaDevices.getUserMedia({
+      audio:true
+   })
+   一定要获取授权，因为这是用户的隐私
 ## 通用组件开发
 - Loading 
   - 居中方案
@@ -231,3 +239,6 @@
    - intersectionObserver 用了两次 重复 违反了dry原则
      封装为hooks 
 
+- AI功能
+   智能前端(http 请求) + 工作流 coze api + ai 全新工作链路
+   + 自动化Agent 智能体
