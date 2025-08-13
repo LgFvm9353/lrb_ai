@@ -1,0 +1,56 @@
+<html>
+    <body>
+        <div id='container'>1</div>
+        <button id='button' type="button">点击+1</button>
+        <button id="loginBtn" type="button">登录</button>
+    </body>
+    <script>
+        document.getElementById('button').addEventListener('click',function(){
+            let container = document.getElementById('container')
+            // 显式类型转换
+            container.innerHTML = Number(container.innerHTML)+1
+        })
+        // 响应式开发 数据状态 它发生改变，数据绑定的地方会自动更新
+        // MVVM Model count View #container VM JSX
+        // 1. 状态
+        let obj = {
+            // 监听这个状态的改变 
+            value : 1,   // 数据，如何变成响应式状态
+            isLogin: false, //数据状态
+        }
+        let value = obj.value
+        let isLogin = obj.isLogin
+        Object.defineProperty(obj,'value',{
+            // 定义obj 上的value 属性，有些什么样的操作
+             get: function(){
+                  console.log('读取了value属性')
+                  return value
+             },
+             // 拦截
+             set: function(newValue){
+                console.log('设置了value属性')
+                value = newValue
+                // 数据发生了改变，需要更新视图
+                document.getElementById('container').innerHTML = newValue
+             }
+        })
+         document.getElementById('button').addEventListener('click',function(){
+            obj.value += 1
+         })
+
+         Object.defineProperty(obj,'isLogin',{
+            get:function(){
+                return isLogin
+            },
+            set:function(newValue){
+                isLogin = newValue
+                document.getElementById('loginBtn').innerHTML = isLogin ? '退出' : '登录'
+
+            }
+         })
+         document.getElementById('loginBtn').addEventListener('click',function(){
+            obj.isLogin = !obj.isLogin
+         })
+
+    </script>
+</html>
