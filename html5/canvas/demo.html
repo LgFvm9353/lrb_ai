@@ -1,0 +1,45 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>图片压缩</title>
+    <style>
+        #demo {
+            /* width: 800px;
+            height: 600px; */
+            border: 2px solid red;
+        }
+    </style>
+</head>
+<body>
+   <canvas id='demo'></canvas>
+</body>
+<script>
+    // 画布（默认 300 * 150 ）
+    let canvas = document.getElementById('demo')
+    // 设置canvas尺寸
+    canvas.width = 600;
+    canvas.height = 400;
+    
+    let context = canvas.getContext('2d')
+    context.fillStyle = 'red'
+    context.fillRect(0,0,300,150)
+    context.clearRect(0,0,100,50)
+
+    let dis = 0
+    function animation(){
+         // 根据 浏览器的刷帧率 来频繁执行 
+         requestAnimationFrame(function(){
+           context.clearRect(0,0,canvas.width,canvas.height)
+           context.fillStyle = `rgba(${dis},0,0,1)`
+           context.font = `30px Verdana`
+           // 调整文字显示位置
+           context.fillText(dis, 50, 100)
+           dis = (dis + 1) % 256
+           animation()
+         })
+    }
+    animation()
+
+</script>
+</html>
