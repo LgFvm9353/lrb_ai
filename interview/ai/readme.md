@@ -45,5 +45,3 @@
      - 返回结果 function.id
         role: tool
 
-
-
