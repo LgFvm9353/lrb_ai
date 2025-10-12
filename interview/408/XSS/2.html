@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" name="" id="name">
+    <div class="preview"></div>
+</body>
+
+<script>
+    const nameInput = document.getElementById('name')
+    const preview = document.querySelector('.preview')
+    nameInput.oninput = () =>{
+        // preview.innerHTML = nameInput.value
+        // 下面这个可以防止 xss 攻击
+        preview.textContent = nameInput.value
+    }
+</script>
+</html>
