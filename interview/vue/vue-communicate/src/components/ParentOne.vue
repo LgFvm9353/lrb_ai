@@ -1,4 +1,4 @@
-<script>
+<script setup>
 import ChildOne from './ChildOne.vue'
 import { ref } from 'vue'
 
