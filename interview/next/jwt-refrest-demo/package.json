@@ -10,11 +10,14 @@
   "dependencies": {
     "@prisma/client": "^6.16.2",
     "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.2",
     "jose": "^6.1.0",
     "next": "15.5.4",
     "prisma": "^6.16.2",
+    "puppeteer": "^24.23.0",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "x-crawl": "^10.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

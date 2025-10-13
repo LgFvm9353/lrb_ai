@@ -168,3 +168,30 @@
 - 分片上传的并发控制 
   promise.all + 递归 
   并发限流的核心是：一开始只启动不超过 MAX_CONCURRENCY 个工人函数，每个工人执行完一个任务后会递归调用 next()，继续从队列取下一个任务，从而保证始终只有固定数量的工人在运行。这样既避免了同时创建过多 Promise 占用资源，又能充分利用并行度；等所有工人都把队列清空才 resolve，Promise.all 就能精确等待整个批次完成。
+
+
+## merge 流程
+- fileHash 传入
+
+
+## 虚拟列表
+- 数据从何而来
+   爬取一下 
+   x-crawl 是一个灵活且功能强大的 Node.js 多功能爬虫库，支持页面、接口和文件的抓取，并集成了 AI 辅助功能以智能应对反爬机制和优化爬取策略。
+   - 爬取流程
+   1. http 请求得到html 
+   2. 正则 
+   3. css querySelectorAll 选择器 提取数据
+      内存中，将html 字符串渲染成dom，x-crawl 支持在内存DOM 
+   4. AI 辅助 
+      用prompt 去描述我们需要的内容，AI 可以代替我们和DOM 树沟通
+- Puppeteer 无头浏览器
+
+
+- 怎么渲染列表
+  - 时间分片
+     setTimeout + requestAnimationFrame + createDocumentFragment
+  - 虚拟列表
+     按需加载
+  - 分页  
+     滚动到底部 加载更多，后端分页
