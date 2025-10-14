@@ -11,6 +11,6 @@ const handleClick = ()=>{
    <div>
       <h1>EmitChild</h1>
       <button @click="handleClick">按钮</button>
-      <button @click="emit('my-click','hello')"> 触发事件 </button>
+      <button @click="emit('myClick','hello')"> 触发事件 </button>
    </div>
 </template>
