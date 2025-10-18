@@ -7,7 +7,7 @@ import { EditArea } from './components/EditArea';
 import { Setting } from './components/Setting';
 import { Header } from './components/Header';
 
-export default function LowcodeEditor() {
+export default function LowerCodeEditor() {
   return (
     <div className="h-[100vh] flex flex-col">
       <div className="h-[60px] flex items-center border-b-[1px] border-[#000]">
