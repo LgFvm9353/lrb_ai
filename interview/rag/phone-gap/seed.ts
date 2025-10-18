@@ -6,16 +6,14 @@ import {
     PuppeteerWebBaseLoader
 } from '@langchain/community/document_loaders/web/puppeteer'
 import { embed } from 'ai'
-import { createOpenAI } from '@ai-sdk/openai'
-
-
+import "dotenv/config"
 
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: process.env.OPENAI_API_BASE_URL,
-})
+import supabase from '@/utils/supabase'
+
+import openai from '@/utils/openai'
+
 const textSplitter = new RecursiveCharacterTextSplitter({
   chunkSize: 512,  //切割的长度 512 个 字符串 包含一个比较独立的语义
   chunkOverlap: 100, // 重叠的长度 100 个子符
@@ -46,14 +44,21 @@ const loadData = async(webpages:string[])=>{
     {
         const content = await scrapePage(url)
         const chunks = await textSplitter.splitText(content)
-        console.log(chunks,"-----")
         for(let chunk of chunks)
         {
             const {embedding} = await embed({
                 model: openai.embedding("text-embedding-3-small"),
-                value: chunk[0],
+                value: chunk,
             })
-            console.log(embedding,"-----")
+           const {error} = await supabase.from("chunks").insert({
+                content: chunk,
+                vector: embedding,
+                url: url,
+            })
+            if(error)
+            {
+                console.log("Error inserting chunk:",error)
+            }
         }
     }
 }

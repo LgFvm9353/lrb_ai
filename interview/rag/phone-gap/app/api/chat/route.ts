@@ -1,19 +1,74 @@
-// 流式输出
-// AI SDK 中用于生成流式文本响应的核心函数，支持逐字输出、工具调用和异步处理
-import { streamText } from 'ai';
-// ai-sdk openai 调用方式
-import { createOpenAI } from '@ai-sdk/openai';
-// ai-sdk 调用 openai 模型
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: process.env.OPENAI_API_BASE_URL,
-})
+import {
+  embed,
+  streamText
+} from 'ai';
+import openai from '@/utils/openai'
+import supabase from '@/utils/supabase'
 
-export async function POST() {
-  const result = await streamText({
-    model: openai("gpt-3.5-turbo"),
-    prompt: '你好，请简单介绍一下你自己。',
-  });
 
-  return result.toDataStreamResponse();
+async function generateEmbedding(message: string) {
+  return embed({
+    model: openai.embedding("text-embedding-3-small"),
+    value: message,
+  })
+}
+async function fetchRelevantContext(embedding:number[]){
+   const {data,error} = await supabase.rpc("get_relevant_chunks",{
+     query_vector: embedding,
+     match_count: 3,
+     match_threshold: 0.7,
+   })
+    if(error) throw error
+    return JSON.stringify(
+      data.map((item:any) => `
+         Source: ${item.url},
+         DateUpdated: ${item.date_updated},
+         Content: ${item.content}
+        `)
+    )
+}
+
+const createPrompt = (context:string,userQuestion:string)=>{
+  return {
+    role: "system",
+    content: `
+       You are a helpful assistant that provides information about the latest smartphones. 
+      Use the following context to answer questions: 
+      ----------------
+      START CONTEXT
+      ${context}
+      END CONTEXT
+      ----------------
+      
+      Return the answer in markdown format including relevant links and the date when the information was last updated.
+      Where the above context does not provide enough information relating to the question provide an answer based on your own knowledge but caveat it so the user
+      knows that it may not be up to date.
+      If the user asks a question that is not related to a smartphone, politely inform them that you can only answer questions about smartphones.
+      
+      ----------------
+      QUESTION: ${userQuestion}
+      ----------------
+    `
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const { messages } = await req.json();
+    const latestMessage = messages.at(-1).content;
+    // embedding
+    const { embedding } = await generateEmbedding(latestMessage);
+
+    // 相似度计算
+    const context = await fetchRelevantContext(embedding)
+
+    const prompt = createPrompt(context,latestMessage)
+    const result = await streamText({
+      model: openai.chat("gpt-4o-mini"),
+      messages: [prompt,...messages],
+    })
+    return result.toDataStreamResponse()
+  } catch(err) {
+    throw err 
+  }
 }

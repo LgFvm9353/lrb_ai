@@ -2,7 +2,6 @@
 import {
     Message,
 } from "ai"
-import { Children } from "react";
 import ReactMarkdown from 'react-markdown'
 
 interface ChatOutputProps {
