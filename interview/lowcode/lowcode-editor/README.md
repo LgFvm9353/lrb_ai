@@ -33,3 +33,14 @@ alloment split pane 布局，用tailwindcss 写样式，zustand 来全局状态�
 - 编辑区
 
 - 设置区
+
+## 拖拽生成
+pnpm i react-dnd react-dnd-html5-backend
+react-dnd 是一个用于在 React 应用中实现拖放（Drag and Drop）功能的流行库，通过提供可组合的 API 和后端抽象（如 HTML5 或触摸）来简化复杂拖拽交互的开发。
+- 根上包着
+
+## 遇到的问题
+- useDrop 的时候会插入多次 
+- useDrop 多次重复
+   违反了dry 原则 
+   应该封装一下

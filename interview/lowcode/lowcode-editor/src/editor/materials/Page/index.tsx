@@ -1,10 +1,15 @@
 import type {
-  PropsWithChildren
-} from "react";
+  CommonComponentProps
+} from "../../interface";
 
-function Page({children}: PropsWithChildren) {
+import {useMaterialDrop} from '../../hooks/useMaterialDrop'
+function Page({id,name,children}: CommonComponentProps) {
+
+  const {canDrop,drop}= useMaterialDrop(["Button","Container"],id)
   return (
-    <div className="p-[20px] h-[100%] box-border">
+    <div 
+          ref={drop}
+          className="p-[20px] h-[100%] box-border">
       {children}
     </div>
   )
