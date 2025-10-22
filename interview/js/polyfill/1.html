@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        if(!window.Promise)
+    {
+        window.Promise = function(excutor)
+        {
+            let onResolve;
+            this.then = function(callback)
+            {
+                onResolve = callback;
+                return this;
+            }
+            const resolve = (value) => {
+                setTimeout(() => {
+                    onResolve(value);
+                }, 0);
+            }
+            excutor(resolve);
+        }
+    }
+    </script>
+</body>
+</html>
